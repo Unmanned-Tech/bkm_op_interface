@@ -1,11 +1,12 @@
 <template>
     <div class="container ">
-        <div class="row mt-3 p-3 topmenu shadow rounded-2 justify-content-center">
+      <h1 class="mt-3">О роботе: <u>БКМ 1</u></h1>
+      <div class="row mt-3 p-3 topmenu shadow rounded-2 justify-content-center">
             <div class="col col-auto me-auto">
                 <RouterLink to="/" class="btn btn-primary">На главную</RouterLink>
             </div>
             <div class="col col-auto">
-                <RouterLink to="/" class="btn btn-primary">Удалённое управление</RouterLink>
+                <RouterLink to="/teleop" class="btn btn-primary">Удалённое управление</RouterLink>
             </div>
             <div class="col col-auto">
                 <RouterLink to="/" class="btn btn-primary">Отправить на базу</RouterLink>
@@ -13,8 +14,8 @@
             <div class="col col-auto">
                 <RouterLink to="/" class="btn btn-danger">Аварийная остановка</RouterLink>
             </div>
-            <div class="col col-1 bg-success ms-2 me-2 text-center rounded-2">
-                <i class="bi bi-battery fs-4  align-middle "></i><span class="align-middle"> 51%</span>
+            <div class="col col-1 bg-success ms-2 me-2 text-center rounded-2  h-50">
+                <i class="bi bi-battery fs-3  align-middle "></i><span class="align-middle"> 51%</span>
             </div>
             <div class="col col-2">
                 <div class="progress">

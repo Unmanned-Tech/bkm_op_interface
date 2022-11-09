@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory,  createWebHashHistory} from "vue-router";
 import MainPage from "../components/MainPage.vue";
 import RobotPage from "../components/RobotPage.vue";
+import TeleopPage from "../components/TeleopPage.vue";
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     // component: () =>
     //   import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
+  {
+    path: "/teleop",
+    name: "teleop",
+    component: TeleopPage
+  }
 ];
 
 const router = createRouter({
