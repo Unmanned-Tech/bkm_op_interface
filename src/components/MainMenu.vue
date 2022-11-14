@@ -1,5 +1,5 @@
 <template>
-    <header class="p-3 bg-dark text-white">
+  <header class="p-3 bg-dark text-white">
     <div class="container">
 
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -10,10 +10,14 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/" class="nav-link px-2 text-secondary">Роботы</a></li>
+          <li>
+            <router-link to="/" class="nav-link px-2 text-white">Роботы</router-link>
+          </li>
           <li><a href="#" class="nav-link px-2 text-white">Уведомления</a></li>
           <li><a href="#" class="nav-link px-2 text-white">Логи</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Настройки</a></li>
+          <li>
+            <router-link to="settings" class="nav-link px-2 text-white">Настройки</router-link>
+          </li>
         </ul>
       </div>
     </div>

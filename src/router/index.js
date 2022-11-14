@@ -2,6 +2,7 @@ import { createRouter, createWebHistory,  createWebHashHistory} from "vue-router
 import MainPage from "../components/MainPage.vue";
 import RobotPage from "../components/RobotPage.vue";
 import TeleopPage from "../components/TeleopPage.vue";
+import SettingsPage from "../components/SettingsPage.vue";
 
 const routes = [
   {
@@ -23,6 +24,11 @@ const routes = [
     path: "/teleop",
     name: "teleop",
     component: TeleopPage
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: SettingsPage
   }
 ];
 

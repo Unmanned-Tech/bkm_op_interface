@@ -11,9 +11,6 @@
                             <a class="nav-link disabled" href="#">Видео</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#">Ссылка</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link disabled">Лидар</a>
                         </li>
 
