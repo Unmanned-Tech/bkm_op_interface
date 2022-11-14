@@ -8,7 +8,8 @@ import robot_page from "./components/RobotPage.vue";
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import router from "./router";
 // // Импортируйте весь JS Bootstrap
-import * as bootstrap from 'bootstrap';
+import {popper} from "@popperjs/core";
+import * as bootstrap from '../node_modules/bootstrap';
 
 const app = createApp(App).use(router);
 // app.use(VueRouter(routes));

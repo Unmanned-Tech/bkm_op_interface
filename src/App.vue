@@ -4,6 +4,7 @@
 import main_menu from "./components/MainMenu.vue";
 import main_page from "./components/MainPage.vue";
 import robot_page from "./components/RobotPage.vue";
+
 import { ref } from 'vue';
 const count = ref(0);
 </script>

@@ -7,7 +7,7 @@
       </div>
 
       <div class="col col-auto">
-        <RouterLink to="/" class="btn btn-danger">Аварийная остановка</RouterLink>
+        <emer-stop-button/>
       </div>
       <div class="col col-1 bg-success ms-2 me-2 text-center rounded-2">
         <i class="bi bi-battery fs-4  align-middle "></i><span class="align-middle"> 51%</span>
@@ -101,8 +101,11 @@
 </template>
 
 <script>
+import EmerStopButton from "./EmerStopButton.vue";
+
 export default {
   name: "TeleopPage",
+  components: {EmerStopButton},
   data: function () {
     return {
       shetka_speed: 0
