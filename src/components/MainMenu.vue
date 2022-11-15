@@ -14,7 +14,9 @@
             <router-link to="/" class="nav-link px-2 text-white">Роботы</router-link>
           </li>
           <li><a href="#" class="nav-link px-2 text-white">Уведомления</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Логи</a></li>
+          <li>
+            <router-link to="logs" class="nav-link px-2 text-white">Логи</router-link>
+          </li>
           <li>
             <router-link to="settings" class="nav-link px-2 text-white">Настройки</router-link>
           </li>

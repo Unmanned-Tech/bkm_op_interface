@@ -49,7 +49,20 @@
     <div class="row mt-3">
       <div class="col-4">
         <h3>Карта</h3>
+
         <img src="/map_placeholder.png" alt="" class="img-fluid w-100 rounded-3">
+        <ul class="nav nav-pills mt-3">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Карта</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Видео</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Лидар</a>
+          </li>
+
+        </ul>
       </div>
       <div class="col-4">
         <h3>Задачи</h3>
