@@ -33,8 +33,8 @@
 
         <emer-stop-button />
       </div>
-      <div class="col col-1 bg-success ms-2 me-2 text-center rounded-2  h-50">
-        <i class="bi bi-battery fs-3  align-middle" ></i><span class="align-middle"> 51%</span>
+      <div class="col col-1">
+      <battery-info/>
       </div>
       <div class="col col-2">
         <div class="progress">
@@ -175,9 +175,10 @@
 <script>
 import {Modal} from 'bootstrap'
 import EmerStopButton from "./EmerStopButton.vue";
+import BatteryInfo from "./BatteryInfo.vue";
 export default {
   name: "RobotPage",
-  components: {EmerStopButton},
+  components: {BatteryInfo, EmerStopButton},
   data: function () {
     return {
       shetka_speed: 0

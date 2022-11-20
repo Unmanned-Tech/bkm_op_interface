@@ -1,0 +1,66 @@
+<template>
+  <div class="modal fade" id="battInfoModal" tabindex="-1" aria-labelledby="battInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-dark" id="exampleModalLabel">Информация о батарее</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body text-dark">
+          <ul class="list-group">
+            <li class="list-group-item">
+              Напряжение: {{ rbatt.voltage }}
+            </li>
+            <li class="list-group-item">
+              Температура: {{ rbatt.temperature }}
+            </li>
+            <li class="list-group-item">
+              Статус: {{ rbatt.status }}
+            </li>
+            <li class="list-group-item">Уровень заряда: {{ rbatt.chargePersantage }}</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button v-on:click="" data-bs-toggle="modal" data-bs-target="#battInfoModal"
+          class="btn btn-outline-success text-center align-middle">
+    <i class="bi bi-battery fs-4 align-middle me-1"></i> {{ rbatt.chargePersantage }}%
+  </button>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+  name: "BatteryInfo",
+  data() {
+    return {
+      rbatt: {
+        voltage: -1,
+        temperature: -1,
+        status: -1,
+        chargePersantage: -1,
+      }
+    }
+  },
+  methods: {
+    //TODO: add autoupdate
+    fetchRbattPercentage() {
+      axios.get('http://localhost:5003/api/telemetry/rbattery/').then(response => (response.data)).then((data) => {
+        this.rbatt = data
+      });
+    }
+  },
+  beforeMount() {
+    this.fetchRbattPercentage()
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
