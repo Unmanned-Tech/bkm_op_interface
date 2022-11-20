@@ -9,8 +9,8 @@
       <div class="col col-auto">
         <emer-stop-button/>
       </div>
-      <div class="col col-1 bg-success ms-2 me-2 text-center rounded-2">
-        <i class="bi bi-battery fs-4  align-middle "></i><span class="align-middle"> 51%</span>
+      <div class="col">
+        <BatteryInfo/>
       </div>
     </div>
     <div class="row mt-3">
@@ -102,10 +102,11 @@
 
 <script>
 import EmerStopButton from "./EmerStopButton.vue";
+import BatteryInfo from "./BatteryInfo.vue";
 
 export default {
   name: "TeleopPage",
-  components: {EmerStopButton},
+  components: {BatteryInfo, EmerStopButton},
   data: function () {
     return {
       shetka_speed: 0
