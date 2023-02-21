@@ -4,6 +4,7 @@ import RobotPage from "../components/RobotPage.vue";
 import TeleopPage from "../components/TeleopPage.vue";
 import SettingsPage from "../components/SettingsPage.vue";
 import LogsPage from "../components/LogsPage.vue";
+import StatusPage from "../components/StatusPage.vue"
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: "/logs",
     name: "logs",
     component: LogsPage
+  },
+  {
+    path: "/status",
+    name: "status",
+    component: StatusPage
   }
 ];
 
