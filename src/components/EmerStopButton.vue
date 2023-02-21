@@ -10,8 +10,8 @@
           Применить аварийную остановку
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Остановить</button>
+          <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button v-on:click="send_emerstop()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Остановить</button>
         </div>
       </div>
     </div>
@@ -20,12 +20,32 @@
 </template>
 
 <script>
-import {Modal} from 'bootstrap'
+import { Modal } from 'bootstrap'
+import * as roslib from "../../roslib.js";
+
+
 export default {
-  name: "EmerStopButton"
+  name: "EmerStopButton",
+  methods: {
+    send_emerstop() {
+      const ros = new ROSLIB.Ros({ url: "ws://localhost:9090" });
+      console.info("EmerStop");
+      var EmerStopSrv = new ROSLIB.Service({
+        ros: ros,
+        name: '/bkm_cmd_srv',
+        serviceType: 'mcu_msgs/srv/TextCmd'
+      });
+      var request = new ROSLIB.ServiceRequest({
+        cmd: "EMER_STOP"
+      });
+      EmerStopSrv.callService(request, function (result) {
+        console.log('Result for service call on ' + EmerStopSrv.name + ': ' + result.success);
+      });
+    },
+  }
+
 }
+
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

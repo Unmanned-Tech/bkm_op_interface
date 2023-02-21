@@ -5,7 +5,7 @@
             <h4>C_1</h4>
             <table class="table">
                 <thead>
-                    <tr>
+                    <tr>    
                         <th scope="col">#</th>
                         <th scope="col">Имя</th>
                         <th scope="col">Значение</th>
@@ -91,7 +91,7 @@ export default {
         ros.on('connection', function () {
             console.log('Connected to websocket server.');
         });
-
+        
         var listener1 = new ROSLIB.Topic({
             ros: ros,
             name: '/c1_telem',
