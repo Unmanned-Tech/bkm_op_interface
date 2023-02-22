@@ -78,19 +78,26 @@
                 <div class="row mt-3">
                   <div class="col-12">
                     <label for="customRange3" class="form-label">Скорость вращения (об/мин): {{ shetka_speed }}</label>
-                    <input v-on:input="set_shetka_speed" type="range" class="form-range" min="0" max="200" step="0.5"
+                    <input v-on:input="set_shetka_speed" type="range" class="form-range" min="-50" max="200" step="0.5"
                       id="shetka_speed_range" value="0">
                   </div>
                 </div>
-                <hr>
                 <div class="row mt-3">
+                  <div class="col-12">
+                    <label for="shetka_angle_range" class="form-label">Поворот: {{ shetka_angle }}</label>
+                    <input v-on:input="set_shetka_angle" type="range" class="form-range" disabled min="-1" max="1" step="0.1"
+                      id="shetka_angle_range" value="0">
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-3 ">
                   <div class="col-auto">
                     <div class="form-check form-switch " style="">
                       <input class="form-check-input big-check-box" style="" type="checkbox" role="switch"
                         id="flexSwitchCheckDefault">
                       <label class="form-check-label" for="flexSwitchCheckDefault">Управление движением</label>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 mt-3">
                       <label for="customRange3" class="form-label">Линейная скорость (м/c): {{ lin_max_speed }}</label>
                       <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="10" step="0.5"
                         id="lin_max_speed_range" value="0">
@@ -127,6 +134,7 @@ export default {
   data: function () {
     return {
       shetka_speed: 0,
+      shetka_angle: 0,
       lin_max_speed: 0,
       ang_max_speed: 0,
     }
@@ -142,10 +150,15 @@ export default {
       },
     };
     var manager = nipplejs.create(options);
+    
+    
   },
   methods: {
     set_shetka_speed() {
       this.shetka_speed = document.getElementById("shetka_speed_range").value
+    },
+    set_shetka_angle() {
+      this.shetka_angle = document.getElementById("shetka_angle_range").value
     },
     set_linear_speed() {
       this.lin_max_speed = document.getElementById("lin_max_speed_range").value
