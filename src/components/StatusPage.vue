@@ -1,6 +1,6 @@
 <template>
     <div class="row mt-3">
-        <h1>Подробное описание состояния робота</h1>
+        <h1>Отладка состояния робота</h1>
         <div class="col-6">
             <h4>C_1</h4>
             <table class="table">
@@ -70,7 +70,8 @@
 
 <script>
 import * as roslib from "../../roslib.js";
-const ros = new ROSLIB.Ros({ url: "ws://localhost:9090" });
+import { useConfigStore } from "../stores/ConfigStore";
+
 
 export default {
     name: "StatusPage",
@@ -82,10 +83,14 @@ export default {
             c1_msg: {},
             c2_msg: {},
             ce_msg: {},
-            aa: ""
+            aa: "",
+            ros: "",
+            ConfigStore: "",
         }
     },
     mounted: function () {
+        this.ConfigStore = useConfigStore()
+        this.ros = new ROSLIB.Ros({ url: ConfigStore.robotConfig.ros_bridge_url });
         // this.startRefreshing();
 
         ros.on('connection', function () {
