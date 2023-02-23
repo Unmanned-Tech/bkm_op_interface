@@ -128,6 +128,7 @@
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
+import * as roslib from "../../roslib.js";
 import { resolveDirective } from "vue";
 
 export default {
@@ -141,6 +142,21 @@ export default {
       ang_max_speed: 0,
       lin_speed: 0,
       ang_speed: 0,
+      speed_send_timer: {},
+      ros: {},
+      twist: {
+        linear: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0
+        },
+        angular: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0
+        }
+      },
+      cmdVel: 0,
     }
   },
   mounted: function () {
@@ -155,6 +171,13 @@ export default {
     };
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
+    this.speed_send_timer = setInterval(this.send_speed, 200);
+    this.ros = new ROSLIB.Ros({ url: "ws://192.168.2.163:9090" });
+
+
+    // Then we create the payload to be published. The object we pass in to ros.Message matches the
+    // fields defined in the geometry_msgs/Twist.msg definition.
+
   },
   methods: {
     set_shetka_speed() {
@@ -171,10 +194,8 @@ export default {
     },
     joystick_move(evt, data) {
       if (document.getElementById("moveing_enable").checked) {
-        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 100) / 100;
-        console.log("ls " + this.lin_speed);
-        this.ang_speed = Math.round(data.vector.x * this.ang_max_speed * 100) / 100;
-        console.log("as " + this.ang_speed);
+        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.1 * data.force * 100) / 100;
+        this.ang_speed = -Math.round(data.vector.x * this.ang_max_speed * 0.1 * data.force * 100) / 100;
       } else {
         this.lin_speed = 0;
         this.ang_speed = 0;
@@ -187,7 +208,19 @@ export default {
     joystick_end(evt, data) {
       this.lin_speed = 0;
       this.ang_speed = 0;
-    }
+    },
+    send_speed() {
+      if (document.getElementById("moveing_enable").checked) {
+        this.cmdVel = new ROSLIB.Topic({
+          ros: this.ros,
+          name: '/turtle1/cmd_vel',
+          messageType: 'geometry_msgs/Twist'
+        });
+        this.twist.linear.x = this.lin_speed;
+        this.twist.angular.z = this.ang_speed;
+        this.cmdVel.publish(this.twist);
+      }
+    },
   }
 }
 </script>
