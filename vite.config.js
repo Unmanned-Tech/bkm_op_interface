@@ -16,6 +16,9 @@ export default defineConfig({
       target: "es2020"
     }
   },
+  server:{
+    host: "0.0.0.0"
+  },
   plugins: [vue()],
   resolve: {
     alias: {

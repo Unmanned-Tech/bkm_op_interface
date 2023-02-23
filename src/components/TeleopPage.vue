@@ -5,7 +5,9 @@
       <div class="col col-auto me-auto">
         <RouterLink to="/robot" class="btn btn-primary">Назад</RouterLink>
       </div>
-
+      <div class="col ms-5 col-auto me-auto">
+        <RouterLink to="/status" class="btn btn-primary">Статус</RouterLink>
+      </div>
       <div class="col col-auto">
         <emer-stop-button />
       </div>
@@ -85,8 +87,8 @@
                 <div class="row mt-3">
                   <div class="col-12">
                     <label for="shetka_angle_range" class="form-label">Поворот: {{ shetka_angle }}</label>
-                    <input v-on:input="set_shetka_angle" type="range" class="form-range" disabled min="-1" max="1" step="0.1"
-                      id="shetka_angle_range" value="0">
+                    <input v-on:input="set_shetka_angle" type="range" class="form-range" disabled min="-1" max="1"
+                      step="0.1" id="shetka_angle_range" value="0">
                   </div>
                 </div>
                 <hr>
@@ -94,8 +96,8 @@
                   <div class="col-auto">
                     <div class="form-check form-switch " style="">
                       <input class="form-check-input big-check-box" style="" type="checkbox" role="switch"
-                        id="flexSwitchCheckDefault">
-                      <label class="form-check-label" for="flexSwitchCheckDefault">Управление движением</label>
+                        id="moveing_enable">
+                      <label class="form-check-label" for="moveing_enable">Управление движением</label>
                     </div>
                     <div class="col-12 mt-3">
                       <label for="customRange3" class="form-label">Линейная скорость (м/c): {{ lin_max_speed }}</label>
@@ -137,6 +139,8 @@ export default {
       shetka_angle: 0,
       lin_max_speed: 0,
       ang_max_speed: 0,
+      lin_speed: 0,
+      ang_speed: 0,
     }
   },
   mounted: function () {
@@ -149,9 +153,8 @@ export default {
         bottom: '12%'
       },
     };
-    var manager = nipplejs.create(options);
-    
-    
+    this.joystick = nipplejs.create(options);
+    this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
   },
   methods: {
     set_shetka_speed() {
@@ -166,6 +169,25 @@ export default {
     set_angular_speed() {
       this.ang_max_speed = document.getElementById("ang_max_speed_range").value
     },
+    joystick_move(evt, data) {
+      if (document.getElementById("moveing_enable").checked) {
+        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 100) / 100;
+        console.log("ls " + this.lin_speed);
+        this.ang_speed = Math.round(data.vector.x * this.ang_max_speed * 100) / 100;
+        console.log("as " + this.ang_speed);
+      } else {
+        this.lin_speed = 0;
+        this.ang_speed = 0;
+      }
+
+    },
+    joystick_start(evt, data) {
+
+    },
+    joystick_end(evt, data) {
+      this.lin_speed = 0;
+      this.ang_speed = 0;
+    }
   }
 }
 </script>
