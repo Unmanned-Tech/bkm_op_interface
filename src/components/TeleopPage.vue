@@ -125,21 +125,32 @@
 
                 <div class="col-auto">
                   <div class="form-check form-switch">
-                    <input class="form-check-input big-check-box" type="checkbox" role="switch"
-                      id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">Габариты</label>
+                    <input class="form-check-input big-check-box" v-on:change="set_sm_lights" type="checkbox"
+                      role="switch" id="sm_lights_check">
+                    <label class="form-check-label" for="sm_lights_check">Габариты</label>
                   </div>
                 </div>
                 <div class="col-auto">
                   <div class="form-check form-switch" style="">
-                    <input class="form-check-input big-check-box" type="checkbox" role="switch"
-                      id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">Проблесковые маячки</label>
+                    <input class="form-check-input big-check-box" v-on:change="set_strobe_lights" type="checkbox" role="switch"
+                      id="strobe_lights_check">
+                    <label class="form-check-label" for="strobe_lights_check">Проблесковые маячки</label>
                   </div>
 
                 </div>
                 <div class="col-auto">
                   <button class="btn btn-sm btn-primary">Звуковой сигнал</button>
+                </div>
+
+              </div>
+              <hr>
+              <div class="row">
+                <label class="form-check-label" for="cmd1">Команда</label>
+                <div class="col-auto">
+                  <input id="cmd1" type="text" class="form-control bg-light text-dark" />
+                </div>
+                <div class="col">
+                  <button v-on:click="send_cmd" class="btn btn-primary ">Отправить</button>
                 </div>
               </div>
             </div>
@@ -234,6 +245,46 @@ export default {
     set_angular_speed() {
       this.ang_max_speed = document.getElementById("ang_max_speed_range").value
     },
+    set_sm_lights() {
+      var cmd_srv = new ROSLIB.Service({
+        ros: this.ros,
+        name: '/bkm_cmd_srv',
+        serviceType: 'mcu_msgs/srv/TextCmd'
+      });
+      if (document.getElementById("sm_lights_check").checked) {
+        var request = new ROSLIB.ServiceRequest({
+          cmd: "SM_LIGHTS_EN"
+        });
+      } else {
+        var request = new ROSLIB.ServiceRequest({
+          cmd: "SM_LIGHTS_DIS"
+        });
+      }
+
+      cmd_srv.callService(request, function (result) {
+        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+      });
+    },
+    set_strobe_lights() {
+      var cmd_srv = new ROSLIB.Service({
+        ros: this.ros,
+        name: '/bkm_cmd_srv',
+        serviceType: 'mcu_msgs/srv/TextCmd'
+      });
+      if (document.getElementById("strobe_lights_check").checked) {
+        var request = new ROSLIB.ServiceRequest({
+          cmd: "STROBE_EN"
+        });
+      } else {
+        var request = new ROSLIB.ServiceRequest({
+          cmd: "STROBE_DIS"
+        });
+      }
+
+      cmd_srv.callService(request, function (result) {
+        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+      });
+    },
     joystick_move(evt, data) {
       if (document.getElementById("moveing_enable").checked) {
         this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
@@ -274,7 +325,7 @@ export default {
     },
     stop_shetka() {
       document.getElementById("shetka_enabled").checked = false;
-      document.getElementById("shetka_speed_range").value=0;
+      document.getElementById("shetka_speed_range").value = 0;
       this.shetka_speed = 0;
     },
     send_shetka_speed() {
@@ -290,6 +341,19 @@ export default {
         // alert("ss");
       }
 
+    },
+    send_cmd() {
+      var cmd_srv = new ROSLIB.Service({
+        ros: this.ros,
+        name: '/bkm_cmd_srv',
+        serviceType: 'mcu_msgs/srv/TextCmd'
+      });
+      var request = new ROSLIB.ServiceRequest({
+        cmd: document.getElementById("cmd1").value
+      });
+      cmd_srv.callService(request, function (result) {
+        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+      });
     },
   }
 }
