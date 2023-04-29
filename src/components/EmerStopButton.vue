@@ -28,7 +28,7 @@ export default {
   name: "EmerStopButton",
   methods: {
     send_emerstop() {
-      const ros = new ROSLIB.Ros({ url: "ws://localhost:9090" });
+      const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
       console.info("EmerStop");
       var EmerStopSrv = new ROSLIB.Service({
         ros: ros,

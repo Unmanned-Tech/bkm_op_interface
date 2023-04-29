@@ -106,7 +106,7 @@ export default {
   },
   mounted: function () {
     // this.startRefreshing();
-    const ros = new ROSLIB.Ros({ url: "ws://localhost:9090" });
+    const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
     ros.on('connection', function () {
       console.log('Connected to websocket server.');
@@ -135,7 +135,7 @@ export default {
     },
     fetchRstatus() {
       axios
-        .get('http://localhost:5003/api/telemetry/rstatus/')
+        .get('http://192.168.1.1:5003/api/telemetry/rstatus/')
         .then(response => (this.rstatus = response.data))
       console.info("statuses updated")
     },

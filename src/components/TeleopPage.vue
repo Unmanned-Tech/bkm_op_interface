@@ -37,7 +37,7 @@
         <div id="teleop_view"></div>
         <img class="img-fluid rounded-4 h-50 mt-2 " src="/map_placeholder.png" />
       </div>
-      <div class="col-4">
+      <div class="col-6">
         <div class="row">
           <div class="col-12 ">
             <h3 class="text-center">Управление</h3>
@@ -172,7 +172,7 @@ export default {
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.2.163:9090" });
+    this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
 
     // Then we create the payload to be published. The object we pass in to ros.Message matches the
@@ -194,8 +194,8 @@ export default {
     },
     joystick_move(evt, data) {
       if (document.getElementById("moveing_enable").checked) {
-        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.1 * data.force * 100) / 100;
-        this.ang_speed = -Math.round(data.vector.x * this.ang_max_speed * 0.1 * data.force * 100) / 100;
+        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
+        this.ang_speed = -Math.round(data.vector.x * this.ang_max_speed * 0.5 * data.force * 100) / 100;
       } else {
         this.lin_speed = 0;
         this.ang_speed = 0;
@@ -213,7 +213,7 @@ export default {
       if (document.getElementById("moveing_enable").checked) {
         this.cmdVel = new ROSLIB.Topic({
           ros: this.ros,
-          name: '/turtle1/cmd_vel',
+          name: '/cmd_vel',
           messageType: 'geometry_msgs/Twist'
         });
         this.twist.linear.x = this.lin_speed;
