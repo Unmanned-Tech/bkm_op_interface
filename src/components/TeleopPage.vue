@@ -17,7 +17,7 @@
     </div>
     <div class="row mt-3">
       <div class="col-6">
-        <div class="row m-1">
+        <div class="row ">
           <div class="col">
             <ul class="nav nav-pills">
               <li class="nav-item">
@@ -35,15 +35,15 @@
           </div>
         </div>
         <div id="teleop_view"></div>
-        <img class="img-fluid rounded-4 h-50 mt-2 " src="/map_placeholder.png" />
+        <img class="img-fluid rounded-4  mt-2 " src="/map_placeholder.png" />
       </div>
-      <div class="col-4">
-        <div class="row">
-          <div class="col-12 mt-3">
-            <h3 class="text-center">Управление</h3>
+      <div class="col-4 ">
+        <div class="row ">
+          <div class="col-12">
+            
             <div class="card bg-light">
               <div class="card-body text-dark">
-
+                <h4 class="text-center">Управление</h4>
                 <div class="row">
                   <div class="row mt-1">
                     <div class="col-auto">
@@ -84,7 +84,7 @@
                       </div>
                       <div class="row mt-1">
                         <div class="col-12">
-                          <button class="btn btn-danger w-100 " disabled>Стоп</button>
+                          <button v-on:click="stop_moving" class="btn btn-warning shadow-sm w-100 ">Стоп</button>
                         </div>
                       </div>
                       <div class="col-12 mt-3">
@@ -107,8 +107,8 @@
           </div>
         </div>
       </div>
-      <div class="col-2 mt-5">
-        <div class="card bg-light h-25">
+      <div class="col-2">
+        <div class="card bg-light h-25 ">
           <div class="card-body text-dark">
             <div class="row justify-content-center">
               <div id="zone_joystick" class="zone static" style="width: 100px; height: 50px;"></div>
@@ -208,11 +208,12 @@ export default {
   methods: {
     set_shetka_speed() {
       this.shetka_speed = document.getElementById("shetka_speed_range").value
-      shetka_enabled
+      // 
+      if (document.getElementById("shetka_enabled").checked) {
+      }
     },
     set_shetka_angle() {
       this.shetka_angle = document.getElementById("shetka_angle_range").value
-
     },
     set_linear_speed() {
       this.lin_max_speed = document.getElementById("lin_max_speed_range").value
@@ -248,6 +249,27 @@ export default {
         this.twist.angular.z = this.ang_speed;
         this.cmdVel.publish(this.twist);
       }
+    },
+    stop_moving(){
+      document.getElementById("moveing_enable").checked = false;
+      document.getElementById("lin_max_speed_range").value = 0;
+      document.getElementById("ang_max_speed_range").value = 0;
+      this.lin_max_speed = 0;
+      this.ang_max_speed = 0;
+      this.lin_speed = 0;
+      this.ang_speed = 0;
+    },
+    send_shetka_speed() {
+      // if (document.getElementById("shetka_enabled").checked) {
+      //   this.cmdVel = new ROSLIB.Topic({
+      //     ros: this.ros,
+      //     name: '/cmd_vel',
+      //     messageType: 'geometry_msgs/Twist'
+      //   });
+      //   this.twist.linear.x = this.lin_speed;
+      //   this.twist.angular.z = this.ang_speed;
+      //   this.cmdVel.publish(this.twist);
+      // }
     },
   }
 }
