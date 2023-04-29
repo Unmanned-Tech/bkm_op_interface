@@ -40,7 +40,7 @@
       <div class="col-4 ">
         <div class="row ">
           <div class="col-12">
-            
+
             <div class="card bg-light">
               <div class="card-body text-dark">
                 <h4 class="text-center">Управление</h4>
@@ -55,10 +55,11 @@
                   </div>
                   <div class="row mt-1">
                     <div class="col-12">
-                      <label for="customRange3" class="form-label">Скорость (об/мин): {{ shetka_speed }}</label>
-                      <input v-on:input="set_shetka_speed" type="range" class="form-range" min="-50" max="200" step="0.5"
+                      <label for="shetka_speed_range1" class="form-label">Скорость (об/мин): {{ shetka_speed }}</label>
+                      <input v-on:input="set_shetka_speed" type="range" class="form-range" min="-50" max="200" step="1"
                         id="shetka_speed_range" value="0">
                     </div>
+
                   </div>
                   <div class="row ">
                     <div class="col-12">
@@ -69,11 +70,11 @@
                   </div>
                   <div class="row mt-1">
                     <div class="col-12">
-                      <button class="btn btn-danger w-100 " disabled>Остановка щётки</button>
+                      <button v-on:click="stop_shetka" class="btn btn-warning w-100 ">Остановка щётки</button>
                     </div>
-                    
+
                   </div>
-                  
+
                   <div class="row mt-1">
                     <div class="col-auto">
                       <hr>
@@ -169,8 +170,21 @@ export default {
       lin_speed: 0,
       ang_speed: 0,
       speed_send_timer: {},
+      shetka_send_timer: {},
       ros: {},
       twist: {
+        linear: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0
+        },
+        angular: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0
+        }
+      },
+      twist_ce: {
         linear: {
           x: 0.0,
           y: 0.0,
@@ -198,6 +212,7 @@ export default {
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
+    this.shetka_send_timer = setInterval(this.send_shetka_speed, 300);
     this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
 
@@ -207,10 +222,8 @@ export default {
   },
   methods: {
     set_shetka_speed() {
-      this.shetka_speed = document.getElementById("shetka_speed_range").value
-      // 
-      if (document.getElementById("shetka_enabled").checked) {
-      }
+      this.shetka_speed = document.getElementById("shetka_speed_range").value;
+      send_shetka_speed();
     },
     set_shetka_angle() {
       this.shetka_angle = document.getElementById("shetka_angle_range").value
@@ -250,7 +263,7 @@ export default {
         this.cmdVel.publish(this.twist);
       }
     },
-    stop_moving(){
+    stop_moving() {
       document.getElementById("moveing_enable").checked = false;
       document.getElementById("lin_max_speed_range").value = 0;
       document.getElementById("ang_max_speed_range").value = 0;
@@ -259,17 +272,24 @@ export default {
       this.lin_speed = 0;
       this.ang_speed = 0;
     },
+    stop_shetka() {
+      document.getElementById("shetka_enabled").checked = false;
+      document.getElementById("shetka_speed_range").value=0;
+      this.shetka_speed = 0;
+    },
     send_shetka_speed() {
-      // if (document.getElementById("shetka_enabled").checked) {
-      //   this.cmdVel = new ROSLIB.Topic({
-      //     ros: this.ros,
-      //     name: '/cmd_vel',
-      //     messageType: 'geometry_msgs/Twist'
-      //   });
-      //   this.twist.linear.x = this.lin_speed;
-      //   this.twist.angular.z = this.ang_speed;
-      //   this.cmdVel.publish(this.twist);
-      // }
+      if (document.getElementById("shetka_enabled").checked) {
+        this.ceVel = new ROSLIB.Topic({
+          ros: this.ros,
+          name: '/ce_vel',
+          messageType: 'geometry_msgs/Twist'
+        });
+        this.twist_ce.linear.x = Math.round(this.shetka_speed);
+        this.twist_ce.angular.z = Math.round(this.shetka_speed);
+        this.ceVel.publish(this.twist_ce);
+        // alert("ss");
+      }
+
     },
   }
 }
