@@ -90,7 +90,7 @@ export default {
     },
     mounted: function () {
         this.ConfigStore = useConfigStore()
-        this.ros = new ROSLIB.Ros({ url: ConfigStore.robotConfig.ros_bridge_url });
+        this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
         // this.startRefreshing();
 
         ros.on('connection', function () {

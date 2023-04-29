@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <h1 class="mt-3">Удалённое управление: <u>БКМ 1</u></h1>
     <div class="row mt-3 p-3 topmenu shadow rounded-2 justify-content-center">
       <div class="col col-auto me-auto">
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-8">
+      <div class="col-6">
         <div class="row m-1">
           <div class="col">
             <ul class="nav nav-pills">
@@ -37,82 +37,108 @@
         <div id="teleop_view"></div>
         <img class="img-fluid rounded-4 h-50 mt-2 " src="/map_placeholder.png" />
       </div>
-      <div class="col-6">
+      <div class="col-4">
         <div class="row">
-          <div class="col-12 ">
+          <div class="col-12 mt-3">
             <h3 class="text-center">Управление</h3>
             <div class="card bg-light">
               <div class="card-body text-dark">
 
                 <div class="row">
-
-                  <div class="col-4">
-                    <div class="form-check form-switch">
-                      <input class="form-check-input big-check-box" type="checkbox" role="switch"
-                        id="flexSwitchCheckDefault">
-                      <label class="form-check-label" for="flexSwitchCheckDefault">Фары</label>
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <div class="form-check form-switch" style="">
+                        <input class="form-check-input big-check-box" type="checkbox" role="switch" id="shetka_enabled">
+                        <label class="form-check-label" for="shetka_enabled">Щетка</label>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-auto">
-                    <div class="form-check form-switch" style="">
-                      <input class="form-check-input big-check-box" type="checkbox" role="switch"
-                        id="flexSwitchCheckDefault">
-                      <label class="form-check-label" for="flexSwitchCheckDefault"> Проблесковые маячки</label>
-                    </div>
-                  </div>
-                </div>
-                <hr>
-                <div class="row mt-3">
-                  <div class="col-auto">
-                    <button class="btn btn-sm btn-primary">Звуковой сигнал</button>
-                  </div>
-                </div>
-                <hr>
-                <div class="row mt-3">
-                  <div class="col-auto">
-                    <div class="form-check form-switch" style="">
-                      <input class="form-check-input big-check-box" type="checkbox" role="switch"
-                        id="flexSwitchCheckDefault">
-                      <label class="form-check-label" for="flexSwitchCheckDefault">Щетка</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mt-3">
-                  <div class="col-12">
-                    <label for="customRange3" class="form-label">Скорость вращения (об/мин): {{ shetka_speed }}</label>
-                    <input v-on:input="set_shetka_speed" type="range" class="form-range" min="-50" max="200" step="0.5"
-                      id="shetka_speed_range" value="0">
-                  </div>
-                </div>
-                <div class="row mt-3">
-                  <div class="col-12">
-                    <label for="shetka_angle_range" class="form-label">Поворот: {{ shetka_angle }}</label>
-                    <input v-on:input="set_shetka_angle" type="range" class="form-range" disabled min="-1" max="1"
-                      step="0.1" id="shetka_angle_range" value="0">
-                  </div>
-                </div>
-                <hr>
-                <div class="row mt-3 ">
-                  <div class="col-auto">
-                    <div class="form-check form-switch " style="">
-                      <input class="form-check-input big-check-box" style="" type="checkbox" role="switch"
-                        id="moveing_enable">
-                      <label class="form-check-label" for="moveing_enable">Управление движением</label>
-                    </div>
-                    <div class="col-12 mt-3">
-                      <label for="customRange3" class="form-label">Линейная скорость (м/c): {{ lin_max_speed }}</label>
-                      <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="10" step="0.5"
-                        id="lin_max_speed_range" value="0">
-                    </div>
+                  <div class="row mt-1">
                     <div class="col-12">
-                      <label for="customRange3" class="form-label">Угловая скорость (рад/c): {{ ang_max_speed }}</label>
-                      <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="10" step="0.5"
-                        id="ang_max_speed_range" value="0">
-                    </div>
-                    <div class="col-auto mt-3">
-                      <div id="zone_joystick" class="" style="width: 100px; height: 100px;"></div>
+                      <label for="customRange3" class="form-label">Скорость (об/мин): {{ shetka_speed }}</label>
+                      <input v-on:input="set_shetka_speed" type="range" class="form-range" min="-50" max="200" step="0.5"
+                        id="shetka_speed_range" value="0">
                     </div>
                   </div>
+                  <div class="row ">
+                    <div class="col-12">
+                      <label for="shetka_angle_range" class="form-label">Поворот: {{ shetka_angle }}</label>
+                      <input v-on:input="set_shetka_angle" type="range" class="form-range" disabled min="-1" max="1"
+                        step="0.1" id="shetka_angle_range" value="0">
+                    </div>
+                  </div>
+                  <div class="row mt-1">
+                    <div class="col-12">
+                      <button class="btn btn-danger w-100 " disabled>Остановка щётки</button>
+                    </div>
+                    
+                  </div>
+                  
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <hr>
+                      <div class="form-check form-switch " style="">
+                        <input class="form-check-input big-check-box" style="" type="checkbox" role="switch"
+                          id="moveing_enable">
+                        <label class="form-check-label" for="moveing_enable">Управление движением</label>
+                      </div>
+                      <div class="row mt-1">
+                        <div class="col-12">
+                          <button class="btn btn-danger w-100 " disabled>Стоп</button>
+                        </div>
+                      </div>
+                      <div class="col-12 mt-3">
+                        <label for="customRange3" class="form-label">Линейная скорость (м/c): {{ lin_max_speed }}</label>
+                        <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="10" step="0.5"
+                          id="lin_max_speed_range" value="0">
+                      </div>
+                      <div class="col-12">
+                        <label for="customRange3" class="form-label">Угловая скорость (рад/c): {{ ang_max_speed }}</label>
+                        <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="10" step="0.5"
+                          id="ang_max_speed_range" value="0">
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 mt-5">
+        <div class="card bg-light h-25">
+          <div class="card-body text-dark">
+            <div class="row justify-content-center">
+              <div id="zone_joystick" class="zone static" style="width: 100px; height: 50px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mt-1">
+          <div class="card bg-light">
+            <div class="card-body text-dark">
+              <div class="row">
+
+                <div class="col-auto">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input big-check-box" type="checkbox" role="switch"
+                      id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Габариты</label>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <div class="form-check form-switch" style="">
+                    <input class="form-check-input big-check-box" type="checkbox" role="switch"
+                      id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Проблесковые маячки</label>
+                  </div>
+
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-sm btn-primary">Звуковой сигнал</button>
                 </div>
               </div>
             </div>
@@ -182,9 +208,11 @@ export default {
   methods: {
     set_shetka_speed() {
       this.shetka_speed = document.getElementById("shetka_speed_range").value
+      shetka_enabled
     },
     set_shetka_angle() {
       this.shetka_angle = document.getElementById("shetka_angle_range").value
+
     },
     set_linear_speed() {
       this.lin_max_speed = document.getElementById("lin_max_speed_range").value
@@ -227,8 +255,20 @@ export default {
 
 <style scoped lang="scss">
 .big-check-box {
-  width: 2vw;
-  height: 2vh;
-  margin-right: 1rem;
+  // width: 2vw;
+  // height: 2vh;
+  // margin-right: 1rem;
+}
+
+.zone {
+  // display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  // left: 100%;
+}
+
+.zone.static {
+  // background: rgba(255, 0, 0, 0.1);
 }
 </style>
