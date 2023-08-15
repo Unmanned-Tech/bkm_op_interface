@@ -79,8 +79,10 @@
             </select>
         </div>
         <div class="col-4">
-            <img src="/brush.png" class="img-fluid">
-            
+            <p>
+                <img src="/brush.png" class="img-fluid">
+                
+            </p>
         </div>
         <div class="col-6">
             <table class="table">
