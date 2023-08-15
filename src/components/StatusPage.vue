@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="row mt-3">
         <h1>Отладка состояния робота</h1>
         <div class="col-6">
@@ -64,6 +64,55 @@
                 </tbody>
             </table>
 
+        </div>
+    </div>
+</template> -->
+
+<template>
+    <div class="row mt-5">
+        <div class="col-2">
+            <select class ="form-select">
+                <option selected>Выбор машины</option>
+                <option value="1">БКМ 1</option>
+                <option value="2">БКМ 2</option>
+                <option value="3">БКМ 3</option>
+            </select>
+        </div>
+        <div class="col-4">
+            <img src="/brush.png" class="img-fluid">
+            
+        </div>
+        <div class="col-6">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Датчик</th>
+                        <th scope="col">Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LiDAR</td>
+                        <td>Состояние</td>
+                    </tr>
+                    <tr>
+                        <td>IMU</td>
+                        <td>Состояние</td>
+                    </tr>
+                    <tr>
+                        <td>GPS</td>
+                        <td>Состояние</td>
+                    </tr>
+                    <tr>
+                        <td>Передняя камера</td>
+                        <td>Состояние</td>
+                    </tr>
+                    <tr>
+                        <td>Задняя камера</td>
+                        <td>Состояние</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
