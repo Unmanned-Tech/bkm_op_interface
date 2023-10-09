@@ -78,12 +78,27 @@
                 <option value="3">БКМ 3</option>
             </select>
         </div>
-        <div class="col-4">
+        <div class="col-3">
             <p>
                 <img src="/brush.png" class="img-fluid">
-                
+                ___/100
+            </p>
+            <div class="progress" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+            </div>
+            <p>
+                <img src="/tires.png" class="img-fluid mt-3">
+            </p>
+            <div class="progress" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar" style="width: 50%"></div>
+            </div>
+            <p>
+                <div class="progress mt-4" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 200px" >
+                    <div class="progress-bar" style="width: 50%"></div>
+                </div>
             </p>
         </div>
+        <div class="col-1"></div>
         <div class="col-6">
             <table class="table">
                 <thead>
