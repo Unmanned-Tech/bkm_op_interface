@@ -81,21 +81,35 @@
         <div class="col-3">
             <p>
                 <img src="/brush.png" class="img-fluid">
-                ___/100
+                ___/100 ч.
             </p>
             <div class="progress" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width: 50%"></div>
             </div>
             <p>
                 <img src="/tires.png" class="img-fluid mt-3">
+                __/500 ч.
             </p>
             <div class="progress" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width: 50%"></div>
             </div>
             <p>
-                <div class="progress mt-4" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 200px" >
-                    <div class="progress-bar" style="width: 50%"></div>
-                </div>
+                <img src="/battery.png" class="img-fluid mt-3">
+                --%
+            </p>
+            <p>
+                <h6>Заряд батареи: --%;</h6>
+                <h6>Напряжение: __V;</h6>
+                <h6>Температура: __°C</h6>
+            </p>
+            <p>
+                <h6>Полных циклов зарядки: [__];</h6> 
+                <h6>Остаточное время работы: __ ч. __ мин.;</h6>
+            </p>
+            <p>
+                <img src="/connection.png" class="img-fluid"> 
+                <h6>Качество сигнала: хорошее</h6> 
+                <h6>Задержка: __ ms</h6>
             </p>
         </div>
         <div class="col-1"></div>
