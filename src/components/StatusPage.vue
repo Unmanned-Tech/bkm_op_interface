@@ -72,7 +72,7 @@
     <div class="row mt-5">
         <div class="col-2">
             <select class ="form-select">
-                <option selected>Выбор машины</option>
+                <option disabled selected>Выбор машины</option>
                 <option value="1">БКМ 1</option>
                 <option value="2">БКМ 2</option>
                 <option value="3">БКМ 3</option>
