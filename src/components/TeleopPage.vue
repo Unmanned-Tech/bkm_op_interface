@@ -41,8 +41,8 @@
         <div class="row ">
           <div class="col-12">
 
-            <div class="card bg-light">
-              <div class="card-body text-dark">
+            <div class="card bg-dark">
+              <div class="card-body text-light">
                 <h4 class="text-center">Управление</h4>
                 <div class="row">
                   <div class="row mt-1">
@@ -109,7 +109,7 @@
         </div>
       </div>
       <div class="col-2">
-        <div class="card bg-light h-25 ">
+        <div class="card bg-dark h-25 ">
           <div class="card-body text-dark">
             <div class="row justify-content-center">
               <div id="zone_joystick" class="zone static" style="width: 100px; height: 50px;"></div>
@@ -119,8 +119,8 @@
       </div>
       <div class="row">
         <div class="col-12 mt-1">
-          <div class="card bg-light">
-            <div class="card-body text-dark">
+          <div class="card bg-dark">
+            <div class="card-body text-light">
               <div class="row">
 
                 <div class="col-auto">
