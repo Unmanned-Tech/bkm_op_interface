@@ -21,6 +21,6 @@ const count = ref(0);
 
 </template>
 
-<style scoped>
+<style>
 
 </style>

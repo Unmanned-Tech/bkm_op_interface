@@ -1,5 +1,5 @@
 <template>
-  <div class="row mt-3">
+  <!-- <div class="row mt-3">
     <div class="col-6">
       <div class="row m-1">
         <div class="col">
@@ -22,7 +22,7 @@
 
       <div class="ps-3 pe-3 pb-2 rounded-2">
         <h2 class="mb-3 mt-3">Роботы</h2>
-        <table class="table  ">
+        <table class="table">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -89,7 +89,9 @@
       </table>
 
     </div>
-  </div>
+  </div> -->
+
+  
 </template>
 <script>
 import axios from 'axios';
@@ -100,7 +102,7 @@ export default {
   components: {},
   data: function () {
     return {
-      rstatus: 0,
+      rstatus: 1,
       refresh_timer: ''
     }
   },
@@ -149,4 +151,11 @@ export default {
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+  .container {
+    background-color: var(
+    --SystemBG-Dark-Elevated-Secondary,
+    color(display-p3 0.1725 0.1725 0.1804)
+  );
+  }
+</style>

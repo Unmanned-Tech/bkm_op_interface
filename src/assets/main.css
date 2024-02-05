@@ -8,6 +8,12 @@
   font-weight: normal; */
 }
 
+a.router-link-active.router-link-exact-active.link {
+  background-color: var(--SystemBG-Dark-Elevated-Secondary);
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, .25) inset;
+  font: 700 36px/100px 'SF Pro Text';
+}
+
 a,
 .green {
   /* text-decoration: none;
@@ -32,4 +38,34 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem; */
   }
+}
+
+:root {
+  --SystemColor-Light-Red: #FF3B30;
+  --SystemColor-Light-Orange: #FFA500;
+  --SystemColor-Light-Green: #34C759;
+  --SystemColor-Light-Blue: #007AFF;
+  --SystemColor-Light-Grey: #8E8E93;
+  --SystemColor-Light-Grey2: #AEAEB2;
+  --SystemColor-Light-Grey3: #C7C7CC;
+  --SystemColor-Light-Grey4: #D1D1D6;
+  --SystemColor-Light-Grey5: #E5E5EA;
+  --SystemColor-Light-Grey6: #F2F2F7;
+  --SystemBG-Light-Primary: #FFFFFF;
+  --SystemBG-Light-Secondary: #F2F2F7;
+  --SystemBG-Light-Tertiary: #FFFFFF;
+  --SystemColor-Dark-Red: #FF453A;
+  --SystemColor-Dark-Orange: #FF9F0A;
+  --SystemColor-Dark-Green: #30D158;
+  --SystemColor-Dark-Blue: #0A84FF;
+  --SystemColor-Dark-Grey: #8E8E93;
+  --SystemColor-Dark-Grey2: #636366;
+  --SystemColor-Dark-Grey3: #48484A;
+  --SystemColor-Dark-Grey4: #3A3A3C;
+  --SystemColor-Dark-Grey5: #2C2C2E;
+  --SystemColor-Dark-Grey6: #1C1C1E;
+  --SystemBG-Dark-Elevated-Primary: #1C1C1E;
+  --SystemBG-Dark-Elevated-Secondary: #2C2C2E;
+  --SystemBG-Dark-Elevated-Tertiary: #3A3A3C;
+
 }
