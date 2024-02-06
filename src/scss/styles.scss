@@ -1,5 +1,8 @@
 // Import all of Bootstrap's CSS
-$body-bg: rgb(44, 44, 46);
+$body-bg: #2C2C2E;
 $body-color: rgb(255, 255, 255);
 $form-check-input-bg: rgb(255, 255, 255);
 @import "~bootstrap/scss/bootstrap";
+
+@import 
+url('https://fonts.cdnfonts.com./css/sf-pro-display?styles=98774,98770');

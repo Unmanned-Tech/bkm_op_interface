@@ -1,16 +1,16 @@
 <template>
-  <ul class="con">
-    <li class="column">
+  <ul class="con mb-1">
+    <li class="col">
       <router-link to="/" class="link">Главная</router-link>
     </li>
-    <li class="column">
+    <li class="col">
       <router-link to="/logs" class="link">Задачи</router-link>
     </li>
-    <li class="column">
+    <li class="col">
       <router-link to="/teleop" class="link">Телеуправление</router-link>
     </li>
-    <li class="column">
-      <router-link to="/status" class="link div-6">Системная информация</router-link>
+    <li class="col">
+      <router-link to="/status" class="link ln">Системная<br/>информация</router-link>
     </li>
   </ul>
 </template>
@@ -18,28 +18,24 @@
 <style scoped>
   .con {
     display: flex;
-    width: 100%;
     padding: 0;
-    font-family: 'SF Pro Text';
+    font-family: 'SF Pro Display', sans-serif;
     list-style-type: none;
   }
-
-  .column {
-    box-sizing: border-box;
-    width: 25%;
-  }
-
   .link {
-    box-shadow: 0px 6px 8px 0px rgba(0, 0, 0, .25);
-    background-color: var(--SystemBG-Dark-Elevated-Tertiary);
+    box-shadow: 0rem 0.375rem 0.5rem 0rem rgba(0, 0, 0, .25);
+    background-color: var(--bg-tertiary);
     text-decoration: none;
-    color: inherit;
     display: block;
-    color: white;
+    color: var(--text-color);
     text-align: center;
     margin: 0;
     width: 100%;
-    font: 400 36px/100px "SF Pro Text";
+    font: 400 2.25rem/6.25rem "SF Pro Display";
+  }
+  .ln {
+    padding: 1.25rem;
+    line-height: 1.875rem;
   }
 </style>
 
