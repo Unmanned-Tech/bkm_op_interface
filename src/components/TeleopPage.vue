@@ -2,19 +2,26 @@
   <div class="container-fluid">
     <h1 class="mt-3">Удалённое управление: <u>БКМ 1</u></h1>
     <div class="row mt-3 p-3 topmenu shadow rounded-2 justify-content-center">
-      <div class="col col-auto me-auto">
-        <RouterLink to="/robot" class="btn btn-primary">Назад</RouterLink>
-      </div>
-      <div class="col ms-5 col-auto me-auto">
+      <div class="col-2 col-auto me-auto d-flex justify-content-center align-items-center">
         <RouterLink to="/status" class="btn btn-primary">Статус</RouterLink>
       </div>
-      <div class="col col-auto">
+      <div class="col col-auto me-auto d-flex justify-content-center align-items-center">
         <emer-stop-button />
       </div>
-      <div class="col">
+      <div class="col col-auto d-flex justify-content-center align-items-center">
         <BatteryInfo />
       </div>
-    </div>
+      <!-- <div class="col col-auto d-flex justify-content-center align-items-center">
+        <img v-bind:src="svgPath" class="img-fluid">
+      </div> -->
+      <!-- <div class="col" id="app">{{ currentTime }}</div> -->
+      <div class="col col-auto d-flex justify-content-center align-items-center">
+        <RouterLink to="/" class="btn btn-primary">На главную</RouterLink>
+      </div>
+      <div class="col col-auto me-5 d-flex justify-content-center align-items-center">
+        <RouterLink to="/robot" class="btn btn-primary">Назад</RouterLink>
+      </div>
+</div>
     <div class="row mt-3">
       <div class="col-6">
         <div class="row ">
@@ -37,8 +44,8 @@
         <div id="teleop_view"></div>
         <img class="img-fluid rounded-4  mt-2 " src="/map_placeholder.png" />
       </div>
-      <div class="col-4 ">
-        <div class="row ">
+      <div class="col-4">
+        <div class="row mt-5">
           <div class="col-12">
 
             <div class="card bg-dark">
@@ -109,7 +116,7 @@
         </div>
       </div>
       <div class="col-2">
-        <div class="card bg-dark h-25 ">
+        <div class="card bg-dark h-25 mt-5">
           <div class="card-body text-dark">
             <div class="row justify-content-center">
               <div id="zone_joystick" class="zone static" style="width: 100px; height: 50px;"></div>
@@ -117,7 +124,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row-1">
         <div class="col-12 mt-1">
           <div class="card bg-dark">
             <div class="card-body text-light">
@@ -208,17 +215,22 @@ export default {
         }
       },
       cmdVel: 0,
-    }
+      localdate: "",
+      svgPath: '/Vector.svg',
+    };
   },
   mounted: function () {
     var options = {
       zone: document.getElementById('zone_joystick'),
       mode: 'static',
-      color: 'blue',
+      color: 'gray',
       position: {
         left: '50%',
         bottom: '12%'
       },
+      multitouch: {
+        touchRadius: '100%',
+      }
     };
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
@@ -229,7 +241,7 @@ export default {
 
     // Then we create the payload to be published. The object we pass in to ros.Message matches the
     // fields defined in the geometry_msgs/Twist.msg definition.
-
+    
   },
   methods: {
     set_shetka_speed() {
@@ -357,6 +369,8 @@ export default {
     },
   }
 }
+
+
 </script>
 
 <style scoped lang="scss">
@@ -369,12 +383,19 @@ export default {
 .zone {
   // display: none;
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 200px;
+  height: 200px;
   // left: 100%;
 }
 
 .zone.static {
   // background: rgba(255, 0, 0, 0.1);
 }
+
+#zone_joystick {
+  width: 300px;
+  height: 300px;
+}
+
+
 </style>

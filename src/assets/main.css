@@ -8,6 +8,17 @@
   font-weight: normal; */
 }
 
+a.router-link-active.router-link-exact-active.link {
+  background-color: var(--bg-secondary);
+  box-shadow: 0rem 0.5rem 0.625rem -0.3125rem rgba(0, 0, 0, .25) inset;
+  font: 700 2.25rem/6.25rem 'SF Pro Display';
+}
+
+a.router-link-active.router-link-exact-active.link.ln {
+  padding: 1.25rem;
+  line-height: 1.875rem;
+}
+
 a,
 .green {
   /* text-decoration: none;
@@ -33,3 +44,32 @@ a,
     padding: 0 2rem; */
   }
 }
+
+
+* {
+  /* background-color: var(--bg-secondary); */
+  /* color: var(--text-color); */
+  font-family: 'SF Pro Display', sans-serif;
+  font-weight: 400;
+  transition: background-color 0.3s, color 0.1s;
+}
+
+
+
+:root {
+  --red: #FF453A;
+  --orange: #FF9F0A;
+  --green: #30D158;
+  --blue: #0A84FF;
+  --grey: #8E8E93;
+  --grey2: #636366;
+  --grey3: #48484A;
+  --grey4: #3A3A3C;
+  --grey5: #2C2C2E;
+  --grey6: #1C1C1E;
+  --bg-primary: #1C1C1E;
+  --bg-secondary: #2C2C2E;
+  --bg-tertiary: #3A3A3C;
+  --text-color: #FFFFFF;
+}
+

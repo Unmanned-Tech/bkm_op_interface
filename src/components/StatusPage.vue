@@ -80,21 +80,21 @@
         </div>
         <div class="col-3">
             <p>
-                <img src="/brush.png" class="img-fluid">
+                <!-- <img src="/brush.png" class="img-fluid"> -->
                 ___/100 ч.
             </p>
             <div class="progress" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width: 50%"></div>
             </div>
             <p>
-                <img src="/tires.png" class="img-fluid mt-3">
+                <!-- <img src="/tires.png" class="img-fluid mt-3"> -->
                 __/500 ч.
             </p>
             <div class="progress" role="progressbar" aria-label="basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width: 50%"></div>
             </div>
             <p>
-                <img src="/battery.png" class="img-fluid mt-3">
+                <!-- <img src="/battery.png" class="img-fluid mt-3"> -->
                 --%
             </p>
             <p>
@@ -107,7 +107,6 @@
                 <h6>Остаточное время работы: __ ч. __ мин.;</h6>
             </p>
             <p>
-                <img src="/connection.png" class="img-fluid"> 
                 <h6>Качество сигнала: хорошее</h6> 
                 <h6>Задержка: __ ms</h6>
             </p>
@@ -152,7 +151,6 @@
 import * as roslib from "../../roslib.js";
 import { useConfigStore } from "../stores/ConfigStore";
 
-
 export default {
     name: "StatusPage",
     components: {},
@@ -166,35 +164,35 @@ export default {
             aa: "",
             ros: "",
             ConfigStore: "",
+            svgPath: '/Vector.svg'
         }
     },
     mounted: function () {
-        this.ConfigStore = useConfigStore()
+        this.ConfigStore = useConfigStore();
         this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
-        // this.startRefreshing();
 
-        ros.on('connection', function () {
+        this.ros.on('connection', () => {
             console.log('Connected to websocket server.');
         });
-        
+
         var listener1 = new ROSLIB.Topic({
-            ros: ros,
+            ros: this.ros,
             name: '/c1_telem',
             messageType: 'mcu_msgs/msg/BldcStatus'
         });
-        listener1.subscribe(this.set_c1_msg);
+        listener1.subscribe(this.set_c1_msg.bind(this));
         var listener2 = new ROSLIB.Topic({
-            ros: ros,
+            ros: this.ros,
             name: '/c2_telem',
             messageType: 'mcu_msgs/msg/BldcStatus'
         });
-        listener2.subscribe(this.set_c2_msg);
+        listener2.subscribe(this.set_c2_msg.bind(this));
         var listener3 = new ROSLIB.Topic({
-            ros: ros,
+            ros: this.ros,
             name: '/ce_telem',
             messageType: 'mcu_msgs/msg/BldcStatus'
         });
-        listener3.subscribe(this.set_ce_msg);
+        listener3.subscribe(this.set_ce_msg.bind(this));
     },
     beforeUnmount() {
 
@@ -204,15 +202,14 @@ export default {
             console.info("pressed");
         },
         set_c1_msg(msg) {
-            this.c1_msg = msg
+            this.c1_msg = msg;
         },
         set_c2_msg(msg) {
-            this.c2_msg = msg
+            this.c2_msg = msg;
         },
         set_ce_msg(msg) {
-            this.ce_msg = msg
+            this.ce_msg = msg;
         },
-
     }
 }
 </script>

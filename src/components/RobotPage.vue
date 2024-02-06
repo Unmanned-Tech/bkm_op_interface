@@ -19,25 +19,25 @@
   </div>
   <div class="container ">
     <h1 class="mt-3">О роботе: <u>БКМ 1</u></h1>
-    <div class="row mt-3 p-3 topmenu shadow rounded-2 justify-content-center align-items-center">
-      <div class="col col-auto me-auto">
+    <div class="row mt-3 p-3 topmenu shadow rounded-2 justify-content-center">
+      <div class="col-auto me-auto d-flex justify-content-center align-items-center">
         <RouterLink to="/" class="btn btn-primary">На главную</RouterLink>
       </div>
-      <div class="col col-auto">
+      <div class="col-auto me-5 d-flex justify-content-center align-items-center">
         <RouterLink to="/teleop" class="btn btn-primary">Удалённое управление</RouterLink>
       </div>
-      <div class="col col-auto">
+      <div class="col-auto d-flex justify-content-center align-items-center">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#toBaseModal">Отправить на базу</button>
       </div>
-      <div class="col col-auto">
+      <div class="col-auto me-5 d-flex justify-content-center align-items-center">
 
         <emer-stop-button />
       </div>
-      <div class="col col-1">
+      <div class="col-auto d-flex justify-content-center align-items-center">
       <battery-info/>
       </div>
-      <div class="col col-2">
-        <div class="progress">
+      <div class="col-auto">
+        <div class="progress mt-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
                aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
                style="width: 75%">75%
@@ -68,7 +68,7 @@
         <h3>Задачи</h3>
         <table class="table table-hover">
           <thead>
-          <tr>
+          <tr style="text-align: center;">
             <th scope="col">#</th>
             <th scope="col">Тип</th>
             <th scope="col">Время</th>
@@ -76,7 +76,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
+          <tr style="text-align: center;">
             <th scope="row">1</th>
             <td>Уборка</td>
             <td>Выполняется</td>
@@ -87,7 +87,7 @@
               </button>
             </td>
           </tr>
-          <tr>
+          <tr style="text-align: center;">
             <th scope="row">2</th>
             <td>Зарядка</td>
             <td>15:30</td>
@@ -111,7 +111,7 @@
         <h3>Уведомления</h3>
         <table class="table table-hover">
           <thead>
-          <tr>
+          <tr style="text-align: center;">
 
             <th scope="col">Время</th>
 
@@ -119,23 +119,23 @@
           </tr>
           </thead>
           <tbody>
-          <tr class="text-primary">
+          <tr class="text-primary" style="text-align: center;">
             <td>15-35 20.11.2022</td>
             <td>Задача запущена</td>
 
           </tr>
-          <tr class="text-success">
+          <tr class="text-success" style="text-align: center;">
             <td>15-35 20.11.2022</td>
             <td>Зарядка завершена</td>
 
           </tr>
-          <tr class="text-info">
+          <tr class="text-info" style="text-align: center;">
 
             <td>15-35 20.11.2022</td>
             <td>Зарядка начата</td>
 
           </tr>
-          <tr class="text-warning">
+          <tr class="text-warning" style="text-align: center;">
 
             <td>15-35 20.11.2022</td>
             <td>Низкий заряд батареи</td>
@@ -166,9 +166,17 @@
     </div>
   </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .topmenu {
   background-color: rgb(40, 40, 40);
+}
+
+.tr {
+  text-align: center;
+}
+
+.th {
+  text-align: center;
 }
 </style>
 

@@ -27,8 +27,8 @@
     </div>
   </div>
   <button v-on:click="" data-bs-toggle="modal" data-bs-target="#battInfoModal"
-          class="btn btn-outline-success text-center align-middle">
-    <i class="bi bi-battery fs-4 align-middle me-1"></i> {{ rbatt.chargePersantage }}%
+          class="btn btn-outline-success d-flex justify-content-center align-items-center">
+    <i class="bi bi-battery fs-4 me-1"></i>{{ rbatt.chargePersantage }}%
   </button>
 </template>
 
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       rbatt: {
-        voltage: -1,
+        voltage: 1,
         temperature: -1,
         status: -1,
         chargePersantage: -1,

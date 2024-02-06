@@ -1,0 +1,28 @@
+:root {
+    --red: #FF3B30;
+    --orange: #FFA500;
+    --green: #34C759;
+    --blue: #007AFF;
+    --grey: #8E8E93;
+    --grey2: #AEAEB2;
+    --grey3: #C7C7CC;
+    --grey4: #D1D1D6;
+    --grey5: #E5E5EA;
+    --grey6: #F2F2F7;
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F2F2F7;
+    --bg-tertiary: #E5E5EA;
+    --text-color: #000000;
+  }
+
+body {
+    background-color: var(--bg-secondary);
+}
+
+svg {
+  fill: #000;
+}
+
+$body-bg: #F2F2F7;
+
+@import "~bootstrap/scss/bootstrap";

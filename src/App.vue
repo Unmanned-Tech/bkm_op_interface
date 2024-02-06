@@ -13,7 +13,8 @@ const count = ref(0);
     <!-- <router-link to="/foo">Перейти к Foo</router-link>
     <router-link to="/bar">Перейти к Bar</router-link> -->
     <main_menu></main_menu>
-    <div class="container">
+    <div class="container-fluid">
+        
         <router-view />
     </div>
 
@@ -21,6 +22,12 @@ const count = ref(0);
 
 </template>
 
-<style scoped>
+<style>
 
+</style>
+
+<script>
+</script>
+
+<style scoped>
 </style>
