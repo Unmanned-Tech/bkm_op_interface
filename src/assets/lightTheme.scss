@@ -1,18 +1,18 @@
 :root {
-    --red: #FF3B30;
-    --orange: #FFA500;
-    --green: #34C759;
-    --blue: #007AFF;
-    --grey: #8E8E93;
-    --grey2: #AEAEB2;
-    --grey3: #C7C7CC;
-    --grey4: #D1D1D6;
-    --grey5: #E5E5EA;
-    --grey6: #F2F2F7;
-    --bg-primary: #FFFFFF;
-    --bg-secondary: #F2F2F7;
-    --bg-tertiary: #E5E5EA;
-    --text-color: #000000;
+    --red: rgba(255, 59, 48, 1);
+    --orange: rgba(255, 165, 0, 1);
+    --green: rgba(52, 199, 89, 1);
+    --blue: rgba(0, 122, 255, 1);
+    --grey: rgba(142, 142, 147, 1);
+    --grey2: rgba(174, 174, 178, 1);
+    --grey3: rgba(199, 199, 204, 1);
+    --grey4: rgba(209, 209, 214, 1);
+    --grey5: rgba(229, 229, 234, 1);
+    --grey6: rgba(242, 242, 247, 1);
+    --bg-primary: rgba(255, 255, 255, 1);
+    --bg-secondary: rgba(242, 242, 247, 1);
+    --bg-tertiary: rgba(229, 229, 234, 1);
+    --text-color: rgba(0, 0, 0, 1);
   }
 
 body {
@@ -20,9 +20,9 @@ body {
 }
 
 svg {
-  fill: #000;
+  fill: rgba(0, 0, 0, 1);
 }
 
-$body-bg: #F2F2F7;
+$body-bg: rgba(242, 242, 247, 1);
 
 @import "~bootstrap/scss/bootstrap";
