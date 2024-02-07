@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade hide" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="el" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import bootstrap from 'bootstrap';
 
 export default {
+    
     name: 'FullScreen',
     methods: {
         isFullScreen() {
@@ -24,11 +24,12 @@ export default {
         },
         
     },
-    mounted() {
-        // $('#myModal').modal('show');
-        // var myModal = new bootstrap.Modal(document.getElementById('#myModal'), options)
 
+    mounted() {
+      
     }
+    
+    
 
 
 }

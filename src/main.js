@@ -13,6 +13,6 @@ import * as bootstrap from '../node_modules/bootstrap';
 
 const app = createApp(App);
 app.use(createPinia()).use(router);
-app.mount("#app");
+app.mount("#app");S
 
 
