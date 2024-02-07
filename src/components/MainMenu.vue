@@ -31,11 +31,11 @@
     text-align: center;
     margin: 0;
     width: 100%;
-    font: 400 2.25rem/6.25rem "SF Pro Display";
+    font: 400 1.25rem/3.5rem "SF Pro Display";
   }
   .ln {
-    padding: 1.25rem;
-    line-height: 1.875rem;
+    padding: .5rem;
+    line-height: 1.25rem;
   }
 </style>
 

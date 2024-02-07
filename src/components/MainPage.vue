@@ -90,7 +90,9 @@
 
     </div>
   </div>  -->
+  
   <template>
+    <FullScreen></FullScreen>
       <div class="row mt-3">
         <div class="col">
           <ThemeSwithcer></ThemeSwithcer>
@@ -148,6 +150,7 @@
 
   
 <script>
+import FullScreen from './FullScreen.vue';
 import NotificationBell from './NotificationBell.vue'
 import ThemeSwithcer from './ThemeSwithcer.vue';
 import MainPageButtons from './MainPageButtons.vue';
@@ -160,6 +163,7 @@ export default {
     MainPageButtons,
     ThemeSwithcer,
     NotificationBell,
+    FullScreen,
   },
   data: function () {
     return {
@@ -217,8 +221,9 @@ export default {
 <style scoped>
   
   .caption{
-    font: 400 2rem "SF Pro Display";
+    font: 400 1.25rem "SF Pro Display";
     text-align: center;
+    line-height: normal;
   }
 
   .map {

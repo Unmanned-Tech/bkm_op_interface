@@ -11,12 +11,12 @@
 a.router-link-active.router-link-exact-active.link {
   background-color: var(--bg-secondary);
   box-shadow: 0rem 0.5rem 0.625rem -0.3125rem rgba(0, 0, 0, .25) inset;
-  font: 700 2.25rem/6.25rem 'SF Pro Display';
+  font: 700 1.25rem/3.5rem 'SF Pro Display';
 }
 
 a.router-link-active.router-link-exact-active.link.ln {
-  padding: 1.25rem;
-  line-height: 1.875rem;
+  padding: .5rem;
+  line-height: 1.25rem;
 }
 
 /* a,
