@@ -1,9 +1,10 @@
 <script setup>
-// import HelloWorld from "./components/HelloWorld.vue";
-// import TheWelcome from "./components/TheWelcome.vue";
 import main_menu from "./components/MainMenu.vue";
 import main_page from "./components/MainPage.vue";
 import robot_page from "./components/RobotPage.vue";
+
+import { ref } from 'vue';
+const count = ref(0);
 
 </script>
 
@@ -12,7 +13,9 @@ import robot_page from "./components/RobotPage.vue";
 <template>
     <main_menu></main_menu>
     <div class="container-fluid">
+        <FullScreen></FullScreen>
         <router-view />
+        
     </div>
 
 
@@ -24,9 +27,10 @@ import robot_page from "./components/RobotPage.vue";
 </style>
 
 <script>
+import FullScreen from './components/FullScreen.vue';
 export default {
-    mounted: function() {
-        console.log('data');
+    components: {
+        FullScreen,
     }
 }
 
