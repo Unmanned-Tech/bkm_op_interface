@@ -3,10 +3,9 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-dark" id="exampleModalLabel">Информация о батарее</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          <h5 class="modal-title" id="exampleModalLabel">Информация о батарее</h5>
         </div>
-        <div class="modal-body text-dark">
+        <div class="modal-body">
           <ul class="list-group">
             <li class="list-group-item">
               Напряжение: {{ rbatt.voltage }}
@@ -26,7 +25,7 @@
       </div>
     </div>
   </div>
-  <button v-on:click="" data-bs-toggle="modal" data-bs-target="#battInfoModal"
+  <button data-bs-toggle="modal" data-bs-target="#battInfoModal"
           class="btn btn-outline-success d-flex justify-content-center align-items-center">
     <i class="bi bi-battery fs-4 me-1"></i>{{ rbatt.chargePersantage }}%
   </button>

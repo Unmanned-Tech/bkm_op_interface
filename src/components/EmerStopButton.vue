@@ -3,10 +3,9 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-dark" id="exampleModalLabel">Подтверждение аварийной остановки</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          <h5 class="modal-title" id="exampleModalLabel">Подтверждение аварийной остановки</h5>
         </div>
-        <div class="modal-body text-dark">
+        <div class="modal-body">
           Применить аварийную остановку
         </div>
         <div class="modal-footer">
