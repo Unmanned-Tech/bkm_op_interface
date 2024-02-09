@@ -59,27 +59,46 @@
               </div>
             </div>
             <div class="row mb-2">
-              <div class="col">
+              <div class="col-md-3">
                 <div class="row">
-                  <router-link to="/logs">
-                    <button class="button" data-bs-dismiss="modal">
+                  <router-link to="/logs" class="button">
                       <div class="row">
-                        <div class="col">Задачи</div>
-                        <div class="col"><arrowSVG></arrowSVG></div>
+                        <div class="col" data-bs-dismiss="modal">Задачи</div>
+                        <div class="col svg"><arrowSVG /></div>
                       </div>
-                      
-                    </button>
                   </router-link>
                 </div>
                 <div class="row">
-                  <router-link to="">
-                    <button class="button mt-2" data-bs-dismiss="modal">
-                      <div>Сервис</div>
-                    </button>
+                  <router-link to="/settings" class="button mt-2">
+                      <div class="row">
+                        <div class="col" data-bs-dismiss="modal">Сервис</div>
+                        <div class="col svg"><arrowSVG /></div>
+                      </div>
                   </router-link>
                 </div>
               </div>
-              <div class="col"></div>
+              <div class="col-md-3 ms-auto d-flex justify-content-end">
+                <div class="row">
+                  <table class="tab">
+                      <thead>
+                        <tr>
+                          <th class="left-cell">Датчик</th>
+                          <th class="head">Ошибка</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="text-success">
+                          <td class="left-cell">Уборка на тер. 2</td>
+                          <td>Выполнена</td>
+                        </tr>
+                        <tr>
+                          <td class="left-cell last">Уборка на тер. N</td>
+                          <td class="last">Ожидание</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -94,7 +113,7 @@
 </template>
 
 <script>
-import arrowSVG from './SvgComponents/arrowSVG.vue';
+import arrowSVG from '/src/assets/arrow.svg';
 import batterySVG from '/src/assets/battery.svg';
 import robotSVG from '/src/assets/android.svg';
 import otherSVG from '/src/assets/three-dots.svg';
@@ -102,13 +121,16 @@ export default {
   components: {
     robotSVG,
     batterySVG,
-    arrowSVG,
     otherSVG,
+    arrowSVG,
   }
 }
 </script>
 
 <style scoped>
+.svg {
+  padding: 0;
+}
 .col-md-12 {
   padding: 0;
 }
@@ -122,6 +144,7 @@ export default {
 td {
   font: 400 1.25rem "SF Pro Display";
   border: .125rem solid var(--grey);
+  background-color: var(--bg-tertiary);
   border-top: none;
   padding: .5rem;
 }
@@ -131,8 +154,8 @@ th {
   border: .125rem solid var(--grey);
   background-color: var(--grey2);
 }
-tbody {
-  background-color: var(--bg-tertiary);
+.head {
+  border-radius: 0rem 1.125rem 0rem 0rem;
 }
 th.left-cell {
   border-radius: 1.125rem 0rem 0rem;
@@ -164,7 +187,8 @@ td.last {
     border: none;
     text-align: center;
     font: 400 1.75rem "SF Pro Display";
-    padding: .5rem 1.25rem;
+    padding: .5rem 1.5rem;
+    text-decoration: none;
   }
 
 

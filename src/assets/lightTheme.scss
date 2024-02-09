@@ -24,6 +24,15 @@ svg {
   fill: rgba(0, 0, 0, 1);
 }
 
+svg.arrow {
+  fill: none;
+}
+
+path.arrow {
+  fill: none;
+  stroke: black;
+}
+
 $body-bg: rgba(242, 242, 247, 1);
 $red: rgba(255, 59, 48, 1) !default;
 $orange: rgba(255, 165, 0, 1) !default;
