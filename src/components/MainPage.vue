@@ -3,21 +3,21 @@
         <div class="col">
           <ThemeSwithcer></ThemeSwithcer>
           <p class="caption mt-4 mb-2">
-            БКМ-1: Уборка<br/> 
-            Общее состояние: Хорошо
+            БКМ-1: <span style="color: var(--green);">Уборка</span><br/>
+            Общее состояние: <span style="color: var(--green);">Хорошо</span><br/>
           </p>
         </div>
         <div class="col">
           <p class="caption mt-4 mb-2">
-            БКМ-2: Уборка<br/> 
-            Общее состояние: Есть ограничения
+            БКМ-2: <span style="color: var(--blue);">Уборка</span><br/> 
+            Общее состояние: <span style="color: var(--orange);">Есть ограничения</span>
           </p>
         </div>
         <div class="col">
           <NotificationBell></NotificationBell>
           <p class="caption mt-4 mb-2">
-            БКМ-3: Подзарядка<br/> 
-            Общее состояние: Плохо
+            БКМ-3: <span style="color: var(--blue);">Подзарядка</span><br/> 
+            Общее состояние: <span style="color: var(--red);">Плохо</span>
           </p>
         </div>
       </div>
@@ -25,19 +25,19 @@
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/image7.jpg">
         <div class="row mt-3">
-          <MainPageButtons></MainPageButtons>
+          <MPButtons1 />
         </div>
       </div>
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/image7.jpg">
         <div class="row mt-3">
-          <MainPageButtons></MainPageButtons>
+          <MPButtons2 />
         </div>
       </div>
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/image7.jpg">
         <div class="row mt-3">
-          <MainPageButtons></MainPageButtons>
+          <MPButtons3 />
         </div>
       </div>
     </div>
@@ -59,14 +59,19 @@
 
 import NotificationBell from './SvgComponents/NotificationBell.vue'
 import ThemeSwithcer from './SvgComponents/ThemeSwithcer.vue';
-import MainPageButtons from './MainPageButtons.vue';
+import MPButtons1 from './ButtonsBKM/MPButtons1.vue';
+import MPButtons2 from './ButtonsBKM/MPButtons2.vue';
+import MPButtons3 from './ButtonsBKM/MPButtons3.vue'
+
 import axios from 'axios';
 import * as roslib from "../../roslib.js";
 
 export default {
   name: "RobotPage",
   components: {
-    MainPageButtons,
+    MPButtons1,
+    MPButtons2,
+    MPButtons3,
     ThemeSwithcer,
     NotificationBell,
   },
