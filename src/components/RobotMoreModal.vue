@@ -4,6 +4,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <div class="title">Информация</div>
+          <table class="tab">
+            <tr>
+              <td class="time date">{{ localeDate }}</td>
+              <td class="time">{{ localeTime }}</td>
+            </tr>
+          </table>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
@@ -31,6 +37,22 @@
                     <div class="battery">79%</div>
                   </div>
                 </div>
+                <div class="row mb-2 mt-5" data-bs-dismiss="modal">
+                  <router-link to="/logs" class="button">
+                    <div class="row">
+                      <div class="col">Задачи</div>
+                      <div class="col svg"><arrowSVG /></div>
+                    </div>
+                  </router-link>
+                </div>
+                <div class="row" data-bs-dismiss="modal">
+                  <router-link to="/settings" class="button">
+                    <div class="row">
+                      <div class="col">Сервис</div>
+                      <div class="col svg"><arrowSVG /></div>
+                    </div>
+                  </router-link>
+                </div>
               </div>
               <div class="col">
                 <div class="row">
@@ -56,58 +78,34 @@
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </div>
-            <div class="row mb-2">
-              <div class="col-md-3">
-                <div class="row">
-                  <router-link to="/logs" class="button">
-                      <div class="row">
-                        <div class="col" data-bs-dismiss="modal">Задачи</div>
-                        <div class="col svg"><arrowSVG /></div>
-                      </div>
-                  </router-link>
-                </div>
-                <div class="row">
-                  <router-link to="/settings" class="button mt-2">
-                      <div class="row">
-                        <div class="col" data-bs-dismiss="modal">Сервис</div>
-                        <div class="col svg"><arrowSVG /></div>
-                      </div>
-                  </router-link>
-                </div>
-              </div>
-              <div class="col-md-3 ms-auto d-flex justify-content-end">
-                <div class="row">
+                <div class="row mt-2">
                   <table class="tab">
-                      <thead>
-                        <tr>
-                          <th class="left-cell">Датчик</th>
-                          <th class="head">Ошибка</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="text-success">
-                          <td class="left-cell">Уборка на тер. 2</td>
-                          <td>Выполнена</td>
-                        </tr>
-                        <tr>
-                          <td class="left-cell last">Уборка на тер. N</td>
-                          <td class="last">Ожидание</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <thead>
+                      <tr>
+                        <th class="left-cell">Датчик</th>
+                        <th class="head">Ошибка</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="">
+                        <td class="left-cell">-</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td class="left-cell last">-</td>
+                        <td class="last">-</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-          
-          
         </div>
       </div>
     </div>
   </div>
-  <button class="other" data-bs-toggle="modal" data-bs-target="#oneModal">
+  <button id="get-level" class="other" data-bs-toggle="modal" data-bs-target="#oneModal">
     <otherSVG />
   </button>
 </template>
@@ -117,13 +115,54 @@ import arrowSVG from '/src/assets/arrow.svg';
 import batterySVG from '/src/assets/battery.svg';
 import robotSVG from '/src/assets/android.svg';
 import otherSVG from '/src/assets/three-dots.svg';
+
+
 export default {
+
+  data() {
+    return {
+      date: 1580558031264,
+    }
+  },
+  
   components: {
     robotSVG,
     batterySVG,
     otherSVG,
     arrowSVG,
-  }
+  },
+
+  computed: {
+    localeDate() {
+      const dateOptions = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      };
+      
+      const dateString = new Date(this.date).toLocaleDateString(undefined, dateOptions);
+      
+      return dateString
+    },
+    localeTime() {
+      const timeOptions = {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
+      };
+      const timeString = new Date(this.date).toLocaleTimeString(undefined, timeOptions);
+      return timeString
+    },
+  },
+  created() {
+    this.intervalId = setInterval(() => this.date = Date.now(), 1000);
+  },
+
+  beforeDestroy() {
+    if (this.intervalId) clearInterval(this.intervalId);
+  
+  },
+
 }
 </script>
 
@@ -189,6 +228,7 @@ td.last {
     font: 400 1.75rem "SF Pro Display";
     padding: .5rem 1.5rem;
     text-decoration: none;
+    width: 50%;
   }
 
 
@@ -232,8 +272,20 @@ td.last {
   }
 
 .title {
-  font: 400 2.5rem "SF Pro Display";
+  font: 400 3rem "SF Pro Display";
 
 }
+.time {
+  font: 400 2.5rem "SF Pro Display";
+  border: .125rem solid var(--grey);
+  border-radius: 0rem 1.125rem 1.125rem 0rem;
+  padding: .35rem;
+}
+
+.time.date {
+  border-radius: 1.125rem 0rem 0rem 1.125rem;
+  border-right: 0;
+}
+
 
 </style>
