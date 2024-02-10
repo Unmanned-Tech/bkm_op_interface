@@ -16,14 +16,10 @@
 </template>
 
 <script>
-import Toasts from "./Toasts.vue";
 import * as roslib from "../../roslib.js";
 
 export default {
   name: "EmerStopButton",
-  components: {
-    Toasts
-  },
   methods: {
     send_emerstop() {
       const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });

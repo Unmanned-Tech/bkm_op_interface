@@ -18,21 +18,19 @@
 import { reactive } from 'vue'
 import { Modal } from 'bootstrap'
 export default {
-    
-    name: 'FullScreen',
+
+    mounted: function() {
+      var myModal = new Modal('#myModal', {})
+      myModal.show()
+    },
+
     methods: {
         isFullScreen() {
             document.querySelector("html").requestFullscreen();
         },
         
     },
-    mounted: function() {
-      const state = reactive({
-        myModal: null,
-      })
-      state.myModal = new Modal('#myModal', {})
-      state.myModal.show()
-    }
+    
 }
 
 </script>
