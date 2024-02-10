@@ -1,8 +1,12 @@
 <template>
     <div class="d-flex justify-content-end">
         <div class="btn-group dropstart position-absolute">
-            <button class="set" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="set" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                 <bellSVG />
+                <span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">
+                    1
+                    <span class="visually-hidden">alert</span>
+                </span>
             </button>
             <div class="dropdown-menu me-2">
                 <div class="dropdown-header align-items-center d-flex">
@@ -17,6 +21,9 @@
                 </div>
                 <div>
                 </div>
+                <div class="p-3">
+                    <!-- <Toasts /> -->
+                </div>
                 <p class="p-3 d-flex justify-content-center">
                     Нет более старых уведомлений
                 </p>
@@ -28,6 +35,7 @@
 <script>
 import bellSVG from '/src/assets/notification-bing.svg';
 import arrowToSVG from '/src/assets/arrowTo.svg';
+
 export default {
     components: {
         bellSVG,
@@ -49,7 +57,7 @@ p {
 }
 
 @keyframes show {
-    from { opacity: 0; transform: translateY(0);}
+    from { opacity: 0; }
     to { opacity: 1; }
 }
 
@@ -67,7 +75,7 @@ p {
 
 .set.notts {
     background-color: var(--grey3);
-    padding: .25rem;
+    padding: .25rem .4rem;
     margin-left: 1rem;
 }
 
