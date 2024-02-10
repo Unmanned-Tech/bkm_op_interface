@@ -25,6 +25,7 @@
   .link {
     box-shadow: 0rem 0.375rem 0.5rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--bg-tertiary);
+    transition: background-color .3s;
     text-decoration: none;
     display: block;
     color: var(--text-color);
