@@ -1,30 +1,29 @@
 <template>
-  <div class="modal fade" id="emerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal fade" id="emerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Подтверждение аварийной остановки</h5>
         </div>
-        <div class="modal-body">
-          Применить аварийную остановку
-        </div>
         <div class="modal-footer">
-          <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-          <button v-on:click="send_emerstop()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Остановить</button>
+          <button  type="button" class="button cancel" data-bs-dismiss="modal"><p class="cap">Отмена</p></button>
+          <button v-on:click="send_emerstop()" type="button" class="button" data-bs-dismiss="modal"><p class="cap">Остановить</p></button>
         </div>
       </div>
     </div>
   </div>
-  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#emerModal">Аварийная остановка</button>
+  <button class="button" data-bs-toggle="modal" data-bs-target="#emerModal"><p class="cap">Остановить</p></button>
 </template>
 
 <script>
-import { Modal } from 'bootstrap'
+import Toasts from "./Toasts.vue";
 import * as roslib from "../../roslib.js";
-
 
 export default {
   name: "EmerStopButton",
+  components: {
+    Toasts
+  },
   methods: {
     send_emerstop() {
       const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
@@ -47,4 +46,31 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.button {
+    box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
+    background-color: var(--red);
+    border-radius: 1.125rem;
+    color: var(--text-color);
+    border: none;
+    font: 400 1.25rem "SF Pro Display";
+  }
+.cap {
+  margin: .75rem;
+}
+.cancel {
+  background-color: var(--grey2);
+}
+.modal-title {
+  font: 400 1.5rem "SF Pro Display";
+}
+.modal-header {
+  border-color: var(--grey);
+}
+.modal-footer {
+  border-color: var(--grey);
+}
+.modal-content {
+  border-radius: 1.125rem; 
+}
+</style>
