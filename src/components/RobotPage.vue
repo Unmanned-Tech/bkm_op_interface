@@ -181,7 +181,7 @@
 </style>
 
 <script>
-import {Modal} from 'bootstrap'
+
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 export default {
@@ -196,6 +196,6 @@ export default {
     showConfirmModal() {
       console.info("pressed");
     }
-  }
+  },
 }
 </script>

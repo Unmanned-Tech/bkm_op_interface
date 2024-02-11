@@ -25,17 +25,18 @@
   .link {
     box-shadow: 0rem 0.375rem 0.5rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--bg-tertiary);
+    transition: background-color .3s;
     text-decoration: none;
     display: block;
     color: var(--text-color);
     text-align: center;
     margin: 0;
     width: 100%;
-    font: 400 2.25rem/6.25rem "SF Pro Display";
+    font: 400 1.25rem/3.5rem "SF Pro Display";
   }
   .ln {
-    padding: 1.25rem;
-    line-height: 1.875rem;
+    padding: .5rem;
+    line-height: 1.25rem;
   }
 </style>
 
