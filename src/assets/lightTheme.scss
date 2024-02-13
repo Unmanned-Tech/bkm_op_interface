@@ -1,8 +1,4 @@
 :root {
-    --red: rgba(255, 59, 48, 1);
-    --orange: rgba(255, 165, 0, 1);
-    --green: rgba(52, 199, 89, 1);
-    --blue: rgba(0, 122, 255, 1);
     --grey: rgba(142, 142, 147, 1);
     --grey2: rgba(174, 174, 178, 1);
     --grey3: rgba(199, 199, 204, 1);
@@ -20,6 +16,29 @@ body {
     color: var(--text-color);
 }
 
+.segmented-control .selection {
+  background: white !important;
+}
+
+td .other {
+  background-color: var(--grey6) !important;
+}
+
+.dropdown-menu.animate {
+  background-color: var(--grey6) !important;
+}
+
+.actions {
+  background-color: var(--grey) !important;
+}
+
+.segmented-control .option label::before,
+.segmented-control .option label::after {
+  background: rgba(142, 142, 147, .15) !important;
+}
+
+
+
 svg {
   fill: rgba(0, 0, 0, 1);
 }
@@ -34,9 +53,39 @@ path.arrow {
 }
 
 $body-bg: rgba(242, 242, 247, 1);
+$blue: rgba(0, 122, 255, 1) !default;
+$indigo: rgba(88, 86, 214, 1) !default;
+$purple: rgba(175, 82, 222, 1) !default;
+$pink: rgba(255, 45, 85, 1) !default;
 $red: rgba(255, 59, 48, 1) !default;
 $orange: rgba(255, 165, 0, 1) !default;
+$yellow: rgba(255, 204, 0, 1) !default;
 $green: rgba(52, 199, 89, 1) !default;
-$blue: rgba(0, 122, 255, 1) !default;
+$teal: rgba(48, 176, 199, 1) !default;
+$cyan: rgba(50, 173, 230, 1) !default;
+
+
+// scss-docs-start theme-color-variables
+$primary:       $blue !default;
+// $secondary:     $gray-600 !default;
+$success:       $green !default;
+// $info:          $cyan !default;
+$warning:       $orange !default;
+$danger:        $red !default;
+// $light:         $gray-100 !default;
+// $dark:          $gray-900 !default;
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-map
+$theme-colors: (
+  "primary":    $primary,
+//   "secondary":  $secondary,
+  "success":    $success,
+//   "info":       $info,
+  "warning":    $warning,
+  "danger":     $danger,
+//   "light":      $light,
+//   "dark":       $dark
+) !default;
 
 @import "~bootstrap/scss/bootstrap";

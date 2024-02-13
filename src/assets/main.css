@@ -11,12 +11,26 @@ a.router-link-active.router-link-exact-active.link.ln {
   line-height: 1.25rem;
 }
 
+div .front  {
+  background-color: var(--bg-secondary) !important;
+  opacity: 1 !important;
+}
+
+div .back {
+  background-color: var(--bg-tertiary) !important;
+  opacity: .4 !important;
+}
+
+* {
+  font-family: 'SF Pro Display';
+  font-weight: 400;
+}
+
 body {
   /* background-color: var(--bg-secondary); */
   color: var(--text-color);
   
-  font-family: 'SF Pro Display', sans-serif;
-  font-weight: 400;
+  
   transition: background-color .3s, color .1s;
 }
 
