@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link to="/logs" class="button">
+                  <router-link to="/tasks" class="button">
                     <div class="row">
                       <div class="col">Задачи</div>
                       <div class="col svg"><arrowSVG /></div>

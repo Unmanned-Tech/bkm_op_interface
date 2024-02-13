@@ -5,6 +5,7 @@ import TeleopPage from "../components/TeleopPage.vue";
 import SettingsPage from "../components/SettingsPage.vue";
 import LogsPage from "../components/LogsPage.vue";
 import StatusPage from "../components/StatusPage.vue"
+import TasksPage from "../components/TasksPage.vue"
 
 const routes = [
   {
@@ -25,22 +26,27 @@ const routes = [
   {
     path: "/teleop",
     name: "teleop",
-    component: TeleopPage
+    component: TeleopPage,
   },
   {
     path: "/settings",
     name: "settings",
-    component: SettingsPage
+    component: SettingsPage,
   },
   {
     path: "/logs",
     name: "logs",
-    component: LogsPage
+    component: LogsPage,
   },
   {
     path: "/status",
     name: "status",
-    component: StatusPage
+    component: StatusPage,
+  },
+  {
+    path: "/tasks",
+    name: "tasks",
+    component: TasksPage,
   }
 ];
 

@@ -28,7 +28,7 @@
                 </div>
                 <div class="row mb-2">
                   <div class="col-md-2 inf start">
-                    <batterySVG></batterySVG>
+                    <batterycharged />
                   </div>
                   <div class="col d-flex align-items-center inf cap">
                     <div>Заряд батареи</div>
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link to="/logs" class="button">
+                  <router-link to="/tasks" class="button">
                     <div class="row">
                       <div class="col">Задачи</div>
                       <div class="col svg"><arrowSVG /></div>
@@ -115,7 +115,7 @@ import arrowSVG from '/src/assets/arrow.svg';
 import batterySVG from '/src/assets/battery.svg';
 import robotSVG from '/src/assets/android.svg';
 import otherSVG from '/src/assets/three-dots.svg';
-
+import batterycharged from '/src/assets/battery-charging.svg'
 
 export default {
 
@@ -130,6 +130,7 @@ export default {
     batterySVG,
     otherSVG,
     arrowSVG,
+    batterycharged,
   },
 
   computed: {

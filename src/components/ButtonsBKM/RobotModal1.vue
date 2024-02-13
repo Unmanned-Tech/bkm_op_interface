@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link to="/logs" class="button">
+                  <router-link to="/tasks" class="button">
                     <div class="row">
                       <div class="col">Задачи</div>
                       <div class="col svg"><arrowSVG /></div>
@@ -155,12 +155,18 @@ export default {
     },
   },
   created() {
+    this.updateTime();
     this.intervalId = setInterval(() => this.date = Date.now(), 1000);
   },
 
   beforeDestroy() {
     if (this.intervalId) clearInterval(this.intervalId);
   
+  },
+  methods: {
+    updateTime() {
+      this.date = Date.now();
+    },
   },
 
 }
@@ -230,9 +236,6 @@ td.last {
     text-decoration: none;
     width: 50%;
   }
-
-
-  
 .modal-content {
   border-radius: 1.125rem; 
 }
@@ -269,7 +272,7 @@ td.last {
     padding: 0.5rem;
     border-radius: 1.125rem;
     border: none;
-  }
+}
 
 .title {
   font: 400 3rem "SF Pro Display";

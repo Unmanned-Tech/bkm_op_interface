@@ -4,7 +4,7 @@
       <router-link to="/" class="link">Главная</router-link>
     </li>
     <li class="col">
-      <router-link to="/logs" class="link">Задачи</router-link>
+      <router-link to="/tasks" class="link">Задачи</router-link>
     </li>
     <li class="col">
       <router-link to="/teleop" class="link">Телеуправление</router-link>

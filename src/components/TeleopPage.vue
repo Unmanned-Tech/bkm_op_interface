@@ -119,7 +119,7 @@
         <div class="card bg-dark h-25 mt-5">
           <div class="card-body text-dark">
             <div class="row justify-content-center">
-              <div id="zone_joystick" class="zone static" style="width: 100px; height: 50px;"></div>
+              <div id="zone_joystick" class="zone static" style="width: 100px; height: 100px;"></div>
             </div>
           </div>
         </div>
@@ -223,14 +223,15 @@ export default {
     var options = {
       zone: document.getElementById('zone_joystick'),
       mode: 'static',
-      color: 'gray',
+      color: 'white',
       position: {
         left: '50%',
         bottom: '12%'
       },
       multitouch: {
         touchRadius: '100%',
-      }
+      },
+      size: 200,
     };
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
@@ -393,8 +394,7 @@ export default {
 }
 
 #zone_joystick {
-  width: 300px;
-  height: 300px;
+ 
 }
 
 
