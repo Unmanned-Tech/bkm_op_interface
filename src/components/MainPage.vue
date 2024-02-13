@@ -1,5 +1,6 @@
 <template>
-      <div class="row mt-3">
+  <div>
+    <div class="row mt-3">
         <div class="col">
           <ThemeSwithcer></ThemeSwithcer>
           <p class="caption mt-4 mb-2">
@@ -52,16 +53,17 @@
         <img class="img-fluid rounded-4 map" src="../assets/map-dark.png">
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
   
 <script>
 
-import NotificationBell from './SvgComponents/NotificationBell.vue'
+import NotificationBell from './SvgComponents/NotificationBell.vue';
 import ThemeSwithcer from './SvgComponents/ThemeSwithcer.vue';
 import MPButtons1 from './ButtonsBKM/MPButtons1.vue';
 import MPButtons2 from './ButtonsBKM/MPButtons2.vue';
-import MPButtons3 from './ButtonsBKM/MPButtons3.vue'
+import MPButtons3 from './ButtonsBKM/MPButtons3.vue';
 
 import axios from 'axios';
 import * as roslib from "../../roslib.js";
