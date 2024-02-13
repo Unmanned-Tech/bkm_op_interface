@@ -14,7 +14,11 @@ const count = ref(0);
     <main_menu></main_menu>
     <div class="container-fluid">
         <FullScreen></FullScreen>
-        <router-view />
+        <router-view v-slot="{ Component }">
+            <Transition name="fade" mode="out-in">
+                <Component :is="Component" />
+            </Transition>
+        </router-view>
         
     </div>
 
@@ -24,6 +28,17 @@ const count = ref(0);
 
 <style>
 
+
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity .15s ease-out;
+}
 </style>
 
 <script>
