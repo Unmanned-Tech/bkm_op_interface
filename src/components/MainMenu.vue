@@ -4,7 +4,7 @@
       <router-link to="/" class="link">Главная</router-link>
     </li>
     <li class="col">
-      <router-link to="/tasks" class="link">Задачи</router-link>
+      <router-link :to="{ name: 'tasks', params: { selectedOption: store.selectedOption }}" class="link">Задачи</router-link>
     </li>
     <li class="col">
       <router-link to="/teleop" class="link">Телеуправление</router-link>
@@ -14,6 +14,13 @@
     </li>
   </ul>
 </template>
+
+<script setup>
+import { useStore } from '../stores/store';
+
+const store = useStore();
+
+</script>
 
 <style scoped>
   .con {

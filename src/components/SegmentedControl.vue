@@ -1,77 +1,87 @@
 <template>
-    <div class="segmented-control">
-        <span class="selection"></span>
-        <div class="option">
-            <input type="radio" id="bkm1" name="sample" value="bkm1" checked>
-            <label for="bkm1"><span>БКМ-1</span></label>
-        </div>
-        <div class="option">
-            <input type="radio" id="bkm2" name="sample" value="bkm2">
-            <label for="bkm2"><span>БКМ-2</span></label>
-        </div>
-        <div class="option">
-            <input type="radio" id="bkm3" name="sample" value="bkm3">
-            <label for="bkm3"><span>БКМ-3</span></label>
-        </div>
+    <div class="segmented-control" ref="segmentedControl">
+      <!-- Your segmented control options go here -->
+      <div class="option" v-for="(option, index) in options" :key="index">
+        <input 
+            type="radio" 
+            :id="'option' + index" 
+            name="segmentedControl" 
+            :checked="option === store.selectedOption"
+            @input="updatePillPosition" 
+        />
+        <label :for="'option' + index">
+            <span>{{ option }}</span>
+        </label>
+      </div>
+      
+      <!-- Background pill element -->
+      <div class="selection" ref="backgroundPill"></div>
     </div>
-</template>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted, onBeforeUnmount, toRefs } from 'vue';
+  import { useStore } from '../stores/store';
+  import { useRoute, useRouter } from 'vue-router';
 
-<script setup>
-    const SEGMENTED_CONTROL_BASE_SELECTOR = ".segmented-control";
-    const SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR = ".segmented-control .option input";
-    const SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR = ".segmented-control .selection";
+  const SEGMENTED_CONTROL_BASE_SELECTOR = ".segmented-control";
+  const SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR = ".segmented-control .option input";
+  const SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR = ".segmented-control .selection";
 
-    document.addEventListener("DOMContentLoaded", setup);
+  const { selectedOption } = toRefs(useStore());
+  
+  const options = ref(["БКМ-1", "БКМ-2", "БКМ-3"]); // Add your options here
+  
+  const store = useStore();
+  const route = useRoute();
+  const router = useRouter();
 
-    function setup() {
-        
-        document.body.addEventListener("input", function(event) {
-            const segmentedControl = event.target.closest(SEGMENTED_CONTROL_BASE_SELECTOR);
+  const segmentedControl = ref(null);
+  const backgroundPill = ref(null);
+  
+  onMounted(() => {
+    segmentedControl.value = document.querySelector(SEGMENTED_CONTROL_BASE_SELECTOR);
+    backgroundPill.value = document.querySelector(SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR);
 
-            if (segmentedControl) {
-                updatePillPosition(segmentedControl);
-            }
-        });
+    const selectedOption = store.selectedOption;
+    const selectedIndex = options.value.indexOf(selectedOption);
 
-        window.addEventListener("resize", updatePillPosition);
+    if (selectedIndex !== -1) {
+        const selectedInput = segmentedControl.value.querySelector(
+            SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR + ":checked"
+        );
+        backgroundPill.value.style.transform = `translateX(${selectedInput.offsetWidth * selectedIndex}px)`;
     }
 
-    function updatePillPosition(segmentedControl) {
-        const selectedInput = segmentedControl.querySelector(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR + ":checked");
-        const selectedIndex = Array.from(segmentedControl.querySelectorAll(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR)).indexOf(selectedInput);
-
-        const backgroundPill = segmentedControl.querySelector(SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR);
-        backgroundPill.style.transform = "translateX(" + (selectedInput.offsetWidth * selectedIndex) + "px)";
+    const routeSelectedOption = route.params.selectedOption;
+    if (options.value.includes(routeSelectedOption)) {
+        store.setSelectedOption(routeSelectedOption);
     }
+  
+    document.body.addEventListener("input", updatePillPosition);
+    window.addEventListener("resize", updatePillPosition);
+  });
+  
+  onBeforeUnmount(() => {
+    document.body.removeEventListener("input", updatePillPosition);
+    window.removeEventListener("resize", updatePillPosition);
+  });
+  
+  function updatePillPosition() {
+    const selectedInput = segmentedControl.value.querySelector(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR + ":checked");
+    if (selectedInput) {
+        const selectedIndex = Array.from(segmentedControl.value.querySelectorAll(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR)).indexOf(selectedInput);
+        backgroundPill.value.style.transform = `translateX(${selectedInput.offsetWidth * selectedIndex}px)`;
 
-
-</script>
+        router.push({ params: { selectedOption: options.value[selectedIndex] } });
+        store.setSelectedOption(options.value[selectedIndex]);
+    }
+    
+  }
+    
+  </script>
 
 <style scoped>
-
-body, html {
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	text-rendering: geometricPrecision;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-overflow-scrolling: touch!important;
-	touch-action: manipulation!important;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-body {
-		display: flex;
-	}
-
-* {
-	box-sizing: border-box;
-}
-
-label {
-	cursor:inherit;
-}
 .segmented-control {
     background: var(--bg-tertiary);
     border-radius: 9px;
@@ -87,18 +97,22 @@ label {
     -ms-user-select: none;
     user-select: none;
 }
+
 .segmented-control .option {
     position: relative;
     cursor: pointer;
 }
+
 .segmented-control .option:hover input:not(:checked) + label span, 
 .segmented-control .option:active input:not(:checked) + label span, 
 .segmented-control .option:focus input:not(:checked) + label span {
-	opacity: .2;
+    opacity: .2;
 }
+
 .segmented-control .option:active input:not(:checked) + label span {
     transform: scale(.95);
 }
+
 .segmented-control .option label {
     position: relative;
     display: block;
@@ -108,6 +122,7 @@ label {
     color: var(--text-color);
     font-size: 24px;
 }
+
 .segmented-control .option label::before,
 .segmented-control .option label::after {
     content: '';
@@ -119,29 +134,33 @@ label {
     bottom: 25%;
     border-radius: 10px;
     will-change: background;
-    -webkit-transition: background .2s ease;
     transition: background .2s ease;
 }
+
 .segmented-control .option label::before {
     left: 0;
     transform: translateX(-.5px);
 }
+
 .segmented-control .option label::after {
     right: 0;
     transform: translateX(.5px);
 }
+
 .segmented-control .option:first-of-type {
     grid-column: 1;
     grid-row: 1;
     box-shadow: none;
 }
+
 .segmented-control .option:first-of-type label::before {
-	opacity: 0;
+    opacity: 0;
 }
 
 .segmented-control .option:last-of-type label::after {
-	opacity: 0;
+    opacity: 0;
 }
+
 .segmented-control .option input {
     position: absolute;
     top: 0;
@@ -157,8 +176,9 @@ label {
     appearance: 0;
     outline: 0;
     border: 0;
-    opacity: 0;
+    opacity: 1;
 }
+
 .segmented-control .selection {
     background: var(--grey2);
     border: .5px solid rgba(0, 0, 0, .04);
@@ -168,18 +188,25 @@ label {
     grid-row: 1;
     z-index: 2;
     will-change: transform;
-    -webkit-transition: transform .2s ease;
     transition: transform .2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.segmented-control .selection label {
+    color: var(--text-color);
+    font-size: 24px;
 }
 
 .segmented-control .option label span {
     display: block;
     position: relative;
-    z-index: 2;
-    -webkit-transition: all .2s ease;
+    z-index: 3;
     transition: all .2s ease;
     will-change: transform;
 }
+
 .segmented-control .option input:checked+label span {
     font-weight: 700;
 }
@@ -188,7 +215,8 @@ label {
     background-color: var(--bg-tertiary);
     z-index: 1;
 }
+
 .segmented-control .option input:checked+label {
-	cursor: default;
+    cursor: default;
 }
 </style>

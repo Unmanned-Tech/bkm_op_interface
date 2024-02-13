@@ -44,7 +44,7 @@ const routes = [
     component: StatusPage,
   },
   {
-    path: "/tasks",
+    path: "/tasks/:selectedOption?",
     name: "tasks",
     component: TasksPage,
   }

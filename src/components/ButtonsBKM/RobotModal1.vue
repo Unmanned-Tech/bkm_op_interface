@@ -23,7 +23,7 @@
                     <div>Робот</div>
                   </div>
                   <div class="col-md-4 inf end d-flex">
-                    <div>БКМ - 1</div>
+                    <div>БКМ-1</div>
                   </div>
                 </div>
                 <div class="row mb-2">
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link to="/tasks" class="button">
+                  <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-1' } }" class="button">
                     <div class="row">
                       <div class="col">Задачи</div>
                       <div class="col svg"><arrowSVG /></div>
@@ -116,6 +116,9 @@ import batterySVG from '/src/assets/battery.svg';
 import robotSVG from '/src/assets/android.svg';
 import otherSVG from '/src/assets/three-dots.svg';
 
+import SegmentedControl from '../SegmentedControl.vue';
+
+
 
 export default {
 
@@ -130,6 +133,7 @@ export default {
     batterySVG,
     otherSVG,
     arrowSVG,
+    SegmentedControl,
   },
 
   computed: {

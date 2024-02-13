@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-items-center">
         <div class="btn-group dropend">
-            <button class="other" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+            <button class="other" data-bs-toggle="dropdown" aria-expanded="false">
                 <otherSVG />
             </button>
             <div class="dropdown-menu animate fade ms-2">

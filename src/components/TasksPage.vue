@@ -10,7 +10,7 @@
                 </table>
             </div>
             <div class="col mb-4">
-                <SegmentedControl />
+                <SegmentedControl :selectedOption="selectedOption"/>
             </div>
             <div class="col-md-3 mb-4 d-flex justify-content-center">
                 <button class="set">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col d-flex">
+            <div class="col">
                 <table class="tab">
                     <tr>
                         <th class="thead start">Задача</th>
@@ -28,33 +28,12 @@
                         <th class="thead mid">Заряд</th>
                         <th class="thead end"></th>
                     </tr>
-                    <tr class="text-primary">
-                        <td>Задача 1</td>
-                        <td class="mid">10:00</td>
-                        <td class="mid">Выполняется</td>
-                        <td class="mid">80%</td>
-                        <td class="mid d-flex"><editTask /></td>
-                    </tr>
-                    <tr>
-                        <td>-</td>
-                        <td class="mid">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid d-flex"><editTask /></td>
-                    </tr>
-                    <tr>
-                        <td>-</td>
-                        <td class="mid">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid d-flex"><editTask /></td>
-                    </tr>
-                    <tr>
-                        <td class="first">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid">-</td>
-                        <td class="mid d-flex last"><editTask /></td>
+                    <tr v-for="(task, index) in filteredTasks" :key="index" :style="{ color: getBackgroundColor(task.status) }">
+                        <td :class="{ 'last-cell-left': isLastColumn(index) }" @click="handleEditClick">{{ task.name }}</td>
+                        <td class="mid">{{ task.time }}</td>
+                        <td class="mid">{{ task.status }}</td>
+                        <td class="mid">{{ task.charge }}</td>
+                        <td class="mid" :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick"><editTask /></td>
                     </tr>
                 </table>
             </div>
@@ -83,6 +62,43 @@
     
 
 </template>
+
+<script setup>
+import { computed, watchEffect, ref } from 'vue';
+import SegmentedControl from './SegmentedControl.vue';
+import { fetchDataByOption } from './fetchDataByOption';
+import { useStore } from '../stores/store';
+import { useRoute } from 'vue-router';
+
+const store = useStore();
+const route = useRoute();
+
+const isLastColumn = ref((index) => {
+  return index === filteredTasks.value.length - 1;
+});
+
+const getBackgroundColor = (status) => {
+  switch (status) {
+    case 'Выполнена':
+      return 'var(--green)';
+    case 'Выполняется':
+      return 'var(--blue)';
+    default:
+      return 'white'; // Adjust the default background color as needed
+  }
+};
+
+const filteredTasks = computed(() => fetchDataByOption(store.selectedOption));
+
+watchEffect(() => {
+  // Update selectedOption when route changes
+  const selectedOptionFromRoute = route.params.selectedOption;
+  if (selectedOptionFromRoute !== store.selectedOption) {
+    store.setSelectedOption(selectedOptionFromRoute);
+  }
+});
+
+</script>
 
 <script>
 import SegmentedControl from './SegmentedControl.vue';
@@ -137,12 +153,18 @@ export default {
     updateTime() {
       this.date = Date.now();
     },
-  }
+  },
 }
 
 </script>
 
 <style scoped>
+.last-cell-left {
+  border-bottom-left-radius: 0.125rem;
+}
+.last-cell-right {
+  border-bottom-right-radius: 0.125rem;
+}
 .header{
     border-bottom: solid .125rem var(--bg-tertiary);
 }
@@ -151,7 +173,6 @@ export default {
   border-collapse: separate;
   text-align: center;
   border-spacing: 0;
-  background-color: var(--bg-tertiary);
 }
 td {
   font: 400 1.5rem "SF Pro Display";
@@ -161,11 +182,21 @@ td {
   border-top: none;
 }
 
+.last-cell-left {
+  border-bottom-left-radius: 1.125rem;
+}
+.last-cell-right {
+    border-bottom-right-radius: 1.125rem;
+}
+
 .thead {
     font: 700 1.75rem "SF Pro Display";
     padding: .5rem 1.25rem;
     border: .125rem solid var(--grey);
     background-color: var(--grey2);
+}
+.thead.start {
+  padding: .5rem 3.5rem ;
 }
 .tasks {
     padding: .5rem 1rem;
@@ -181,12 +212,6 @@ td {
 .end {
     border-radius: 0 1.125rem 0 0;
     border-left: none;
-}
-.first {
-    border-radius: 0 0 0 1.125rem;
-}
-.last {
-    border-radius: 0 0 1.125rem;
 }
 .lastcell {
     border-radius: 0 0 1.125rem 1.125rem;

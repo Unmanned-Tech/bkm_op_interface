@@ -23,7 +23,7 @@
                     <div>Робот</div>
                   </div>
                   <div class="col-md-4 inf end d-flex">
-                    <div>БКМ - 1</div>
+                    <div>БКМ-2</div>
                   </div>
                 </div>
                 <div class="row mb-2">
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                 <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link to="/tasks" class="button">
+                  <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-2' } }" class="button">
                     <div class="row">
                       <div class="col">Задачи</div>
                       <div class="col svg"><arrowSVG /></div>
