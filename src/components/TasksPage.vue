@@ -10,12 +10,14 @@
                 </table>
             </div>
             <div class="col mb-4">
-                <SegmentedControl :selectedOption="selectedOption"/>
+                <SegmentedControl />
             </div>
             <div class="col-md-3 mb-4 d-flex justify-content-center">
+              <router-link :to="{ name: 'edit', params: { mode: 'Настройки' } }">
                 <button class="set">
                     <plusSVG />
                 </button>
+              </router-link>
             </div>
         </div>
         <div class="row mt-4">
@@ -24,7 +26,7 @@
                     <tr>
                         <th class="thead start">Задача</th>
                         <th class="thead mid">Время</th>
-                        <th class="thead mid">Статус</th>
+                        <th class="thead mid status">Статус</th>
                         <th class="thead mid">Заряд</th>
                         <th class="thead end"></th>
                     </tr>
@@ -84,7 +86,7 @@ const getBackgroundColor = (status) => {
     case 'Выполняется':
       return 'var(--blue)';
     default:
-      return 'white'; // Adjust the default background color as needed
+      return 'var(--text-color)';
   }
 };
 
@@ -105,13 +107,15 @@ import SegmentedControl from './SegmentedControl.vue';
 import plusSVG from '/src/assets/plus.svg';
 import otherSVG from '/src/assets/three-dots.svg';
 import editTask from './editTask.vue';
+import EditorTasks from './EditorTasks.vue';
 
 export default {
     components: {
     SegmentedControl,
     plusSVG,
     otherSVG,
-    editTask
+    editTask,
+    EditorTasks,
 },
     data() {
         return {
@@ -160,10 +164,10 @@ export default {
 
 <style scoped>
 .last-cell-left {
-  border-bottom-left-radius: 0.125rem;
+  border-bottom-left-radius: 1.125rem;
 }
 .last-cell-right {
-  border-bottom-right-radius: 0.125rem;
+  border-bottom-right-radius: 1.125rem;
 }
 .header{
     border-bottom: solid .125rem var(--bg-tertiary);
@@ -198,6 +202,9 @@ td {
 .thead.start {
   padding: .5rem 3.5rem ;
 }
+.thead.status {
+  padding: .5rem 3rem;
+}
 .tasks {
     padding: .5rem 1rem;
     border-radius: 1.125rem 1.125rem 0 0;
@@ -217,7 +224,7 @@ td {
     border-radius: 0 0 1.125rem 1.125rem;
 }
 .time {
-  font: 400 2rem "SF Pro Display";
+  font: 400 2rem "SF Pro Rounded";
   border: .125rem solid var(--grey);
   border-radius: 0 1.125rem 1.125rem 0;
   padding: .35rem;

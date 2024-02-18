@@ -25,32 +25,32 @@
     <div class="row">
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/image7.jpg">
-        <div class="row mt-3">
+        <div class="row mt-4">
           <MPButtons1 />
         </div>
       </div>
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/image7.jpg">
-        <div class="row mt-3">
+        <div class="row mt-4">
           <MPButtons2 />
         </div>
       </div>
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/image7.jpg">
-        <div class="row mt-3">
+        <div class="row mt-4">
           <MPButtons3 />
         </div>
       </div>
     </div>
     <div class="row mt-3">
       <div class="col ">
-        <img class="img-fluid rounded-4 map" src="../assets/map-dark.png">
+        <Map3 class="map" />
       </div>
       <div class="col">
-        <img class="img-fluid rounded-4 map" src="../assets/map-dark.png">
+        <Map2 class="map" />
       </div>
       <div class="col">
-        <img class="img-fluid rounded-4 map" src="../assets/map-dark.png">
+        <Map1 class="map" />
       </div>
     </div>
   </div>
@@ -65,6 +65,11 @@ import MPButtons1 from './ButtonsBKM/MPButtons1.vue';
 import MPButtons2 from './ButtonsBKM/MPButtons2.vue';
 import MPButtons3 from './ButtonsBKM/MPButtons3.vue';
 
+
+import Map1 from './maps/Map1.vue';
+import Map2 from './maps/Map2.vue';
+import Map3 from './maps/Map3.vue';
+
 import axios from 'axios';
 import * as roslib from "../../roslib.js";
 
@@ -76,6 +81,11 @@ export default {
     MPButtons3,
     ThemeSwithcer,
     NotificationBell,
+
+    Map1,
+    Map2,
+    Map3,
+
   },
   data: function () {
     return {
@@ -141,6 +151,9 @@ export default {
 
   .map {
     border: solid var(--grey2) .25rem;
+    height: 15.528rem;
+    border-radius: 1.125rem;
+    
   }
   img {
     line-height: normal;

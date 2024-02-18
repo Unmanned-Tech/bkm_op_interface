@@ -16,7 +16,13 @@ body {
     color: var(--text-color);
 }
 
-.segmented-control .selection {
+$form-range-track-height: 1.5rem;
+$form-range-track-bg: var(--grey2);
+$form-range-thumb-width: 2.5rem;
+$form-range-thumb-border-radius: 2.5rem;
+
+.segmented-control .selection,
+.io-segmented-control .selection{
   background: white !important;
 }
 
@@ -37,7 +43,13 @@ td .other {
   background: rgba(142, 142, 147, .15) !important;
 }
 
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background: url(/src/assets/clock-dark.svg) !important;
+}
 
+.map-tiles {
+  filter: none !important;
+}
 
 svg {
   fill: rgba(0, 0, 0, 1);
@@ -50,6 +62,15 @@ svg.arrow {
 path.arrow {
   fill: none;
   stroke: black;
+}
+
+.form-check-input {
+  background-color: transparent !important;
+  border-color: var(--grey2) !important;
+}
+.form-check-input:checked {
+  background-color: var(--blue) !important;
+  border-color: var(--blue) !important;
 }
 
 $body-bg: rgba(242, 242, 247, 1);

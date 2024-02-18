@@ -6,6 +6,7 @@ import SettingsPage from "../components/SettingsPage.vue";
 import LogsPage from "../components/LogsPage.vue";
 import StatusPage from "../components/StatusPage.vue"
 import TasksPage from "../components/TasksPage.vue"
+import EditorTasks from "../components/EditorTasks.vue"
 
 const routes = [
   {
@@ -47,6 +48,11 @@ const routes = [
     path: "/tasks/:selectedOption?",
     name: "tasks",
     component: TasksPage,
+  },
+  {
+    path: "/edit/:mode?",
+    name: "edit",
+    component: EditorTasks,
   }
 ];
 
