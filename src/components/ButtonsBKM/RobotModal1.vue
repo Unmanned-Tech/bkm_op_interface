@@ -37,22 +37,23 @@
                     <div class="battery">79%</div>
                   </div>
                 </div>
-                <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-1' } }" class="button">
-                    <div class="row">
-                      <div class="col">Задачи</div>
-                      <div class="col svg"><arrowSVG /></div>
-                    </div>
-                  </router-link>
+                <div class="row mt-5 pe-3">
+                  <button class="button mb-2" data-bs-dismiss="modal">
+                    <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-1' } }" class="caption">
+                        <div>Задачи<span class="ps-2"><arrowSVG /></span></div>
+                    </router-link>
+                  </button>
                 </div>
-                <div class="row" data-bs-dismiss="modal">
-                  <router-link to="/settings" class="button">
-                    <div class="row">
-                      <div class="col">Сервис</div>
-                      <div class="col svg"><arrowSVG /></div>
-                    </div>
-                  </router-link>
+                <div class="row mt-2 pe-3">
+                  <button class="button" data-bs-dismiss="modal">
+                    <router-link to="/settings" class="caption">
+                        <div>Сервис<span class="ps-2"><arrowSVG /></span></div>
+                    </router-link>
+                  </button>
                 </div>
+                  
+                
+                
               </div>
               <div class="col">
                 <div class="row">
@@ -67,13 +68,9 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="text-success">
-                        <td class="left-cell">Уборка на тер. 2</td>
-                        <td>Выполнена</td>
-                      </tr>
-                      <tr>
-                        <td class="left-cell last">Уборка на тер. N</td>
-                        <td class="last">Ожидание</td>
+                      <tr v-for="(task, index) in filteredTasks" :key="index" :style="{ color: getBackgroundColor(task.status) }">
+                        <td class="left-cell" :class="{ 'last-cell-left': isLastColumn(index) }" @click="handleEditClick">{{ task.name }}</td>
+                        <td :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick">{{ task.status }}</td>                      
                       </tr>
                     </tbody>
                   </table>
@@ -110,14 +107,33 @@
   </button>
 </template>
 
+<script setup>
+import { computed, ref } from 'vue';
+import { fetchDataByOption } from '../fetchDataByOption';
+
+const getBackgroundColor = (status) => {
+  switch (status) {
+    case 'Выполнена':
+      return 'var(--green)';
+    case 'Выполняется':
+      return 'var(--blue)';
+    default:
+      return 'var(--text-color)';
+  }
+};
+
+const isLastColumn = ref((index) => {
+  return index === filteredTasks.value.length - 1;
+});
+
+const filteredTasks = computed(() => fetchDataByOption('БКМ-1'));
+</script>
+
 <script>
 import arrowSVG from '/src/assets/arrow.svg';
 import batterySVG from '/src/assets/battery.svg';
 import robotSVG from '/src/assets/android.svg';
 import otherSVG from '/src/assets/three-dots.svg';
-
-import SegmentedControl from '../SegmentedControl.vue';
-
 
 
 export default {
@@ -133,7 +149,6 @@ export default {
     batterySVG,
     otherSVG,
     arrowSVG,
-    SegmentedControl,
   },
 
   computed: {
@@ -177,6 +192,16 @@ export default {
 </script>
 
 <style scoped>
+.caption {
+  text-decoration: none;
+  color: var(--text-color);
+}
+.last-cell-left {
+  border-bottom-left-radius: 1.125rem;
+}
+.last-cell-right {
+  border-bottom-right-radius: 1.125rem;
+}
 .svg {
   padding: 0;
 }
@@ -283,7 +308,7 @@ td.last {
 
 }
 .time {
-  font: 400 2.5rem "SF Pro Display";
+  font: 400 2.5rem "SF Pro Rounded";
   border: .125rem solid var(--grey);
   border-radius: 0rem 1.125rem 1.125rem 0rem;
   padding: .35rem;

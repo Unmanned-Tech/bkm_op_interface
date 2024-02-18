@@ -35,8 +35,6 @@ export default {
 </script>
 
 <style scoped>
-
-
 .button {
     box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--bg-tertiary);

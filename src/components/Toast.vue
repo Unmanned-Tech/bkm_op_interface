@@ -1,5 +1,5 @@
 <template>
-    <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" id="myToast">
+    <div class="toast align-items-center text-bg-danger border-0 w-100" role="alert" aria-live="assertive" aria-atomic="true" id="myToast">
         <div class="d-flex">
             <div class="toast-body">
                 Система навигации БКМ-1 потеряла сигнал
@@ -7,7 +7,7 @@
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
-    <div class="toast align-items-center text-bg-success border-0 mt-2" role="alert" aria-live="assertive" aria-atomic="true" id="myToast1">
+    <div class="toast align-items-center text-bg-success border-0 mt-2 w-100" role="alert" aria-live="assertive" aria-atomic="true" id="myToast1">
         <div class="d-flex">
             <div class="toast-body">
                 Уборка района №1 завершена успешно
@@ -15,7 +15,7 @@
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
-    <div class="toast align-items-center text-bg-warning border-0 mt-2" role="alert" aria-live="assertive" aria-atomic="true" id="myToast2">
+    <div class="toast align-items-center text-bg-warning border-0 mt-2 w-100" role="alert" aria-live="assertive" aria-atomic="true" id="myToast2">
         <div class="d-flex">
             <div class="toast-body">
                 Уровень заряда батареи БКМ-3 ниже 20%
@@ -23,7 +23,7 @@
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
-    <div class="toast align-items-center text-bg-primary border-0 mt-2 p-0" role="alert" aria-live="assertive" aria-atomic="true" id="myToast3">
+    <div class="toast align-items-center text-bg-primary border-0 mt-2 w-100" role="alert" aria-live="assertive" aria-atomic="true" id="myToast3">
         <div class="d-flex">
             <div class="toast-body">
                 БКМ-3 вернулась на базу для плановой зарядки

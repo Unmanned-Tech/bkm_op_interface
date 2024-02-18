@@ -1,17 +1,11 @@
 <script setup>
 import main_menu from "./components/MainMenu.vue";
-import main_page from "./components/MainPage.vue";
-import robot_page from "./components/RobotPage.vue";
-
 import { ref } from 'vue';
-const count = ref(0);
 
 </script>
 
-
-
 <template>
-    <main_menu></main_menu>
+    <main_menu v-if="$route.name !== 'edit'"></main_menu>
     <div class="container-fluid">
         <FullScreen></FullScreen>
         <router-view v-slot="{ Component }">
@@ -27,9 +21,6 @@ const count = ref(0);
 </template>
 
 <style>
-
-
-
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
@@ -39,6 +30,21 @@ const count = ref(0);
 .fade-leave-active {
     transition: opacity .15s ease-out;
 }
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.slide-up-enter, .slide-up-leave-to {
+  transform: translateY(100%);
+}
+
+.slide-up-enter-to, .slide-up-leave-from {
+  transform: translateY(0);
+}
+
+
 </style>
 
 <script>
@@ -46,6 +52,11 @@ import FullScreen from './components/FullScreen.vue';
 export default {
     components: {
         FullScreen,
+    },
+    methods: {
+        getTransitionName() {
+            return this.$route.name === 'edit' ? 'slide-up' : 'fade'
+        }
     }
 }
 

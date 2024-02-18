@@ -37,21 +37,19 @@
                     <div class="battery">17%</div>
                   </div>
                 </div>
-                <div class="row mb-2 mt-5" data-bs-dismiss="modal">
-                  <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-3' } }" class="button">
-                    <div class="row">
-                      <div class="col">Задачи</div>
-                      <div class="col svg"><arrowSVG /></div>
-                    </div>
-                  </router-link>
+                <div class="row mt-5 pe-3">
+                  <button class="button mb-2" data-bs-dismiss="modal">
+                    <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-3' } }" class="caption">
+                        <div>Задачи<span class="ps-2"><arrowSVG /></span></div>
+                    </router-link>
+                  </button>
                 </div>
-                <div class="row" data-bs-dismiss="modal">
-                  <router-link to="/settings" class="button">
-                    <div class="row">
-                      <div class="col">Сервис</div>
-                      <div class="col svg"><arrowSVG /></div>
-                    </div>
-                  </router-link>
+                <div class="row mt-2 pe-3">
+                  <button class="button" data-bs-dismiss="modal">
+                    <router-link to="/settings" class="caption">
+                        <div>Сервис<span class="ps-2"><arrowSVG /></span></div>
+                    </router-link>
+                  </button>
                 </div>
               </div>
               <div class="col">
@@ -67,13 +65,9 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="text-primary">
-                        <td class="left-cell">Подзарядка</td>
-                        <td>Выполняется</td>
-                      </tr>
-                      <tr>
-                        <td class="left-cell last">-</td>
-                        <td class="last">-</td>
+                      <tr v-for="(task, index) in filteredTasks" :key="index" :style="{ color: getBackgroundColor(task.status) }">
+                        <td class="left-cell" :class="{ 'last-cell-left': isLastColumn(index) }" @click="handleEditClick">{{ task.name }}</td>
+                        <td :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick">{{ task.status }}</td>                      
                       </tr>
                     </tbody>
                   </table>
@@ -109,6 +103,28 @@
     <otherSVG />
   </button>
 </template>
+
+<script setup>
+import { computed, ref } from 'vue';
+import { fetchDataByOption } from '../fetchDataByOption';
+
+const getBackgroundColor = (status) => {
+  switch (status) {
+    case 'Выполнена':
+      return 'var(--green)';
+    case 'Выполняется':
+      return 'var(--blue)';
+    default:
+      return 'var(--text-color)';
+  }
+};
+
+const isLastColumn = ref((index) => {
+  return index === filteredTasks.value.length - 1;
+});
+
+const filteredTasks = computed(() => fetchDataByOption('БКМ-3'));
+</script>
 
 <script>
 import arrowSVG from '/src/assets/arrow.svg';
@@ -168,6 +184,16 @@ export default {
 </script>
 
 <style scoped>
+.caption {
+  text-decoration: none;
+  color: var(--text-color);
+}
+.last-cell-left {
+  border-bottom-left-radius: 1.125rem;
+}
+.last-cell-right {
+  border-bottom-right-radius: 1.125rem;
+}
 .svg {
   padding: 0;
 }
@@ -285,7 +311,7 @@ td.last {
 
 }
 .time {
-  font: 400 2.5rem "SF Pro Display";
+  font: 400 2.5rem "SF Pro Rounded";
   border: .125rem solid var(--grey);
   border-radius: 0rem 1.125rem 1.125rem 0rem;
   padding: .35rem;

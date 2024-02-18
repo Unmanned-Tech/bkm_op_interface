@@ -20,7 +20,7 @@
   </template>
   
   <script setup>
-  import { ref, onMounted, onBeforeUnmount, toRefs } from 'vue';
+  import { ref, onMounted, onBeforeUnmount } from 'vue';
   import { useStore } from '../stores/store';
   import { useRoute, useRouter } from 'vue-router';
 
@@ -28,9 +28,8 @@
   const SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR = ".segmented-control .option input";
   const SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR = ".segmented-control .selection";
 
-  const { selectedOption } = toRefs(useStore());
   
-  const options = ref(["БКМ-1", "БКМ-2", "БКМ-3"]); // Add your options here
+  const options = ref(["БКМ-1", "БКМ-2", "БКМ-3"]);
   
   const store = useStore();
   const route = useRoute();
