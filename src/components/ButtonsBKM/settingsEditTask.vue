@@ -13,16 +13,16 @@
                 <div class="col">
                     <span class="caption_low">Триггер задачи:</span>
                 </div>
-                <div class="col-3 d-flex justify-content-end align-items-center">
+                <div class="col-2 d-flex justify-content-center align-items-center">
                     <input type="checkbox" class="form-check-input" style="transform: scale(2); box-shadow: none;" v-model="showTriggers">
                 </div>
             </div>
-            <div v-if="showTriggers">
+            <div class="triggers" :class="{ active: showTriggers }">
                 <div class="row mb-3 align-items-center">
                     <div class="col">
                         <span class="caption_low">Осадки:</span>
                     </div>
-                    <div class="col d-flex p-0 justify-content-end align-items-center">
+                    <div class="col d-flex justify-content-end align-items-center">
                         <select class="form__select d-flex" v-model="dataStore.selectedOption" @change="saveSelOption">
                             <option value="1">Снег</option>
                             <option value="2">БКМ-2</option>
@@ -34,7 +34,7 @@
                     <div class="col">
                         <span class="caption_low">Температура:</span>
                     </div>
-                    <div class="col d-flex p-0 justify-content-end align-items-center">
+                    <div class="col d-flex justify-content-end align-items-center">
                         <input class="inp" v-model="temperature" @input="handleTemperatureInput" type="number">
                         <span class="caption_low ms-2">°C</span>
                     </div>
@@ -43,7 +43,7 @@
                     <div class="col">
                         <span class="caption_low">Время:</span>
                     </div>
-                    <div class="col d-flex justify-content-end align-items-center p-0">
+                    <div class="col d-flex justify-content-end align-items-center">
                         <input type="time" class="inp time" v-model="time" @input="() => saveTime(time)">
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <div class="col">
                         <span class="caption_low">Заряд:</span>
                     </div>
-                    <div class="col d-flex justify-content-end align-items-center p-0">
+                    <div class="col d-flex justify-content-end align-items-center">
                         <input class="inp" v-model="charge" @input="handleChargeInput" type="number">
                         <span class="caption_low ms-2">%</span>
                     </div>
@@ -180,6 +180,14 @@ export default {
 </script>
 
 <style scoped>
+.triggers {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease-out;
+}
+.triggers.active {
+    max-height: 100%;
+}
 .inp {
     font-size: 1.75rem;
     width: 50%;
