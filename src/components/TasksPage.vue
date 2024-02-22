@@ -70,10 +70,8 @@ import { computed, watchEffect, ref } from 'vue';
 import SegmentedControl from './SegmentedControl.vue';
 import { fetchDataByOption } from './fetchDataByOption';
 import { useStore } from '../stores/store';
-import { useRoute } from 'vue-router';
 
 const store = useStore();
-const route = useRoute();
 
 const isLastColumn = ref((index) => {
   return index === filteredTasks.value.length - 1;
@@ -91,14 +89,6 @@ const getBackgroundColor = (status) => {
 };
 
 const filteredTasks = computed(() => fetchDataByOption(store.selectedOption));
-
-watchEffect(() => {
-  // Update selectedOption when route changes
-  const selectedOptionFromRoute = route.params.selectedOption;
-  if (selectedOptionFromRoute !== store.selectedOption) {
-    store.setSelectedOption(selectedOptionFromRoute);
-  }
-});
 
 </script>
 
@@ -206,22 +196,22 @@ td {
   padding: .5rem 3rem;
 }
 .tasks {
-    padding: .5rem 1rem;
-    border-radius: 1.125rem 1.125rem 0 0;
+  padding: .5rem 1rem;
+  border-radius: 1.125rem 1.125rem 0 0;
 }
 
 .start {
-    border-radius: 1.125rem 0 0;
+  border-radius: 1.125rem 0 0;
 }
 .mid {
-    border-left: none;
+  border-left: none;
 }
 .end {
-    border-radius: 0 1.125rem 0 0;
-    border-left: none;
+  border-radius: 0 1.125rem 0 0;
+  border-left: none;
 }
 .lastcell {
-    border-radius: 0 0 1.125rem 1.125rem;
+  border-radius: 0 0 1.125rem 1.125rem;
 }
 .time {
   font: 400 2rem "SF Pro Rounded";

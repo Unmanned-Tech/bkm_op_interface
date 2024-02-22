@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <button class="button px-3" data-bs-toggle="modal" data-bs-target="#emerModal"><p class="cap">Остановить</p></button>
+  <button class="button px-2" data-bs-toggle="modal" data-bs-target="#emerModal"><p class="cap">Остановить</p></button>
 </template>
 
 <script>

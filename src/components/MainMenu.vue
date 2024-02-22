@@ -4,21 +4,23 @@
       <router-link to="/" class="link">Главная</router-link>
     </li>
     <li class="col">
-      <router-link :to="{ name: 'tasks', params: { selectedOption: store.selectedOption }}" class="link">Задачи</router-link>
+      <router-link :to="{ name: 'tasks', params: { selectedOption: store.selectedOption } }" class="link">Задачи</router-link>
     </li>
     <li class="col">
       <router-link to="/teleop" class="link">Телеуправление</router-link>
     </li>
     <li class="col">
-      <router-link to="/status" class="link ln">Системная<br/>информация</router-link>
+      <router-link :to="{ name: 'status', params: { selectedOption: threeStore.threeSelectedOption } }" class="link ln">Системная<br/>информация</router-link>
     </li>
   </ul>
 </template>
 
 <script setup>
 import { useStore } from '../stores/store';
+import { useThreeStore } from '../stores/store';
 
 const store = useStore();
+const threeStore = useThreeStore();
 
 </script>
 
