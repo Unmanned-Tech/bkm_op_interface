@@ -26,6 +26,19 @@ export const useAnotherStore = defineStore('anotherStore', {
   },
 });
 
+export const useThreeStore = defineStore('threeStore', {
+  state: () => ({
+    threeSelectedOption: localStorage.getItem('threeSelectedOption') || null,
+  }),
+  actions: {
+    setThreeSelectedOption(option) {
+      this.threeSelectedOption = option;
+      localStorage.setItem('threeSelectedOption', option);
+      return this.threeSelectedOption;
+    },
+  },
+});
+
 export const useDataStore = defineStore('dataStore', {
   state: () => ({
     temperature: null,
