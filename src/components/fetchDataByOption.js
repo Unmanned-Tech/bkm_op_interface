@@ -20,36 +20,40 @@ export function fetchDataByOption(option) {
   return dataMap[option] || [];
 }
 
-export function fetchDataByOption1(option, searchQuery) {
+export function fetchDataByOption1(option, searchQuery, selectedStatus) {
   const dataMap1 = {
     'БКМ-1': [
-      { time: '18.11.23, 08:37', robot: 'БКМ-1', type: '<i class="bi bi-exclamation-diamond"></i>', notification: 'Система навигации БКМ 1 потеряла сигнал' },
+      { time: '18.11.23, 08:37', robot: 'БКМ-1', type: '<i class="bi bi-exclamation-diamond"></i>', notification: 'Система навигации БКМ 1 потеряла сигнал', status: 'Крит' },
     ],
     'БКМ-2': [
-      { time: '19.11.23, 10:41', robot: 'БКМ-2', type: '<i class="bi bi-info-circle"></i>', notification: 'Уборка района №1 завершена успешно' },
-      { time: '11.12.23, 13:24', robot: 'БКМ-2', type: '<i class="bi bi-exclamation-triangle"></i>', notification: 'Уровень заряда батареи БКМ 2 ниже 20%' },
-      { time: '11.12.23, 20:32', robot: 'БКМ-2', type: '<i class="bi bi-exclamation-diamond"></i>', notification: 'Система обнаружения препятствий БКМ 2 не функционирует' },
+      { time: '19.11.23, 10:41', robot: 'БКМ-2', type: '<i class="bi bi-info-circle"></i>', notification: 'Уборка района №1 завершена успешно', status: 'Инф' },
+      { time: '11.12.23, 13:24', robot: 'БКМ-2', type: '<i class="bi bi-exclamation-triangle"></i>', notification: 'Уровень заряда батареи БКМ 2 ниже 20%', status: 'Пред' },
+      { time: '11.12.23, 20:32', robot: 'БКМ-2', type: '<i class="bi bi-exclamation-diamond"></i>', notification: 'Система обнаружения препятствий БКМ 2 не функционирует', status: 'Крит' },
     ],
     'БКМ-3': [
-      { time: '19.11.23, 12:32', robot: 'БКМ-3', type: '<i class="bi bi-check-circle"></i>', notification: 'БКМ 3 вернулась на базу для плановой зарядки' },
-      { time: '11.12.23, 09:41', robot: 'БКМ-3', type: '<i class="bi bi-info-circle"></i>', notification: 'Начало рабочего цикла по маршруту №5' },
+      { time: '19.11.23, 12:32', robot: 'БКМ-3', type: '<i class="bi bi-check-circle"></i>', notification: 'БКМ 3 вернулась на базу для плановой зарядки', status: 'Сист' },
+      { time: '11.12.23, 09:41', robot: 'БКМ-3', type: '<i class="bi bi-info-circle"></i>', notification: 'Начало рабочего цикла по маршруту №5', status: 'Инф' },
     ],
     
   };
-  if (option === "Все") {
-    const allData = Object.values(dataMap1).flat();
-    return filterData(allData, searchQuery);
-  } 
-  const specificData = dataMap1[option] || [];
-  return filterData(specificData, searchQuery); 
-}
+  let filteredData = [];
 
-function filterData(data, searchQuery) {
-  if(!searchQuery) {
-    return data.map(item => ({ ...item, list: item.robot }));
+  if (option === "Все") {
+    filteredData = Object.values(dataMap1).flat();
+  } else {
+    filteredData = dataMap1[option] || [];
   }
 
-  return data.filter(item => 
-    item.notification.toLowerCase().includes(searchQuery.toLowerCase())
-  ).map(item => ({ ...item, list: item.robot }));
+  if (selectedStatus) {
+    filteredData = filteredData.filter(item => item.status === selectedStatus);
+  }
+
+  if (searchQuery) {
+    filteredData = filteredData.filter(item => 
+      item.notification.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  return filteredData.map(item => ({ ...item, list: item.robot }));
+
 }

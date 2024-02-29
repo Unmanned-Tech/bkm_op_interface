@@ -5,7 +5,7 @@ import { ref } from 'vue';
 </script>
 
 <template>
-    <main_menu v-if="$route.name !== 'edit'"></main_menu>
+    <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
     <div class="container-fluid">
         <FullScreen></FullScreen>
         <router-view v-slot="{ Component }">
@@ -13,7 +13,6 @@ import { ref } from 'vue';
                 <Component :is="Component" />
             </Transition>
         </router-view>
-        
     </div>
 
 

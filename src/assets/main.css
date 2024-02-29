@@ -11,9 +11,16 @@ a.router-link-active.router-link-exact-active.link.ln {
   line-height: 1.25rem;
 }
 
+div .nipple:active {
+  opacity: 1 !important;
+}
+
 div .front  {
-  background-color: var(--bg-tertiary) !important;
-  /* background-image: url(../assets/1.png) !important; */
+  background-color: var(--bg-primary) !important;
+  opacity: .8 !important;
+}
+div .back {
+  background-color: var(--bg-secondary) !important;
 }
 
 * {
@@ -22,9 +29,7 @@ div .front  {
 }
 
 body {
-  /* background-color: var(--bg-secondary); */
   color: var(--text-color);
-  
   transition: background-color .3s, color .1s;
 }
 

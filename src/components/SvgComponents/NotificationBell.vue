@@ -13,7 +13,7 @@
                     <span>Последние уведомления</span> 
                     <span>
                         <button class="set notts">
-                            <router-link to="/logs">
+                            <router-link :to="{ name: 'hist', params: { selectedOption: store.threeSelectedOption } }">
                                 <arrowToSVG />
                             </router-link>
                         </button> 
@@ -36,6 +36,7 @@
 import bellSVG from '/src/assets/notification-bing.svg';
 import arrowToSVG from '/src/assets/arrowTo.svg';
 import Toast from '../Toast.vue';
+import { useThreeStore } from '../../stores/store';
 
 export default {
     components: {
@@ -43,6 +44,13 @@ export default {
         arrowToSVG,
         Toast
     },
+    setup() {
+        const store = useThreeStore();
+
+        return {
+            store
+        }
+    }
 }
 </script>
 

@@ -1,12 +1,26 @@
 <template>
     <div>
-        <div class="row mt-5">
+        <div class="row mt-3">
+            <div class="col d-flex mt-auto mb-auto">
+                <button class="button" @click="goBack">
+                    <div class="col svg me-1 d-flex align-items-center justify-content-center"><arrowSVG /></div>
+                    <div class="col p-0 me-3">Назад</div>
+                </button>        
+            </div>
+            <div class="col d-flex justify-content-end">
+                <span class="header">
+                    История уведомлений
+                </span>
+            </div>
+        </div>
+        <div class="row line mb-3 mt-3"></div>
+        <div class="row">
             <div class="col-6 pe-1">
                 <segmentedForStatus />
             </div>
             <div class="col-auto d-flex">
-                <select class="form__select" required>
-                    <option disabled selected>Тип уведомления</option>
+                <select v-model="selectedOption" class="form__select">
+                    <option selected>Тип уведомления</option>
                     <option value="1">Системные</option>
                     <option value="2">Информ.</option>
                     <option value="3">Предупрежд.</option>
@@ -52,6 +66,8 @@ import formSearch from "./ButtonsBKM/formSearch.vue";
 import { fetchDataByOption1 } from "./fetchDataByOption"
 import { useThreeStore } from '../stores/store';
 import { ref, computed } from 'vue';
+import arrowSVG from '/src/assets/arrow.svg';
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -59,6 +75,7 @@ export default {
     components: {
         segmentedForStatus,
         formSearch,
+        arrowSVG
     },
     data: function () {
         return {
@@ -73,23 +90,47 @@ export default {
         };
     },
     setup() {
+        const router = useRouter();
         const store = useThreeStore();
         const searchQuery = ref("");
+        const selectedOption = ref("");
+        const selectedStatus = computed(() => {
+            switch (selectedOption.value) {
+                case "1":
+                    return "Сист";
+                case "2":
+                    return "Инф";
+                case "3":
+                    return "Пред";
+                case "4":
+                    return "Крит";
+                default:
+                    return "";
+            }
+        });
+
         const isLastColumn = ref((index) => {
             return index === newTableData.value.length - 1;
         });
-        const newTableData = computed(() => fetchDataByOption1(store.threeSelectedOption, searchQuery.value));
+        const newTableData = computed(() => fetchDataByOption1(store.threeSelectedOption, searchQuery.value, selectedStatus.value));
 
 
         function handleSearch(query) {
             searchQuery.value = query;
         }
 
+        function goBack() {
+            router.push({ name: 'MainPage' })
+        };
+
         return {
             store,
             isLastColumn,
             newTableData,
             handleSearch,
+            selectedOption,
+            selectedStatus,
+            goBack
         }
     },
     mounted: function () {
@@ -245,5 +286,35 @@ td {
 }
 .notif {
     text-align: left;
+}
+
+.button {
+    box-shadow: 0 0.1875rem 0.25rem 0 rgba(0, 0, 0, .25);
+    background-color: var(--bg-tertiary);
+    border-radius: 1.125rem;
+    color: var(--text-color);
+    border: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 400 1.75rem "SF Pro Display";
+    padding: .5rem .75rem;
+    text-decoration: none;
+}
+.header {
+    font: 400 2.25rem "SF Pro Display";
+    background-color: var(--bg-tertiary);
+    border-radius: 1.125rem;
+    padding: .5rem 1.5rem;
+    border: solid .125rem var(--grey);
+}
+.line {
+    border-top: solid .125rem var(--bg-tertiary);
+}
+.svg {
+    padding: 0;
+    transform: rotate(180deg) scale(0.8);
+    
 }
 </style>

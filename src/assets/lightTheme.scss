@@ -38,6 +38,11 @@ td .other {
   background-color: var(--grey) !important;
 }
 
+
+div .front  {
+  background-color: var(--bg-primary) !important;
+}
+
 .segmented-control .option label::before,
 .segmented-control .option label::after {
   background: rgba(142, 142, 147, .15) !important;
@@ -62,6 +67,10 @@ svg.arrow {
 path.arrow {
   fill: none;
   stroke: black;
+}
+
+path.pol {
+  fill: black;
 }
 
 .form-check-input {
