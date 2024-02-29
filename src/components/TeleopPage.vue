@@ -27,7 +27,7 @@
             <button class="px-3 fixed-button button" @click="toggleColumn">
               <div class="row align-items-center">
                 <div class="col-1">
-                  <polygonSVG :class="{ 'poly': !isColumnVisible }"/>
+                  <Polygon :class="{ 'poly': !isColumnVisible }"/>
                 </div>
                 <div class="col">
                   <span class="caption">Вид сзади</span>
@@ -59,7 +59,7 @@ import Map from "./maps/Map1.vue"
 
 export default {
   name: "TeleopPage",
-  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic },
+  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic, Map },
   data: function () {
     return {
       isColumnVisible: false,
