@@ -47,16 +47,19 @@
 </template>
 
 <script>
+import Mic from "../assets/mic-fill.svg"
+import Sound from "../assets/Vector.svg"
+import Lights from "../assets/Lights.svg"
+import Polygon from "../assets/Polygon.svg"
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import * as roslib from "../../roslib";
-import polygonSVG from "/src/assets/Polygon.svg"
 import Map from "./maps/Map1.vue"
 
 export default {
   name: "TeleopPage",
-  components: { BatteryInfo, EmerStopButton, polygonSVG, Map },
+  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic },
   data: function () {
     return {
       isColumnVisible: false,
