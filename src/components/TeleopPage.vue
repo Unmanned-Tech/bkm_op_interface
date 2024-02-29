@@ -19,7 +19,20 @@
     </div>
     <div class="row">
       <div class="col">
-        
+        <div class="row">
+          <div class="col-5 p-3 ms-4">
+            <div>
+              <div class="row tongue py-1">
+                <div class="col">
+                  <Polygon></Polygon>
+                  <Lights></Lights>
+                  <Mic></Mic>
+                  <Sound></Sound>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-5 slide-out-column hidebar" :class="{ 'slide-out-column': isColumnVisible, 'hidden': !isColumnVisible }">
         <div class="row">
@@ -297,5 +310,11 @@ main {
 }
 .poly {
   transform: scale(-1, -1);
+}
+.tongue{
+  background-color: var(--bg-tertiary);
+  border: solid .125rem var(--grey2);
+  border-top-left-radius: 1.125rem;
+  border-top-right-radius: 1.125rem;
 }
 </style>
