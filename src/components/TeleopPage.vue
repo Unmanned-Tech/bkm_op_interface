@@ -1,21 +1,47 @@
 <template>
-    <div class="row justify-content-end mt-3">
+  <div class="row justify-content-end mt-3">
       <div class = "col d-flex">
-      <img class="img-fluid rounded-4 map ms-4" src="../assets/map-dark.png">
+        <img class="img-fluid rounded-4 map ms-4" src="../assets/map-dark.png">
+      </div>
+      <div class = "col-2 d-flex justify-content-center mt-5 me-5 button">
+        <EmerStopButton></EmerStopButton>
+      </div> 
     </div>
-    <div class = "col-2 d-flex justify-content-center mt-5 me-5 button">
-      <EmerStopButton></EmerStopButton>
-      
-    </div> </div>
     <div class="col">
       <div class="row mt-5 justify-content-end">
-      <div id="zone_joystick" class="zone_static" style="width: 100px; height: 100px;">
+        <div id="zone_joystick" class="zone_static" style="width: 100px; height: 100px;">
       </div>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-2 p-1 ms-4 column">
+      <div>
+        <div class="row tongue py-1">
+          <div class="col">
+            <Polygon class="arrow me-1"></Polygon>
+            <Lights></Lights>
+            <Mic></Mic>
+            <Sound></Sound>
+          </div>
+        </div>
+      </div>
+
     </div>
+    <div class="col">
+      хйу
+    </div>
+    <div class="col">
+      хуй
+
+    </div>
+  </div>
 </template>
 
 <script>
+import Mic from "../assets/mic-fill.svg"
+import Sound from "../assets/Vector.svg"
+import Lights from "../assets/Lights.svg"
+import Polygon from "../assets/Polygon.svg"
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
@@ -24,7 +50,7 @@ import { resolveDirective } from "vue";
 
 export default {
   name: "TeleopPage",
-  components: { BatteryInfo, EmerStopButton },
+  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic },
   data: function () {
     return {
       shetka_speed: 0,
@@ -226,11 +252,38 @@ export default {
 }
 .map {
     border: solid var(--grey2) .125rem;
-    width: 20%;
+    width: 25%;
     position: absolute;
   }
 .button{
  padding-right: 10rem;
+}
+
+.arrow{
+  rotate: -90deg;
+}
+
+.tongue{
+  background-color: var(--bg-tertiary);
+  border: solid .125rem var(--grey2);
+  border-top-left-radius: 1.125rem;
+  border-top-right-radius: 1.125rem;
+}
+
+.mainbody1{
+  background-color: var(--bg-tertiary);
+  border: solid .125rem var(--grey2);
+}
+
+.column{
+  width: 10%;
+}
+
+.lights{
+  scale: 100%;
+  border: solid .05rem var(--grey2);
+  border-radius: 50%;
+  
 }
 
 </style>
