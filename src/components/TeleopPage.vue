@@ -290,7 +290,7 @@ main {
   overflow: hidden;
 }
 .slide-out-column.hidden {
-  transform: translateY(81%); 
+  transform: translateY(math()); 
 }
 .poly {
   transform: scale(-1, -1);
