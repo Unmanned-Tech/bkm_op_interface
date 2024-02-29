@@ -12,7 +12,7 @@
       </div>
     </div>
   </div>
-  <button class="button" data-bs-toggle="modal" data-bs-target="#emerModal"><p class="cap">Остановить</p></button>
+  <button class="button px-2" data-bs-toggle="modal" data-bs-target="#emerModal"><p class="cap">Остановить</p></button>
 </template>
 
 <script>
@@ -49,10 +49,10 @@ export default {
     border-radius: 1.125rem;
     color: var(--text-color);
     border: none;
-    font: 400 1.25rem "SF Pro Display";
+    font: 400 1.5rem "SF Pro Display";
   }
 .cap {
-  margin: .75rem;
+  margin: .75rem .5rem;
 }
 .cancel {
   background-color: var(--grey2);

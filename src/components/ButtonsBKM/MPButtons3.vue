@@ -2,9 +2,9 @@
     <div class="col">
       <EmerStopButton></EmerStopButton>
     </div>
-    <div class="col">
+    <!-- <div class="col">
       <button class="stop clean"><p class="capbtn">Уборка</p></button>
-    </div>
+    </div> -->
     <div class="col d-flex justify-content-end">
       <RobotModal3 />
     </div>

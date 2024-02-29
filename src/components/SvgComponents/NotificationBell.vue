@@ -1,19 +1,19 @@
 <template>
     <div class="d-flex justify-content-end">
-        <div class="btn-group dropstart position-absolute">
+        <div class="btn-group dropstart position-absolute me-2">
             <button class="set" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                 <bellSVG />
                 <span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">
-                    1
+                    4
                     <span class="visually-hidden">alert</span>
                 </span>
             </button>
-            <div class="dropdown-menu me-2">
+            <div class="dropdown-menu me-2 animate fade">
                 <div class="dropdown-header align-items-center d-flex">
                     <span>Последние уведомления</span> 
                     <span>
                         <button class="set notts">
-                            <router-link to="/logs">
+                            <router-link :to="{ name: 'hist', params: { selectedOption: store.threeSelectedOption } }">
                                 <arrowToSVG />
                             </router-link>
                         </button> 
@@ -22,7 +22,7 @@
                 <div>
                 </div>
                 <div class="p-3">
-                    <!-- <Toasts /> -->
+                    <Toast />
                 </div>
                 <p class="p-3 d-flex justify-content-center">
                     Нет более старых уведомлений
@@ -35,12 +35,22 @@
 <script>
 import bellSVG from '/src/assets/notification-bing.svg';
 import arrowToSVG from '/src/assets/arrowTo.svg';
+import Toast from '../Toast.vue';
+import { useThreeStore } from '../../stores/store';
 
 export default {
     components: {
         bellSVG,
         arrowToSVG,
+        Toast
     },
+    setup() {
+        const store = useThreeStore();
+
+        return {
+            store
+        }
+    }
 }
 </script>
 
@@ -48,17 +58,31 @@ export default {
 p {
     color: var(--grey);
 }
+
+.animate {
+    animation-duration: .4s;
+    animation-fill-mode: both;
+}
+
+.fade {
+    animation-name: show;
+}
 .dropdown-menu {
     background-color: var(--bg-tertiary);
     border: none;
     box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
-    animation: .3s show ease;
     border-radius: 1.125rem;
 }
 
 @keyframes show {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+        
+    }
+    to {
+        opacity: 1;
+        
+    }
 }
 
 .dropdown-header {
@@ -72,6 +96,9 @@ p {
     border-radius: 1.125rem;
     border: none;
   }
+.badge {
+    font: 400 .75rem "SF Pro Display"
+}
 
 .set.notts {
     background-color: var(--grey3);

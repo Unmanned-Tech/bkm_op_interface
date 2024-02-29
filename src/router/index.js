@@ -4,7 +4,9 @@ import RobotPage from "../components/RobotPage.vue";
 import TeleopPage from "../components/TeleopPage.vue";
 import SettingsPage from "../components/SettingsPage.vue";
 import LogsPage from "../components/LogsPage.vue";
-import StatusPage from "../components/StatusPage.vue"
+import HNPage from "../components/HistoryNotifications.vue"
+import TasksPage from "../components/TasksPage.vue"
+import EditorTasks from "../components/EditorTasks.vue"
 
 const routes = [
   {
@@ -25,22 +27,32 @@ const routes = [
   {
     path: "/teleop",
     name: "teleop",
-    component: TeleopPage
+    component: TeleopPage,
   },
   {
     path: "/settings",
     name: "settings",
-    component: SettingsPage
+    component: SettingsPage,
   },
   {
-    path: "/logs",
-    name: "logs",
-    component: LogsPage
+    path: "/hist/:selectedOption?",
+    name: "hist",
+    component: HNPage,
   },
   {
     path: "/status",
     name: "status",
-    component: StatusPage
+    component: LogsPage,
+  },
+  {
+    path: "/tasks/:selectedOption?",
+    name: "tasks",
+    component: TasksPage,
+  },
+  {
+    path: "/edit/:mode?",
+    name: "edit",
+    component: EditorTasks,
   }
 ];
 

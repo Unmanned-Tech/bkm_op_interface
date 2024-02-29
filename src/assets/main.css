@@ -11,13 +11,52 @@ a.router-link-active.router-link-exact-active.link.ln {
   line-height: 1.25rem;
 }
 
-body {
-  /* background-color: var(--bg-secondary); */
-  color: var(--text-color);
-  
-  font-family: 'SF Pro Display', sans-serif;
+div .nipple:active {
+  opacity: 1 !important;
+}
+
+div .front  {
+  background-color: var(--bg-primary) !important;
+  opacity: .8 !important;
+}
+div .back {
+  background-color: var(--bg-secondary) !important;
+}
+
+* {
+  font-family: 'SF Pro Display';
   font-weight: 400;
+}
+
+body {
+  color: var(--text-color);
   transition: background-color .3s, color .1s;
+}
+
+.leaflet-bar {
+  border-radius: .5rem !important;
+  transform: scale(1.2) !important;
+  border: 0 !important;
+  margin-top: 5rem !important;
+}
+
+.leaflet-bar a {
+  background-color: transparent !important;
+  color: var(--text-color) !important;
+  width: 30px !important;
+  height: 30px !important;
+	line-height: 23px !important;
+}
+
+.leaflet-bar a:first-child {
+	border-radius: .25rem !important;
+  border: solid .125rem var(--text-color) !important;
+  margin-bottom: .5rem !important;
+}
+.leaflet-bar a:last-child {
+	border-radius: .25rem !important;
+  border: solid .125rem var(--text-color) !important;
+  border-top: none;
 }
 
 :root {
