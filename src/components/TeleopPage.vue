@@ -21,7 +21,7 @@
       <div class="col">
         
       </div>
-      <div class="col-5 slide-out-column hidebar" :class="{ 'slide-out-column': isColumnVisible, 'hidden': !isColumnVisible }">
+      <div class="col-5 slide-out-column" :class="{ 'slide-out-column': isColumnVisible, 'hidden': !isColumnVisible }">
         <div class="row">
           <div class="col d-flex justify-content-end">
             <button class="px-3 fixed-button button" @click="toggleColumn">
@@ -29,14 +29,19 @@
                 <div class="col-1">
                   <Polygon :class="{ 'poly': !isColumnVisible }"/>
                 </div>
-                <div class="col">
+                <div class="col px-1">
                   <span class="caption">Вид сзади</span>
                 </div>
               </div>
             </button>
           </div>
         </div>
-        <img src="/src/assets/image6.png" class="img-fluid slide-out" style="border-top-left-radius: 1.125rem; border: solid var(--grey2) .125rem;">
+        <div class="row" ref="imageRow">
+          <div class="col">
+            <img src="/src/assets/image6.png" id="backCam" class="img-fluid slide-out">
+          </div>
+        </div>
+        
       </div>
       <div class="col">
         
@@ -45,6 +50,10 @@
     </div>
   </main>
 </template>
+
+<script setup>
+
+</script>
 
 <script>
 import Mic from "../assets/mic-fill.svg"
@@ -115,11 +124,8 @@ export default {
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.shetka_send_timer = setInterval(this.send_shetka_speed, 300);
     this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
-
-
     // Then we create the payload to be published. The object we pass in to ros.Message matches the
     // fields defined in the geometry_msgs/Twist.msg definition.
-    
   },
   methods: {
     toggleColumn() {
@@ -242,13 +248,14 @@ export default {
         alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
     },
+    
   }
 }
 
 
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 img {
   box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
 }
@@ -275,7 +282,7 @@ main {
   opacity: 1;
 }
 .caption {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   color: var(--text-color);
 }
 .button {
@@ -285,17 +292,23 @@ main {
   z-index: 1;
 }
 .slide-out-column {
-  height: 100%;
-  transition: transform 0.5s ease;
+  transition: transform .5s ease-out;
   transform: translateY(0);
 }
-.hidebar {
-  overflow: hidden;
-}
+
 .slide-out-column.hidden {
-  transform: translateY(math()); 
+  transform: translateY(calc(181px + 4px));
+
 }
 .poly {
   transform: scale(-1, -1);
 }
+
+#backCam {
+  width: 500px;
+  height: 185px;
+  border-top-left-radius: 1.125rem; 
+  border: solid var(--grey2) .125rem;
+}
+
 </style>
