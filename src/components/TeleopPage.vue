@@ -1,11 +1,22 @@
 <template>
-  <main>
+  <div class="main">
     <div class="row">
-      <div class="col map-col">
-        <Map class="map mt-2 ms-2"/>
+      <div class="col mt-2 ms-4 slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible}">
+        <div class="row">
+          <div class="col pe-0 map-col">
+            <Map class="map" />
+          </div>
+          <div class="col-auto ps-0 d-flex align-items-center">
+            <button class="tongue" @click="toggleMap">
+              <div :style="{ 'transform': isMapVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
+                <Polygon />
+              </div>
+              <i class="bi bi-geo-alt"></i>
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="col">
-      </div>
+      <div class="col"></div>
       <div class="col mt-5">
         <div class="row mt-5 align-items-center">
           <div class="col mb-5 d-flex justify-content-center">
@@ -17,30 +28,65 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="row">
-          <div class="col-5 p-3 ms-4">
-            <div>
-              <div class="row tongue py-1">
-                <div class="col">
-                  <Polygon></Polygon>
-                  <Lights></Lights>
-                  <Mic></Mic>
-                  <Sound></Sound>
-                </div>
+    <div class="row align-items-end">
+      <div class="col-auto ms-4 mb-2 slide-out-columnX" :class="{ 'slide-out-columnX': isOptionsVisible, 'hiddenX': !isOptionsVisible }">
+        <div class="row align-items-center">
+          <div class="col butt-col">
+            <div class="row align-items-center">
+              <div class="col">
+                <button class="buttonSet">
+                  <Lights style="transform: scale(2);"/>
+                </button>
               </div>
+              <div class="col">
+                <button class="buttonSet mic">
+                  <Mic style="transform: scale(2);"/>
+                </button>
+              </div>
+              <div class="col">
+                <button class="buttonSet">
+                  <Sound style="transform: scale(2);"/>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="row align-items-center">
+              <button class="tongue" @click="toggleOptions">
+                <div class="col">
+                  <div class="row align-items-center">
+                    <div class="col-auto" :style="{ 'transform': isOptionsVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
+                      <Polygon style="transform: scale(0.9);"/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-auto">
+                      <Lights style="transform: scale(0.9);"/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-auto">
+                      <Mic style="transform: scale(0.9);"/>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-auto">
+                      <Sound style="transform: scale(0.9);"/>
+                    </div>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-5 slide-out-column" :class="{ 'slide-out-column': isColumnVisible, 'hidden': !isColumnVisible }">
+      <div class="col slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
         <div class="row">
           <div class="col d-flex justify-content-end">
-            <button class="px-3 fixed-button button" @click="toggleColumn">
+            <button class="px-3 fixed-button button" @click="toggleCamera">
               <div class="row align-items-center">
                 <div class="col-1">
-                  <Polygon :class="{ 'poly': !isColumnVisible }"/>
+                  <Polygon :class="{ 'poly': !isCameraVisible }"/>
                 </div>
                 <div class="col px-1">
                   <span class="caption">Вид сзади</span>
@@ -50,18 +96,18 @@
           </div>
         </div>
         <div class="row" ref="imageRow">
-          <div class="col">
-            <img src="/src/assets/image6.png" id="backCam" class="img-fluid slide-out">
+          <div class="col d-flex justify-content-end">
+            <img src="/src/assets/image6.png" id="backCam" class="slide-out">
           </div>
         </div>
         
       </div>
-      <div class="col">
+      <div class="col-3">
         
       </div>
 
     </div>
-  </main>
+  </div>
 </template>
 
 <script setup>
@@ -70,7 +116,7 @@
 
 <script>
 import Mic from "../assets/mic-fill.svg"
-import Sound from "../assets/Vector.svg"
+import Sound from "../assets/sound.svg"
 import Lights from "../assets/Lights.svg"
 import Polygon from "../assets/Polygon.svg"
 import EmerStopButton from "./EmerStopButton.vue";
@@ -84,7 +130,9 @@ export default {
   components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic, Map },
   data: function () {
     return {
-      isColumnVisible: false,
+      isCameraVisible: false,
+      isOptionsVisible: false,
+      isMapVisible: false,
       shetka_speed: 0,
       shetka_angle: 0,
       lin_max_speed: 0,
@@ -141,8 +189,14 @@ export default {
     // fields defined in the geometry_msgs/Twist.msg definition.
   },
   methods: {
-    toggleColumn() {
-      this.isColumnVisible = !this.isColumnVisible;
+    toggleMap() {
+      this.isMapVisible = !this.isMapVisible;
+    },
+    toggleOptions() {
+      this.isOptionsVisible = !this.isOptionsVisible;
+    },
+    toggleCamera() {
+      this.isCameraVisible = !this.isCameraVisible;
     },
     set_shetka_speed() {
       this.shetka_speed = document.getElementById("shetka_speed_range").value;
@@ -272,7 +326,7 @@ export default {
 img {
   box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
 }
-main {
+.main {
   background: url("/src/assets/image5.png");
   background-size:cover;
   overflow: hidden;
@@ -284,33 +338,44 @@ main {
   height: 200px;
 }
 .map-col {
-  height: 15.528rem;
+  max-width: 20rem;
+  height: 12rem;
 }
 .map {
   border: solid var(--grey2) .25rem;
   border-radius: 1.125rem;
-}
-.map:hover, .map:active {
-  transition: opacity .5s;
-  opacity: 1;
 }
 .caption {
   font-size: 1.5rem;
   color: var(--text-color);
 }
 .button {
+  box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
   background-color: var(--bg-tertiary);
   border-radius: 1.125rem 1.125rem 0 0;
   border: solid .125rem var(--grey2);
   z-index: 1;
 }
-.slide-out-column {
-  transition: transform .5s ease-out;
+.slide-out-columnY {
+  transition: transform .5s ease;
   transform: translateY(0);
 }
 
-.slide-out-column.hidden {
-  transform: translateY(calc(181px + 4px));
+.slide-out-columnX {
+  transition: transform .5s ease;
+  transform: translateX(0);
+}
+
+.slide-out-columnX.hiddenX {
+  transform: translateX(-320px);
+}
+
+.mapHide {
+  transform: translateX(-332px);
+}
+
+.slide-out-columnY.hidden {
+  transform: translateY(calc(183px + 4px));
 
 }
 .poly {
@@ -318,8 +383,8 @@ main {
 }
 
 #backCam {
-  width: 500px;
-  height: 185px;
+  width: 400px;
+  height: 187px;
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
 }
@@ -327,7 +392,28 @@ main {
 .tongue{
   background-color: var(--bg-tertiary);
   border: solid .125rem var(--grey2);
-  border-top-left-radius: 1.125rem;
   border-top-right-radius: 1.125rem;
+  border-bottom-right-radius: 1.125rem;
+  padding-block: 6px;
+  color: var(--text-color);
+}
+.bi {
+  font-size: 1.5rem;
+}
+.buttonSet {
+  border-radius: 50%; 
+  padding: 1.5rem;
+  border: solid var(--grey2) .125rem; 
+  background-color: transparent;
+}
+.buttonSet.mic:active {
+  border-color: var(--green);
+}
+.butt-col {
+  background-color: var(--bg-tertiary);
+  border: solid var(--grey2) .125rem;
+  padding-block: 17px;
+  border-top-left-radius: 1.125rem;
+  border-bottom-left-radius: 1.125rem;
 }
 </style>

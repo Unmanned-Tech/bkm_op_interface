@@ -39,7 +39,6 @@ export default {
     box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
-    /* margin-top: .75rem; */
     color: var(--text-color);
     border: none;
     padding: .5rem 1.25rem;
@@ -48,7 +47,6 @@ export default {
   }
   
 .modal-content {
-  /* color: var(--text-color); */
   border-radius: 1.125rem; 
 }
 
