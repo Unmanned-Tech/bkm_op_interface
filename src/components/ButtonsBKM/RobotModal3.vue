@@ -210,14 +210,17 @@ export default {
   border-spacing: 0;
 }
 td {
-  font: 400 1.25rem "SF Pro Display";
+  font-weight: 400;
+  font-size: 1.25rem;
   border: .125rem solid var(--grey);
   background-color: var(--bg-tertiary);
   border-top: none;
   padding: .5rem;
 }
 th {
-  font: 700 1.425rem "SF Pro Display";
+  font-weight: 700;
+  font-size: 1.425rem;
+  font-family: "SF Pro Bold";
   padding: .125rem;
   border: .125rem solid var(--grey);
   background-color: var(--grey2);
@@ -238,7 +241,9 @@ td.last {
 .header {
   border-radius: 1.125rem 1.125rem 0rem 0rem;
   padding: .25rem 1.5rem;
-  font: 700 1.425rem "SF Pro Display";
+  font-family: "SF Pro Bold";
+  font-weight: 700;
+  font-size: 1.425rem;
   border: .125rem solid var(--grey);
   border-bottom: none;
   text-align: center;
@@ -254,7 +259,8 @@ td.last {
     color: var(--text-color);
     border: none;
     text-align: center;
-    font: 400 1.75rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.75rem;
     padding: .5rem 1.5rem;
     text-decoration: none;
     width: 50%;
@@ -267,7 +273,9 @@ td.last {
 }
 .inf {
   background-color: var(--bg-tertiary);
-  font: 400 1.5rem "SF Pro Display";
+  font-weight: 400;
+  font-size: 1.5rem;
+  font-family: "SF Pro";
   border: solid var(--grey) .125rem;
   text-align: center;
 }
@@ -288,8 +296,9 @@ td.last {
   border-radius: 0rem 1.125rem 1.125rem 0rem;
 }
 .battery {
+  font-family: "SF Pro Bold";
   background-color: var(--red);
-  padding: .25rem .75rem;
+  padding: .125rem .5rem;
   border-radius: 1.125rem;
 }
 .error {
@@ -309,14 +318,18 @@ td.last {
   }
 
 .title {
-  font: 400 3rem "SF Pro Display";
+  font-weight: 400;
+  font-size: 3rem;
+  font-family: "SF Pro";
 
 }
 .time {
-  font: 400 2.5rem "SF Pro Rounded";
+  font-weight: 400;
+  font-size: 2.5rem;
+  font-family: "SF Pro";
   border: .125rem solid var(--grey);
   border-radius: 0rem 1.125rem 1.125rem 0rem;
-  padding: .35rem;
+  padding: 0 .35rem;
 }
 
 .time.date {

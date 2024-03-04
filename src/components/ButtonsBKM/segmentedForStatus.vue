@@ -207,15 +207,11 @@
 }
 
 .io-segmented-control .option input:checked+label span {
-    font-weight: 700;
+    font-family: "SF Pro Bold";
 }
 .io-segmented-control .option input:checked+label::before,
 .io-segmented-control .option input:checked+label::after {
     background-color: var(--bg-tertiary);
     z-index: 1;
 }
-
-/* .io-segmented-control .option input:checked+label {
-    cursor: default;
-} */
 </style>

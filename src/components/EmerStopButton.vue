@@ -49,16 +49,18 @@ export default {
     border-radius: 1.125rem;
     color: var(--text-color);
     border: none;
-    font: 400 1.5rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.5rem;
   }
 .cap {
-  margin: .75rem .5rem;
+  margin: .5rem .5rem;
 }
 .cancel {
   background-color: var(--grey2);
 }
 .modal-title {
-  font: 400 1.5rem "SF Pro Display";
+  font-weight: 400;
+  font-size: 1.5rem;
 }
 .modal-header {
   border-color: var(--grey);

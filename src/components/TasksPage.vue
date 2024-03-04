@@ -168,7 +168,8 @@ export default {
   border-spacing: 0;
 }
 td {
-  font: 400 1.5rem "SF Pro Display";
+  font-weight: 400;
+  font-size: 1.5rem;
   border: .125rem solid var(--grey);
   background-color: var(--bg-tertiary);
   padding: .5rem;
@@ -183,7 +184,9 @@ td {
 }
 
 .thead {
-    font: 700 1.75rem "SF Pro Display";
+    font-weight: 700;
+    font-family: 'SF Pro Bold';
+    font-size: 1.75rem;
     padding: .5rem 1.25rem;
     border: .125rem solid var(--grey);
     background-color: var(--grey2);
@@ -195,7 +198,7 @@ td {
   padding: .5rem 3rem;
 }
 .tasks {
-  padding: .5rem 1rem;
+  padding: .5rem 1.5rem;
   border-radius: 1.125rem 1.125rem 0 0;
 }
 
@@ -213,10 +216,11 @@ td {
   border-radius: 0 0 1.125rem 1.125rem;
 }
 .time {
-  font: 400 2rem "SF Pro Rounded";
+  font-weight: 400;
+  font-size: 2rem;
   border: .125rem solid var(--grey);
   border-radius: 0 1.125rem 1.125rem 0;
-  padding: .35rem;
+  padding: .125rem .35rem;
 }
 .time.date {
   border-radius: 1.125rem 0 0 1.125rem;
@@ -226,10 +230,11 @@ td {
 .set {
     box-shadow: 0 0.1875rem 0.25rem 0 rgba(0, 0, 0, .25);
     background-color: var(--bg-tertiary);
-    padding: .75rem;
+    padding: .661rem .75rem;
     border-radius: 1.125rem;
     border: none;
-    font: 400 2rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 2rem;
     color: var(--text-color);
 }
 .add {

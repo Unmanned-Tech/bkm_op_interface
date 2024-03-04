@@ -1,10 +1,10 @@
 <template>
   <div class="main">
     <div class="row">
-      <div class="col p-0 ms-4 mt-2">
+      <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
-            <!-- <Map class="map" /> -->
+            <Map class="map" />
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-2" @click="toggleMap">
@@ -15,7 +15,7 @@
             </button>
           </div>
         </div>
-        <div class="row mt-3 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, 'slideHide' : !isSliderVisible }">
+        <div class="row mt-1 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, 'slideHide' : !isSliderVisible }">
           <div class="col pe-0 slide-col">
             <div class="slide p-3 py-1">
               <div class="lin_speed">
@@ -26,6 +26,15 @@
                   </div>
                 </label>
                 <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="50" value="0" step="5" id="lin_max_speed_range1"/>
+              </div>
+              <div class="robot_rotate">
+                <label for="ang_max_speed_range" class="form-label">
+                  <div class="row">
+                    <span class="col-auto caption_low">Скорость поворота</span> 
+                    <span class="col-auto d-flex justify-content-center caption_low p-0" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
+                  </div>
+                </label>
+                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="20" value="0" step="5" id="ang_max_speed_range"/>
               </div>
               <div class="brush_speed">
                 <label for="brush_speed_range1" class="form-label">
@@ -42,11 +51,11 @@
                     <span class="col-auto caption_low">Поворот щетки</span> 
                   </div>
                 </label>
-              </div>
-              <div class="range-container">
-                <div class="letter left">L</div>
-                <input type="range" class="form-range" min="0" max="2" value="1" step="1" id="brush_rotate_range1"/>
-                <div class="letter right">R</div>
+                <div class="range-container">
+                  <div class="letter left">L</div>
+                  <input type="range" class="form-range" min="0" max="2" value="1" step="1" id="brush_rotate_range1"/>
+                  <div class="letter right">R</div>
+                </div>
               </div>
             </div>
           </div>
@@ -78,7 +87,7 @@
           <div class="col butt-col">
             <div class="row align-items-center">
               <div class="col">
-                <button class="buttonSet">
+                <button @click="toggleStrobe" class="buttonSet" :class="{ 'active': isStrobeEnabled }">
                   <Lights style="transform: scale(2);"/>
                 </button>
               </div>
@@ -129,7 +138,7 @@
           <div class="col d-flex justify-content-end">
             <button class="px-3 fixed-button button" @click="toggleCamera">
               <div class="row align-items-center">
-                <div class="col-1">
+                <div class="col-auto px-1">
                   <Polygon style="scale: .9;" :class="{ 'poly': !isCameraVisible }"/>
                 </div>
                 <div class="col px-1">
@@ -163,7 +172,7 @@ import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import * as roslib from "../../roslib";
-// import Map from "./maps/Map1.vue";
+import Map from "./maps/Map1.vue";
 
 export default {
   name: "TeleopPage",
@@ -174,7 +183,7 @@ export default {
     Polygon, 
     Sound, 
     Mic, 
-    // Map,
+    Map,
   },
   data: function () {
     return {
@@ -182,6 +191,7 @@ export default {
       isOptionsVisible: false,
       isMapVisible: false,
       isSliderVisible: false,
+      isStrobeEnabled: false,
       brush_speed: 0,
       brush_angle: 0,
       lin_max_speed: 0,
@@ -237,6 +247,15 @@ export default {
                 return { color: 'var(--red)' };
             }
         },
+        angSpeedColorStyle() {
+          if (this.ang_max_speed <= 10) {
+            return { color: 'var(--green)' };
+          } else if (this.ang_max_speed <= 15) {
+            return { color: 'var(--orange)' };
+          } else {
+            return { color: 'var(--red)' };
+          }
+        }
   },
   mounted: function () {
     var options = {
@@ -258,6 +277,9 @@ export default {
     // fields defined in the geometry_msgs/Twist.msg definition.
   },
   methods: {
+    toggleStrobe() {
+      this.isStrobeEnabled = !this.isStrobeEnabled;
+    },
     toggleSlider() {
       this.isSliderVisible = !this.isSliderVisible;
     },
@@ -324,18 +346,11 @@ export default {
       });
     },
     joystick_move(evt, data) {
-      if ((this.lin_max_speed * 0.75) <= this.lin_max_speed) {
-        this.lin_speed = Math.round(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force * 100) / 100;
-      } else {
-        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
-      };
-        // this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
-        this.ang_speed = -Math.round(data.vector.x * 1 * 0.5 * data.force * 100) / 100;
-
-        
+      this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
+      this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
     },
     joystick_start(evt, data) {
-      console.log(this.lin_speed);
+      
     },
     joystick_end(evt, data) {
       this.lin_speed = 0;
@@ -410,6 +425,7 @@ img {
   background-size:cover;
   overflow: hidden;
   margin-inline: -.75rem;
+  position: relative;
 }
 .zone {
   position: relative;
@@ -428,7 +444,7 @@ img {
   border-radius: 1.125rem;
 }
 .caption {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   color: var(--text-color);
 }
 .button {
@@ -460,7 +476,7 @@ img {
 }
 
 .slide-out-columnY.hidden {
-  transform: translateY(calc(172px));
+  transform: translateY(calc(156px));
 
 }
 .poly {
@@ -468,8 +484,8 @@ img {
 }
 
 #backCam {
-  width: 400px;
-  height: 172px;
+  width: 370px;
+  height: 156px;
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
 }
@@ -509,14 +525,17 @@ img {
     border: solid var(--grey2);
 }
 .caption_low {
-    font-size: 1.33rem;
-    margin-bottom: -.75rem;
+    font-size: 1.3rem;
+    margin-bottom: -1rem;
 }
 .lin_speed {
-    margin-bottom: -.75rem;
+    margin-bottom: -1rem;
+}
+.robot_rotate {
+  margin-bottom: -1rem;
 }
 .brush_speed {
-    margin-bottom: -.75rem;
+    margin-bottom: -1rem;
 }
 .range-container {
   position: relative;
@@ -524,18 +543,23 @@ img {
 .letter {
   position: absolute;
   z-index: 1;
-  top: .5rem;
-  width: 1rem;
+  top: .35rem;
+  width: .75rem;
   text-align: center;
-  font-weight: bold;
+  font-weight: 700;
+  font-family: "SF Pro Bold";
   color: var(--text-color);
   -webkit-user-select: none;
   user-select: none;
+  pointer-events: none;
 }
 .left {
   left: .5rem;
 }
 .right {
   right: .5rem;
+}
+.active {
+  border-color: var(--green);
 }
 </style>

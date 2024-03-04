@@ -207,7 +207,7 @@
 }
 
 .segmented-control .option input:checked+label span {
-    font-weight: 700;
+    font-family: "SF Pro Bold";
 }
 .segmented-control .option input:checked+label::before,
 .segmented-control .option input:checked+label::after {

@@ -30,7 +30,8 @@ export default {
     border-radius: 1.125rem;
     color: var(--text-color);
     border: none;
-    font: 400 1.25rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.25rem;
   }
   .capbtn {
     margin: .75rem;

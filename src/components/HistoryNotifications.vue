@@ -278,7 +278,8 @@ option {
   border-left: none;
 }
 td {
-  font: 400 1.5rem "SF Pro Display";
+  font-weight: 400;
+  font-size: 1.5rem;
   border: .125rem solid var(--grey);
   background-color: var(--bg-tertiary);
   padding: .5rem;
@@ -298,12 +299,14 @@ td {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 400 1.75rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.75rem;
     padding: .5rem .75rem;
     text-decoration: none;
 }
 .header {
-    font: 400 2.25rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 2.25rem;
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
     padding: .5rem 1.5rem;

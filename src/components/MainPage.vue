@@ -143,7 +143,8 @@ export default {
 <style scoped>
   
   .caption{
-    font: 400 1.25rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.25rem;
     text-align: center;
     line-height: normal;
     color: var(--text-color);

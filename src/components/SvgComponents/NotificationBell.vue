@@ -14,7 +14,7 @@
                     <span>
                         <button class="set notts">
                             <router-link :to="{ name: 'hist', params: { selectedOption: store.threeSelectedOption } }">
-                                <arrowToSVG />
+                                <arrowToSVG style="scale: .8;"/>
                             </router-link>
                         </button> 
                     </span>
@@ -86,7 +86,8 @@ p {
 }
 
 .dropdown-header {
-    font: 400 2rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 2rem;
     color: var(--text-color);
 }
 .set {
@@ -97,12 +98,12 @@ p {
     border: none;
   }
 .badge {
-    font: 400 .75rem "SF Pro Display"
+    font: 400 .75rem "SF Pro"
 }
 
 .set.notts {
     background-color: var(--grey3);
-    padding: .25rem .4rem;
+    padding: .5px;
     margin-left: 1rem;
 }
 

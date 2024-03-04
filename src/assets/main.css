@@ -2,8 +2,8 @@
 
 a.router-link-active.router-link-exact-active.link {
   background-color: var(--bg-secondary);
-  box-shadow: 0rem 0.5rem 0.625rem -0.3125rem rgba(0, 0, 0, .25) inset;
-  font: 700 1.25rem/3.5rem 'SF Pro Display';
+  box-shadow: 0 .75rem 10px -5px rgba(0, 0, 0, .25) inset;
+  font: 700 1.25rem/3.5rem 'SF Pro Bold';
 }
 
 a.router-link-active.router-link-exact-active.link.ln {
@@ -24,7 +24,7 @@ div .back {
 }
 
 * {
-  font-family: 'SF Pro Display';
+  font-family: "SF Pro";
   font-weight: 400;
 }
 

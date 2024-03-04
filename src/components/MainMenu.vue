@@ -26,7 +26,6 @@ const store = useStore();
   .con {
     display: flex;
     padding: 0;
-    font-family: 'SF Pro Display', sans-serif;
     list-style-type: none;
   }
   .link {
@@ -39,7 +38,9 @@ const store = useStore();
     text-align: center;
     margin: 0;
     width: 100%;
-    font: 400 1.25rem/3.5rem "SF Pro Display";
+    font-size: 1.25rem;
+    line-height: 3.5rem;
+    font-weight: 400;
   }
   .ln {
     padding: .5rem;

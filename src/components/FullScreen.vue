@@ -43,7 +43,8 @@ export default {
     border: none;
     padding: .5rem 1.25rem;
     
-    font: 400 1.75rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.75rem;
   }
   
 .modal-content {

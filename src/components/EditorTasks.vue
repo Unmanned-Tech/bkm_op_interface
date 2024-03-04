@@ -126,12 +126,13 @@ option:checked {
     width: 100%;
 }
 .form-field {
-    font: 400 1.5rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.5rem;
     border: 0;
     border-bottom: 2px solid var(--grey2);
     outline: 0;
     color: var(--text-color);
-    padding: 7px 0;
+    padding: 2px 0;
     background: transparent;
     transition: border-color 0.2s;
     caret-color: var(--blue);
@@ -141,14 +142,14 @@ option:checked {
     }
 
     &:placeholder-shown ~ .form__label {
-        font-family: 'SF Pro Light';
+        font-family: 'SF Pro';
         font-size: 1.5rem;
         cursor: text;
         top: 1.125rem;
     }
 }
 .form__label {
-    font-family: 'SF Pro Light';
+    font-family: 'SF Pro';
     position: absolute;
     top: 0;
     display: block;
@@ -160,10 +161,12 @@ option:checked {
     border-top: solid .125rem var(--bg-tertiary);
 }
 .header {
-    font: 400 2.25rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 2.25rem;
+    font-family: "SF Pro";
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
-    padding: .5rem 1.5rem;
+    padding: .125rem 1.5rem;
     border: solid .125rem var(--grey);
 }
 .svg {
@@ -181,7 +184,8 @@ option:checked {
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 400 1.75rem "SF Pro Display";
+    font-weight: 400;
+    font-size: 1.75rem;
     padding: .5rem .75rem;
     text-decoration: none;
   }

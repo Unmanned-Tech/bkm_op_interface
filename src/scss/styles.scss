@@ -10,10 +10,10 @@ $orange: #FF9F0A !default;
 $yellow: #FFD60A !default;
 
 // rangeSelector
-$form-range-track-height: 1.25rem;
+$form-range-track-height: 1.125rem;
 $form-range-track-bg: rgba(142, 142, 147, 1);
-$form-range-thumb-width: 2rem;
-$form-range-thumb-border-radius: 2rem;
+$form-range-thumb-width: 1.75rem;
+$form-range-thumb-border-radius: 1.75rem;
 
 // scss-docs-start theme-color-variables
 $primary:       $blue !default;
@@ -41,5 +41,18 @@ $theme-colors: (
 
 @import "~bootstrap/scss/bootstrap";
 
-@import 
-url('https://fonts.cdnfonts.com./css/sf-pro-display?styles=98774,98770');
+// @import 
+// url('https://fonts.cdnfonts.com./css/sf-pro-display?styles=98774,98770');
+
+@font-face {
+  font-family: 'SF Pro';
+  src: url('/src/assets/fonts/SFPRODISPLAYREGULAR.OTF') format('opentype');
+       font-weight: 400;
+}
+
+@font-face {
+  font-family: 'SF Pro Bold';
+  src: url('/src/assets/fonts/SFPRODISPLAYMEDIUM.OTF') format('opentype');
+       font-weight: 700;
+}
+

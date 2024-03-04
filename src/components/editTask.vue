@@ -54,7 +54,7 @@ export default {
 .other {
     box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--grey2);
-    padding: .5rem;
+    padding: .472rem .5rem;
     border-radius: 1.125rem;
     border: none;
     margin: 0rem 1rem;
