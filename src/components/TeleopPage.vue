@@ -73,7 +73,7 @@
       <div class="col mt-4">
         <div class="row align-items-center">
           <div class="col d-flex justify-content-center p-5">
-            <EmerStopButton/>
+            <EmerStopButton />
           </div>
         </div>
         <div class="row mt-5 justify-content-center">
@@ -425,7 +425,6 @@ img {
   background-size:cover;
   overflow: hidden;
   margin-inline: -.75rem;
-  position: relative;
 }
 .zone {
   position: relative;

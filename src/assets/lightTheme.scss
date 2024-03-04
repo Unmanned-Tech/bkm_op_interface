@@ -16,10 +16,10 @@ body {
     color: var(--text-color);
 }
 
-$form-range-track-height: 1.25rem;
+$form-range-track-height: 1.125rem;
 $form-range-track-bg: var(--grey2);
-$form-range-thumb-width: 2rem;
-$form-range-thumb-border-radius: 2rem;
+$form-range-thumb-width: 1.75rem;
+$form-range-thumb-border-radius: 1.75rem;
 
 .segmented-control .selection,
 .io-segmented-control .selection{

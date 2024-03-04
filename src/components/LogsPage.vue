@@ -90,7 +90,8 @@ export default {
   border-spacing: 0;
 }
 td {
-  font: 400 1.25rem "SF Pro Display";
+  font-size: 1.25rem;
+  font-family: "SF Pro";
   border: .125rem solid var(--grey);
   background-color: var(--bg-tertiary);
   padding: .5rem;
@@ -98,7 +99,8 @@ td {
 }
 
 .thead {
-    font: 700 1.5rem "SF Pro Display";
+    font-size: 1.5rem;
+    font-family: "SF Pro Bold";
     padding: .5rem 1.25rem;
     border: .125rem solid var(--grey);
     background-color: var(--grey2);

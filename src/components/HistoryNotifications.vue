@@ -256,13 +256,14 @@ option {
   border-spacing: 0;
 }
 .thead {
-    font: 700 1.75rem "SF Pro Display";
-    padding: .5rem 1.25rem;
+    font-size: 1.75rem;
+    font-family: "SF Pro Bold";
+    padding: .125rem 1.25rem;
     border: .125rem solid var(--grey);
     background-color: var(--grey2);
 }
 .thead.start {
-  padding: .5rem 4rem;
+  padding: .125rem 4rem;
   border-top-left-radius: 1.125rem;
 }
 .thead.mid {
@@ -274,15 +275,16 @@ option {
 }
 .end {
   border-top-right-radius: 1.125rem;
-  padding: .5rem 15rem;
+  padding: .125rem 15rem;
   border-left: none;
 }
 td {
   font-weight: 400;
   font-size: 1.5rem;
+  font-family: "SF Pro";
   border: .125rem solid var(--grey);
   background-color: var(--bg-tertiary);
-  padding: .5rem;
+  padding: .25rem .5rem;
   border-top: none;
 }
 .notif {
@@ -301,7 +303,7 @@ td {
     justify-content: center;
     font-weight: 400;
     font-size: 1.75rem;
-    padding: .5rem .75rem;
+    padding: .25rem .75rem;
     text-decoration: none;
 }
 .header {
@@ -309,7 +311,7 @@ td {
     font-size: 2.25rem;
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
-    padding: .5rem 1.5rem;
+    padding: .125rem 1.5rem;
     border: solid .125rem var(--grey);
 }
 .line {

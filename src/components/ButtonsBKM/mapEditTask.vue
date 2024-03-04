@@ -20,16 +20,16 @@
       </label>
     </div>
     <div class="col">
-      <!-- <Map class="map"/> -->
+      <Map class="map"/>
     </div>
   </div>
 </template>
 <script>
-// import Map from '../maps/MapTask.vue';
+import Map from '../maps/MapTask.vue';
 
 export default {
     components: {
-        // Map
+        Map
     }
 }
 </script>

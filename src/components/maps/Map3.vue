@@ -11,8 +11,7 @@ const initialMap1 = ref(null);
 
 onMounted(()=> {
     initialMap1.value = L.map('map3', { zoomControl: false,zoom:1,zoomAnimation:false,fadeAnimation:true,markerZoomAnimation:true, attributionControl:false}).setView([55.02240, 73.29929], 16);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer('/src/assets/Tiles//{z}/{x}/{y}.png', {
         className: 'map-tiles'
     }).addTo(initialMap1.value);
     L.control.zoom({

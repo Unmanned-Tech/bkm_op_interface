@@ -240,7 +240,7 @@ td.last {
 
 .header {
   border-radius: 1.125rem 1.125rem 0rem 0rem;
-  padding: .25rem 1.5rem;
+  padding: .125rem 1.25rem;
   font-family: "SF Pro Bold";
   font-weight: 700;
   font-size: 1.425rem;

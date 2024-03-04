@@ -54,5 +54,6 @@ import { Toast } from 'bootstrap';
 <style scoped>
     .toast-body{
         color: var(--text-color);
+        font-size: 1rem;
     }
 </style>

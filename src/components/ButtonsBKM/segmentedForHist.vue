@@ -116,7 +116,7 @@
     position: relative;
     display: block;
     text-align: center;
-    padding: 5px 4vmin;
+    padding: 1px 4vmin;
     background-color: rgba(255, 255, 255, 0);
     color: var(--text-color);
     font-size: 1.5rem;
@@ -207,7 +207,7 @@
 }
 
 .io-segmented-control .option input:checked+label span {
-    font-weight: 700;
+    font-family: "SF Pro Bold";
 }
 .io-segmented-control .option input:checked+label::before,
 .io-segmented-control .option input:checked+label::after {
