@@ -4,56 +4,56 @@
       <div class="option" v-for="(option, index) in options" :key="index">
         <input 
           type="radio" 
-          :id="'option' + index + '_threeComponent'" 
-          name="segmentedForTask" 
-          :checked="option === threeStore.threeSelectedOption"
+          :id="'option' + index + '_thirdComponent'" 
+          name="segmented" 
+          :checked="option === anotherStore.anotherSelectedOption"
           @input="updatePillPosition" 
         />
-        <label :for="'option' + index + '_threeComponent'">
+        <label :for="'option' + index + '_thirdComponent'">
           <span>{{ option }}</span>
         </label>
       </div>
       
       <!-- Элемент заднего плана (ползунок) -->
-      <div class="selection" ref="backgroundPill_1"></div>
+      <div class="selection" ref="backgroundPill_3"></div>
     </div>
   </template>
   
   <script setup>
     import { ref, onMounted, onBeforeUnmount } from 'vue';
-    import { useThreeStore } from '../../stores/store';
+    import { useAnotherStore } from '../../stores/store';
     import { useRoute, useRouter } from 'vue-router';
   
-    const SEGMENTED_CONTROL_BASE_SELECTOR_1 = ".io-segmented-control";
-    const SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_1 = ".io-segmented-control .option input";
-    const SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR_1 = ".io-segmented-control .selection";
+    const SEGMENTED_CONTROL_BASE_SELECTOR_3 = ".io-segmented-control";
+    const SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_3 = ".io-segmented-control .option input";
+    const SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR_3 = ".io-segmented-control .selection";
 
-
-    const threeStore = useThreeStore();
+    const anotherStore = useAnotherStore();
     const route = useRoute();
     const router = useRouter();
     
-    const options = ref(["БКМ-1", "БКМ-2", "БКМ-3", "Все"])
+    const options = ref(["БКМ1", "БКМ2", "БКМ3" ])
     
     const segmented = ref(null);
-    const backgroundPill_1 = ref(null);
+    const backgroundPill_3 = ref(null);
     
+
     
     onMounted(() => {
-        segmented.value = document.querySelector(SEGMENTED_CONTROL_BASE_SELECTOR_1);
-        backgroundPill_1.value = document.querySelector(SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR_1);
+        segmented.value = document.querySelector(SEGMENTED_CONTROL_BASE_SELECTOR_3);
+        backgroundPill_3.value = document.querySelector(SEGMENTED_CONTROL_BACKGROUND_PILL_SELECTOR_3);
 
-        const threeSelectedOption = threeStore.threeSelectedOption;
-        const selectedIndex = options.value.indexOf(threeSelectedOption);
+        const anotherSelectedOption = anotherStore.anotherSelectedOption;
+        const selectedIndex = options.value.indexOf(anotherSelectedOption);
 
         if (selectedIndex !== -1) {
             const selectedInput = segmented.value.querySelector(
-                SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_1 + ":checked"
+                SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_3 + ":checked"
             );
-            backgroundPill_1.value.style.transform = `translateX(${selectedInput.offsetWidth * selectedIndex}px)`;
+            backgroundPill_3.value.style.transform = `translateX(${selectedInput.offsetWidth * selectedIndex}px)`;
         }
 
-        const routeSelectedOption = route.params.threeSelectedOption;
+        const routeSelectedOption = route.params.anotherSelectedOption;
         if (options.value.includes(routeSelectedOption)) {
             store.setSelectedOption(routeSelectedOption);
         }
@@ -68,24 +68,24 @@
     });
     
     function updatePillPosition() {
-        const selectedInput = segmented.value.querySelector(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_1 + ":checked");
+        const selectedInput = segmented.value.querySelector(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_3 + ":checked");
         if (selectedInput) {
-            const selectedIndex = Array.from(segmented.value.querySelectorAll(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_1)).indexOf(selectedInput);
-            backgroundPill_1.value.style.transform = `translateX(${selectedInput.offsetWidth * selectedIndex}px)`;
+            const selectedIndex = Array.from(segmented.value.querySelectorAll(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR_3)).indexOf(selectedInput);
+            backgroundPill_3.value.style.transform = `translateX(${selectedInput.offsetWidth * selectedIndex}px)`;
 
-            router.push({ params: { selectedOption: options.value[selectedIndex] } });
-            threeStore.setThreeSelectedOption(options.value[selectedIndex]);
+            router.push({ params: { mode: options.value[selectedIndex] } });
+            anotherStore.setAnotherSelectedOption(options.value[selectedIndex]);
+
         }
-    };
-
-
+    }
 </script>
 
 <style scoped>
 .io-segmented-control {
     background: var(--bg-tertiary);
-    border-radius: 12px;
-    padding: 5px 3px;
+    border-radius: 9px;
+    margin-right: 10rem;
+    padding: 3px;
     border: none;
     outline: none;
     display: grid;
@@ -116,10 +116,10 @@
     position: relative;
     display: block;
     text-align: center;
-    padding: 5px 4vmin;
+    padding: 1px 6vmin;
     background-color: rgba(255, 255, 255, 0);
     color: var(--text-color);
-    font-size: 1.5rem;
+    font-size: 24px;
 }
 
 .io-segmented-control .option label::before,
@@ -182,7 +182,7 @@
     background: var(--grey2);
     border: .5px solid rgba(0, 0, 0, .04);
     box-shadow: 0 3px 8px 0 rgba(0, 0, 0, .12), 0 3px 1px 0 rgba(0, 0, 0, .04);
-    border-radius: 12px;
+    border-radius: 9px;
     grid-column: 1;
     grid-row: 1;
     z-index: 2;
@@ -195,7 +195,7 @@
 
 .io-segmented-control .selection label {
     color: var(--text-color);
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .io-segmented-control .option label span {
