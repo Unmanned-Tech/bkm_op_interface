@@ -16,7 +16,7 @@
         <div class="row line mb-3 mt-3"></div>
         <div class="row">
             <div class="col-6 pe-1">
-                <segmentedForStatus />
+                <segmentedForHist />
             </div>
             <div class="col-auto d-flex">
                 <select v-model="selectedOption" class="form__select">
@@ -61,7 +61,7 @@
 <script>
 import * as roslib from "../../roslib.js";
 import { useConfigStore } from "../stores/ConfigStore";
-import segmentedForStatus from "./ButtonsBKM/segmentedForStatus.vue";
+import segmentedForHist from "./ButtonsBKM/segmentedForHist.vue";
 import formSearch from "./ButtonsBKM/formSearch.vue";
 import { fetchDataByOption1 } from "./fetchDataByOption"
 import { useThreeStore } from '../stores/store';
@@ -73,7 +73,7 @@ import { useRouter } from 'vue-router';
 export default {
     name: "StatusPage",
     components: {
-        segmentedForStatus,
+        segmentedForHist,
         formSearch,
         arrowSVG
     },
