@@ -17,7 +17,38 @@
         </div>
         <div class="row mt-3 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, 'slideHide' : !isSliderVisible }">
           <div class="col pe-0 slide-col">
-            <sliderInputTeleop />
+            <div class="slide p-3 py-1">
+              <div class="lin_speed">
+                <label for="lin_max_speed_range1" class="form-label">
+                  <div class="row">
+                    <span class="col-auto caption_low">Скорость робота</span> 
+                    <span class="col-auto d-flex justify-content-center caption_low pe-0" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
+                  </div>
+                </label>
+                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="50" value="0" step="5" id="lin_max_speed_range1"/>
+              </div>
+              <div class="brush_speed">
+                <label for="brush_speed_range1" class="form-label">
+                  <div class="row">
+                    <span class="col-auto caption_low">Скорость щётки</span> 
+                    <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
+                  </div>
+                </label>
+                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-50" max="50" value="0" step="5" id="brush_speed_range1"/>
+              </div>
+              <div class="brush_rotate">
+                <label for="brush_rotate_range1" class="form-label">
+                  <div class="row">
+                    <span class="col-auto caption_low">Поворот щетки</span> 
+                  </div>
+                </label>
+              </div>
+              <div class="range-container">
+                <div class="letter left">L</div>
+                <input type="range" class="form-range" min="0" max="2" value="1" step="1" id="brush_rotate_range1"/>
+                <div class="letter right">R</div>
+              </div>
+            </div>
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-2" @click="toggleSlider">
@@ -132,9 +163,7 @@ import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import * as roslib from "../../roslib";
-<<<<<<< HEAD
-import Map from "./maps/Map1.vue";
-import sliderInputTeleop from "./ButtonsBKM/sliderInputTeleop.vue";
+// import Map from "./maps/Map1.vue";
 
 export default {
   name: "TeleopPage",
@@ -145,30 +174,22 @@ export default {
     Polygon, 
     Sound, 
     Mic, 
-    Map,
-    sliderInputTeleop, 
+    // Map,
   },
-=======
-// import Map from "./maps/Map1.vue"
-
-export default {
-  name: "TeleopPage",
-  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic,  },
->>>>>>> de1341914f934e79aa4fc7b0b261f419938dbee9
   data: function () {
     return {
       isCameraVisible: false,
       isOptionsVisible: false,
       isMapVisible: false,
       isSliderVisible: false,
-      shetka_speed: 0,
-      shetka_angle: 0,
+      brush_speed: 0,
+      brush_angle: 0,
       lin_max_speed: 0,
       ang_max_speed: 0,
       lin_speed: 0,
       ang_speed: 0,
       speed_send_timer: {},
-      shetka_send_timer: {},
+      brush_send_timer: {},
       ros: {},
       twist: {
         linear: {
@@ -197,6 +218,26 @@ export default {
       cmdVel: 0,
     };
   },
+  computed: {
+        linSpeedColorStyle() {
+            if (this.lin_max_speed <= 20) {
+                return { color: 'var(--green)' };
+            } else if (this.lin_max_speed <= 40) {
+                return { color: 'var(--orange)' };
+            } else {
+                return { color: 'var(--red)' };
+            }
+        },
+        brushSpeedColorStyle() {
+            if(this.brush_speed >= -20 && this.brush_speed <= 20) {
+                return { color: 'var(--green)' };
+            } else if (this.brush_speed > -50 && this.brush_speed < -20 || (this.brush_speed > 20 && this.brush_speed < 50)) {
+                return { color: 'var(--orange)' };
+            } else {
+                return { color: 'var(--red)' };
+            }
+        },
+  },
   mounted: function () {
     var options = {
       zone: document.getElementById('zone_joystick'),
@@ -211,7 +252,7 @@ export default {
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
-    this.shetka_send_timer = setInterval(this.send_shetka_speed, 300);
+    this.brush_send_timer = setInterval(this.send_brush_speed, 300);
     this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
     // Then we create the payload to be published. The object we pass in to ros.Message matches the
     // fields defined in the geometry_msgs/Twist.msg definition.
@@ -229,15 +270,15 @@ export default {
     toggleCamera() {
       this.isCameraVisible = !this.isCameraVisible;
     },
-    set_shetka_speed() {
-      this.shetka_speed = document.getElementById("shetka_speed_range").value;
-      send_shetka_speed();
+    set_brush_speed() {
+      this.brush_speed = document.getElementById("brush_speed_range1").value;
+      // send_brush_speed();
     },
-    set_shetka_angle() {
-      this.shetka_angle = document.getElementById("shetka_angle_range").value
+    set_brush_angle() {
+      this.brush_angle = document.getElementById("brush_angle_range").value
     },
     set_linear_speed() {
-      this.lin_max_speed = document.getElementById("lin_max_speed_range").value
+      this.lin_max_speed = document.getElementById("lin_max_speed_range1").value
     },
     set_angular_speed() {
       this.ang_max_speed = document.getElementById("ang_max_speed_range").value
@@ -283,7 +324,12 @@ export default {
       });
     },
     joystick_move(evt, data) {
-        this.lin_speed = Math.round(data.vector.y * 1 * 0.5 * data.force * 100) / 100;
+      if ((this.lin_max_speed * 0.75) <= this.lin_max_speed) {
+        this.lin_speed = Math.round(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force * 100) / 100;
+      } else {
+        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
+      };
+        // this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
         this.ang_speed = -Math.round(data.vector.x * 1 * 0.5 * data.force * 100) / 100;
 
         
@@ -316,20 +362,20 @@ export default {
       this.lin_speed = 0;
       this.ang_speed = 0;
     },
-    stop_shetka() {
-      // document.getElementById("shetka_enabled").checked = false;
-      document.getElementById("shetka_speed_range").value = 0;
-      this.shetka_speed = 0;
+    stop_brush() {
+      // document.getElementById("brush_enabled").checked = false;
+      document.getElementById("brush_speed_range").value = 0;
+      this.brush_speed = 0;
     },
-    // send_shetka_speed() {
-    //   if (document.getElementById("shetka_enabled").checked) {
+    // send_brush_speed() {
+    //   if (document.getElementById("brush_enabled").checked) {
     //     this.ceVel = new ROSLIB.Topic({
     //       ros: this.ros,
     //       name: '/ce_vel',
     //       messageType: 'geometry_msgs/Twist'
     //     });
-    //     this.twist_ce.linear.x = Math.round(this.shetka_speed);
-    //     this.twist_ce.angular.z = Math.round(this.shetka_speed);
+    //     this.twist_ce.linear.x = Math.round(this.brush_speed);
+    //     this.twist_ce.angular.z = Math.round(this.brush_speed);
     //     this.ceVel.publish(this.twist_ce);
     //     // alert("ss");
     //   }
@@ -455,5 +501,41 @@ img {
   padding-block: 17px;
   border-top-left-radius: 1.125rem;
   border-bottom-left-radius: 1.125rem;
+}
+
+.slide {
+    background-color: var(--bg-tertiary);
+    border-radius: 1.125rem;
+    border: solid var(--grey2);
+}
+.caption_low {
+    font-size: 1.33rem;
+    margin-bottom: -.75rem;
+}
+.lin_speed {
+    margin-bottom: -.75rem;
+}
+.brush_speed {
+    margin-bottom: -.75rem;
+}
+.range-container {
+  position: relative;
+}
+.letter {
+  position: absolute;
+  z-index: 1;
+  top: .5rem;
+  width: 1rem;
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-color);
+  -webkit-user-select: none;
+  user-select: none;
+}
+.left {
+  left: .5rem;
+}
+.right {
+  right: .5rem;
 }
 </style>

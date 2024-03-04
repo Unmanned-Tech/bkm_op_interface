@@ -66,8 +66,7 @@
 </template>
 
 <script setup>
-import { computed, watchEffect, ref } from 'vue';
-import SegmentedControl from './SegmentedControl.vue';
+import { computed, ref } from 'vue';
 import { fetchDataByOption } from './fetchDataByOption';
 import { useStore } from '../stores/store';
 

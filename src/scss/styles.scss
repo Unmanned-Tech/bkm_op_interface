@@ -11,7 +11,7 @@ $yellow: #FFD60A !default;
 
 // rangeSelector
 $form-range-track-height: 1.25rem;
-$form-range-track-bg: var(--grey);
+$form-range-track-bg: rgba(142, 142, 147, 1);
 $form-range-thumb-width: 2rem;
 $form-range-thumb-border-radius: 2rem;
 
@@ -41,5 +41,5 @@ $theme-colors: (
 
 @import "~bootstrap/scss/bootstrap";
 
-// @import 
-// url('https://fonts.cdnfonts.com./css/sf-pro-display?styles=98774,98770');
+@import 
+url('https://fonts.cdnfonts.com./css/sf-pro-display?styles=98774,98770');
