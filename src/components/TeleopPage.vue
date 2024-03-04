@@ -1,29 +1,42 @@
 <template>
   <div class="main">
     <div class="row">
-      <div class="col mt-2 ms-4 slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible}">
-        <div class="row">
+      <div class="col p-0 ms-4 mt-2">
+        <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
-            <button class="tongue" @click="toggleMap">
+            <button class="tongue p-2" @click="toggleMap">
               <div :style="{ 'transform': isMapVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
-                <Polygon />
+                <Polygon style="scale: .9;"/>
               </div>
               <i class="bi bi-geo-alt"></i>
             </button>
           </div>
         </div>
+        <div class="row mt-3 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, 'slideHide' : !isSliderVisible }">
+          <div class="col pe-0 slide-col">
+            <sliderInputTeleop />
+          </div>
+          <div class="col-auto ps-0 d-flex align-items-center">
+            <button class="tongue p-2" @click="toggleSlider">
+              <div :style="{ 'transform': isSliderVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
+                <Polygon style="scale: .9;"/>
+              </div>
+              <i class="bi bi-sliders"></i>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="col"></div>
-      <div class="col mt-5">
-        <div class="row mt-5 align-items-center">
-          <div class="col mb-5 d-flex justify-content-center">
+      <div class="col mt-4">
+        <div class="row align-items-center">
+          <div class="col d-flex justify-content-center p-5">
             <EmerStopButton/>
           </div>
         </div>
-        <div class="row mt-4 justify-content-center">
+        <div class="row mt-5 justify-content-center">
           <div id="zone_joystick" class="zone static"></div>
         </div>
       </div>
@@ -56,22 +69,22 @@
                 <div class="col">
                   <div class="row align-items-center">
                     <div class="col-auto" :style="{ 'transform': isOptionsVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
-                      <Polygon style="transform: scale(0.9);"/>
+                      <Polygon style="transform: scale(.9);"/>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Lights style="transform: scale(0.9);"/>
+                      <Lights style="transform: scale(.9);"/>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Mic style="transform: scale(0.9);"/>
+                      <Mic style="transform: scale(.9);"/>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Sound style="transform: scale(0.9);"/>
+                      <Sound style="transform: scale(.9);"/>
                     </div>
                   </div>
                 </div>
@@ -86,7 +99,7 @@
             <button class="px-3 fixed-button button" @click="toggleCamera">
               <div class="row align-items-center">
                 <div class="col-1">
-                  <Polygon :class="{ 'poly': !isCameraVisible }"/>
+                  <Polygon style="scale: .9;" :class="{ 'poly': !isCameraVisible }"/>
                 </div>
                 <div class="col px-1">
                   <span class="caption">Вид сзади</span>
@@ -123,16 +136,27 @@ import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import * as roslib from "../../roslib";
-import Map from "./maps/Map1.vue"
+import Map from "./maps/Map1.vue";
+import sliderInputTeleop from "./ButtonsBKM/sliderInputTeleop.vue";
 
 export default {
   name: "TeleopPage",
-  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic, Map },
+  components: { 
+    BatteryInfo, 
+    EmerStopButton, 
+    Lights, 
+    Polygon, 
+    Sound, 
+    Mic, 
+    Map,
+    sliderInputTeleop, 
+  },
   data: function () {
     return {
       isCameraVisible: false,
       isOptionsVisible: false,
       isMapVisible: false,
+      isSliderVisible: false,
       shetka_speed: 0,
       shetka_angle: 0,
       lin_max_speed: 0,
@@ -189,6 +213,9 @@ export default {
     // fields defined in the geometry_msgs/Twist.msg definition.
   },
   methods: {
+    toggleSlider() {
+      this.isSliderVisible = !this.isSliderVisible;
+    },
     toggleMap() {
       this.isMapVisible = !this.isMapVisible;
     },
@@ -341,6 +368,9 @@ img {
   max-width: 20rem;
   height: 12rem;
 }
+.slide-col {
+  max-width: 20rem;
+}
 .map {
   border: solid var(--grey2) .25rem;
   border-radius: 1.125rem;
@@ -366,16 +396,19 @@ img {
   transform: translateX(0);
 }
 
-.slide-out-columnX.hiddenX {
+.hiddenX {
   transform: translateX(-320px);
 }
 
-.mapHide {
-  transform: translateX(-332px);
+.slide-out-columnX.mapHide {
+  transform: translateX(-320px);
+}
+.slide-out-columnX.slideHide {
+  transform: translateX(-320px);
 }
 
 .slide-out-columnY.hidden {
-  transform: translateY(calc(183px + 4px));
+  transform: translateY(calc(172px));
 
 }
 .poly {
@@ -384,7 +417,7 @@ img {
 
 #backCam {
   width: 400px;
-  height: 187px;
+  height: 172px;
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
 }
@@ -405,6 +438,7 @@ img {
   padding: 1.5rem;
   border: solid var(--grey2) .125rem; 
   background-color: transparent;
+  cursor: pointer;
 }
 .buttonSet.mic:active {
   border-color: var(--green);

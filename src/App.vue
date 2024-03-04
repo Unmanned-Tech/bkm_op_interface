@@ -6,7 +6,7 @@ import { ref } from 'vue';
 
 <template>
     <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
-    <div class="container-fluid">
+    <div class="container-fluid" @contextmenu.prevent>
         <FullScreen></FullScreen>
         <router-view v-slot="{ Component }">
             <Transition name="fade" mode="out-in">
@@ -20,6 +20,10 @@ import { ref } from 'vue';
 </template>
 
 <style>
+.container-fluid {
+    -webkit-user-select: none;
+    user-select: none;
+}
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;

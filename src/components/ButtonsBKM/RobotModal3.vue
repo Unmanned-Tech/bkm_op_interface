@@ -4,12 +4,14 @@
       <div class="modal-content">
         <div class="modal-header">
           <div class="title">Информация</div>
-          <table class="tab">
-            <tr>
-              <td class="time date">{{ localeDate }}</td>
-              <td class="time">{{ localeTime }}</td>
-            </tr>
-          </table>
+          <div class="col d-flex justify-content-end">
+            <table class="tab">
+              <tr>
+                <td class="time date">{{ localeDate }}</td>
+                <td class="time">{{ localeTime }}</td>
+              </tr>
+            </table> 
+          </div>
         </div>
         <div class="modal-body">
           <div class="container-fluid">

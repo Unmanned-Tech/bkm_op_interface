@@ -19,7 +19,6 @@
                 <div class="form__group">
                     <input type="input" class="form-field" id="nameTask" name="nameTask" placeholder="Название задачи" required>
                     <label for="nameTask" class="form__label">Название задачи</label>
-                    
                 </div>
             </div>
             <div class="col-4 mb-auto d-flex justify-content-end">
@@ -37,10 +36,13 @@
         </div>
         <settingsEditTask v-if="anotherSelectedOption === 'Настройки'"/>
         <mapEditTask v-if="anotherSelectedOption === 'Карта'"/>
-        <button class="ms-3 button">
-            <div class="px-3 py-1 ln">Сохранить<br/>задачу</div>
-        </button>   
-
+        <div class="row">
+            <div class="col">
+                <button class="ms-3 button">
+                    <div class="px-3 py-1 ln">Сохранить<br/>задачу</div>
+                </button> 
+            </div>
+        </div>
     </div>
 </template>
 
@@ -77,8 +79,6 @@ import mapEditTask from './ButtonsBKM/mapEditTask.vue';
 import arrowSVG from '/src/assets/arrow.svg'
 import segmented from './ButtonsBKM/segmented.vue';
 import settingsEditTask from './ButtonsBKM/settingsEditTask.vue';
-
-
 
 export default {
     components: {
