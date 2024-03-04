@@ -66,9 +66,9 @@ import MPButtons2 from './ButtonsBKM/MPButtons2.vue';
 import MPButtons3 from './ButtonsBKM/MPButtons3.vue';
 
 
-import Map1 from './maps/Map1.vue';
-import Map2 from './maps/Map2.vue';
-import Map3 from './maps/Map3.vue';
+// import Map1 from './maps/Map1.vue';
+// import Map2 from './maps/Map2.vue';
+// import Map3 from './maps/Map3.vue';
 
 import axios from 'axios';
 import * as roslib from "../../roslib.js";
@@ -82,9 +82,9 @@ export default {
     ThemeSwithcer,
     NotificationBell,
 
-    Map1,
-    Map2,
-    Map3,
+    // Map1,
+    // Map2,
+    // Map3,
 
   },
   data: function () {

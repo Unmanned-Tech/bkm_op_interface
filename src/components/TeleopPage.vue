@@ -4,7 +4,7 @@
       <div class="col p-0 ms-4 mt-2">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
-            <Map class="map" />
+            <!-- <Map class="map" /> -->
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-2" @click="toggleMap">
@@ -123,10 +123,6 @@
   </div>
 </template>
 
-<script setup>
-
-</script>
-
 <script>
 import Mic from "../assets/mic-fill.svg"
 import Sound from "../assets/sound.svg"
@@ -136,6 +132,7 @@ import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import * as roslib from "../../roslib";
+<<<<<<< HEAD
 import Map from "./maps/Map1.vue";
 import sliderInputTeleop from "./ButtonsBKM/sliderInputTeleop.vue";
 
@@ -151,6 +148,13 @@ export default {
     Map,
     sliderInputTeleop, 
   },
+=======
+// import Map from "./maps/Map1.vue"
+
+export default {
+  name: "TeleopPage",
+  components: { BatteryInfo, EmerStopButton, Lights, Polygon, Sound, Mic,  },
+>>>>>>> de1341914f934e79aa4fc7b0b261f419938dbee9
   data: function () {
     return {
       isCameraVisible: false,
@@ -279,11 +283,13 @@ export default {
       });
     },
     joystick_move(evt, data) {
-        this.lin_speed = Math.round(data.vector.y * this.lin_max_speed * 0.5 * data.force * 100) / 100;
-        this.ang_speed = -Math.round(data.vector.x * this.ang_max_speed * 0.5 * data.force * 100) / 100;
+        this.lin_speed = Math.round(data.vector.y * 1 * 0.5 * data.force * 100) / 100;
+        this.ang_speed = -Math.round(data.vector.x * 1 * 0.5 * data.force * 100) / 100;
+
+        
     },
     joystick_start(evt, data) {
-
+      console.log(this.lin_speed);
     },
     joystick_end(evt, data) {
       this.lin_speed = 0;
