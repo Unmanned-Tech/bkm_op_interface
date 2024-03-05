@@ -17,7 +17,7 @@ div .nipple:active {
 
 div .front  {
   background-color: var(--bg-primary) !important;
-  opacity: .8 !important;
+  opacity: .9 !important;
 }
 div .back {
   background-color: var(--bg-secondary) !important;

@@ -34,9 +34,9 @@
                     <span class="col-auto d-flex justify-content-center caption_low p-0" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
                   </div>
                 </label>
-                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step="1" id="ang_max_speed_range"/>
+                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".5" id="ang_max_speed_range"/>
               </div>
-              <div class="brush_speed" v-on:dblclick="disable_brush_speed">
+              <div class="brush_speed">
                 <label for="brush_speed_range1" class="form-label">
                   <div class="row">
                     <span class="col-auto caption_low">Скорость щётки</span> 
@@ -59,12 +59,18 @@
               </div>
             </div>
           </div>
-          <div class="col-auto ps-0 d-flex align-items-center">
+          <div class="col-auto ps-0 d-flex flex-column justify-content-center">
+            <button class="tongue">
+
+            </button>
             <button class="tongue p-2" @click="toggleSlider">
               <div :style="{ 'transform': isSliderVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
                 <Polygon style="scale: .9;"/>
               </div>
               <i class="bi bi-sliders"></i>
+            </button>
+            <button class="tongue mt-5" style="background-color: var(--red);" @click="disable_brush_speed">
+              <i class="bi bi-brush"></i>
             </button>
           </div>
         </div>
@@ -88,7 +94,7 @@
             <div class="row align-items-center">
               <div class="col">
                 <button @click="toggleStrobe" class="buttonSet" :class="{ 'active': isStrobeEnabled }">
-                  <Lights style="transform: scale(2);"/>
+                  <Headlight style="transform: scale(2);"/>
                 </button>
               </div>
               <div class="col">
@@ -97,7 +103,7 @@
                 </button>
               </div>
               <div class="col">
-                <button class="buttonSet">
+                <button class="buttonSet sound">
                   <Sound style="transform: scale(2);"/>
                 </button>
               </div>
@@ -114,7 +120,7 @@
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Lights style="transform: scale(.9);"/>
+                      <Headlight style="transform: scale(.9);"/>
                     </div>
                   </div>
                   <div class="row">
@@ -164,10 +170,11 @@
 </template>
 
 <script>
-import Mic from "../assets/mic-fill.svg"
-import Sound from "../assets/sound.svg"
-import Lights from "../assets/Lights.svg"
-import Polygon from "../assets/Polygon.svg"
+import Mic from "../assets/mic-fill.svg";
+import Sound from "../assets/sound.svg";
+import Lights from "../assets/Lights.svg";
+import Polygon from "../assets/Polygon.svg";
+import Headlight from "../assets/headlights.svg"
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
@@ -181,7 +188,8 @@ export default {
     EmerStopButton, 
     Lights, 
     Polygon, 
-    Sound, 
+    Sound,
+    Headlight, 
     Mic, 
     Map,
   },
@@ -255,7 +263,7 @@ export default {
           } else {
             return { color: 'var(--red)' };
           }
-        }
+        },
   },
   mounted: function () {
     var options = {
@@ -278,6 +286,7 @@ export default {
   },
   methods: {
     disable_brush_speed() {
+      document.getElementById("brush_speed_range1").value = 0;
       this.brush_speed = 0;
     },
     toggleStrobe() {
@@ -350,7 +359,8 @@ export default {
     },
     joystick_move(evt, data) {
       this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
-      this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+
+      this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
     },
     joystick_start(evt, data) {
       
@@ -372,7 +382,7 @@ export default {
     },
     stop_moving() {
       document.getElementById("moveing_enable").checked = false;
-      document.getElementById("lin_max_speed_range").value = 0;
+      document.getElementById("lin_max_speed_range1").value = 0;
       document.getElementById("ang_max_speed_range").value = 0;
       this.lin_max_speed = 0;
       this.ang_max_speed = 0;
