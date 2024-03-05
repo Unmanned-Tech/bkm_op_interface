@@ -43,7 +43,7 @@
                     <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
                   </div>
                 </label>
-                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-50" max="50" value="0" step="5" id="brush_speed_range1"/>
+                <input v-on:input="set_brush_speed" type="range" class="form-range" min="0" max="400" value="0" step="1" id="brush_speed_range1"/>
               </div>
               <div class="brush_rotate">
                 <label for="brush_rotate_range1" class="form-label">
@@ -230,9 +230,9 @@ export default {
   },
   computed: {
         linSpeedColorStyle() {
-            if (this.lin_max_speed <= 20) {
+            if (this.lin_max_speed <= 5) {
                 return { color: 'var(--green)' };
-            } else if (this.lin_max_speed <= 40) {
+            } else if (this.lin_max_speed <= 10) {
                 return { color: 'var(--orange)' };
             } else {
                 return { color: 'var(--red)' };
@@ -248,9 +248,9 @@ export default {
             }
         },
         angSpeedColorStyle() {
-          if (this.ang_max_speed <= 10) {
+          if (this.ang_max_speed <= 1) {
             return { color: 'var(--green)' };
-          } else if (this.ang_max_speed <= 15) {
+          } else if (this.ang_max_speed <= 3) {
             return { color: 'var(--orange)' };
           } else {
             return { color: 'var(--red)' };
@@ -405,7 +405,6 @@ export default {
     },
     
   }
-}
 
 
 </script>
