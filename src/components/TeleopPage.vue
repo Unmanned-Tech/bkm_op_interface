@@ -36,14 +36,14 @@
                 </label>
                 <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step="1" id="ang_max_speed_range"/>
               </div>
-              <div class="brush_speed">
+              <div class="brush_speed" v-on:dblclick="disable_brush_speed">
                 <label for="brush_speed_range1" class="form-label">
                   <div class="row">
                     <span class="col-auto caption_low">Скорость щётки</span> 
                     <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
                   </div>
                 </label>
-                <input v-on:dblclick="brush_speed=0" v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" value="0" step="20" id="brush_speed_range1"/>
+                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" v-model="brush_speed" step="20" id="brush_speed_range1"/>
               </div>
               <div class="brush_rotate">
                 <label for="brush_rotate_range1" class="form-label">
@@ -239,9 +239,9 @@ export default {
             }
         },
         brushSpeedColorStyle() {
-            if(this.brush_speed >= -20 && this.brush_speed <= 20) {
+            if(this.brush_speed >= -75 && this.brush_speed <= 140) {
                 return { color: 'var(--green)' };
-            } else if (this.brush_speed > -50 && this.brush_speed < -20 || (this.brush_speed > 20 && this.brush_speed < 50)) {
+            } else if (this.brush_speed > -150 && this.brush_speed < -75 || (this.brush_speed > 75 && this.brush_speed < 280)) {
                 return { color: 'var(--orange)' };
             } else {
                 return { color: 'var(--red)' };
@@ -277,6 +277,9 @@ export default {
     // fields defined in the geometry_msgs/Twist.msg definition.
   },
   methods: {
+    disable_brush_speed() {
+      this.brush_speed = 0;
+    },
     toggleStrobe() {
       this.isStrobeEnabled = !this.isStrobeEnabled;
     },
