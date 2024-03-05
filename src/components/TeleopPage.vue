@@ -43,7 +43,7 @@
                     <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
                   </div>
                 </label>
-                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" value="0" step="20" id="brush_speed_range1"/>
+                <input v-on:dblclick="brush_speed=0" v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" value="0" step="20" id="brush_speed_range1"/>
               </div>
               <div class="brush_rotate">
                 <label for="brush_rotate_range1" class="form-label">
