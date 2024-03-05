@@ -357,7 +357,6 @@ export default {
       this.ang_speed = 0;
     },
     send_speed() {
-      
         this.cmdVel = new ROSLIB.Topic({
           ros: this.ros,
           name: '/cmd_vel',
@@ -383,9 +382,14 @@ export default {
       this.brush_speed = 0;
     },
     send_brush_speed() {
+      this.ce_vel = new ROSLIB.Topic({
+          ros: this.ros,
+          name: '/ce_vel',
+          messageType: 'geometry_msgs/Twist'
+        });
         this.twist_ce.linear.x = Math.round(this.brush_speed);
         this.twist_ce.angular.z = Math.round(this.brush_speed);
-        this.ceVel.publish(this.twist_ce);
+        this.ce_vel.publish(this.twist_ce);
         // alert("ss");
       }
 
