@@ -294,7 +294,7 @@ export default {
     },
     set_brush_speed() {
       this.brush_speed = document.getElementById("brush_speed_range1").value;
-      send_brush_speed();
+      this.send_brush_speed();
     },
     set_brush_angle() {
       this.brush_angle = document.getElementById("brush_angle_range").value
