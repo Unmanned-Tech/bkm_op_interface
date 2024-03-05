@@ -25,7 +25,7 @@
                     <span class="col-auto d-flex justify-content-center caption_low pe-0" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
                   </div>
                 </label>
-                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="50" value="0" step="5" id="lin_max_speed_range1"/>
+                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="15" value="0" step="1" id="lin_max_speed_range1"/>
               </div>
               <div class="robot_rotate">
                 <label for="ang_max_speed_range" class="form-label">
@@ -34,7 +34,7 @@
                     <span class="col-auto d-flex justify-content-center caption_low p-0" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
                   </div>
                 </label>
-                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="20" value="0" step="5" id="ang_max_speed_range"/>
+                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step="1" id="ang_max_speed_range"/>
               </div>
               <div class="brush_speed">
                 <label for="brush_speed_range1" class="form-label">
@@ -294,7 +294,7 @@ export default {
     },
     set_brush_speed() {
       this.brush_speed = document.getElementById("brush_speed_range1").value;
-      // send_brush_speed();
+      send_brush_speed();
     },
     set_brush_angle() {
       this.brush_angle = document.getElementById("brush_angle_range").value
@@ -382,20 +382,14 @@ export default {
       document.getElementById("brush_speed_range").value = 0;
       this.brush_speed = 0;
     },
-    // send_brush_speed() {
-    //   if (document.getElementById("brush_enabled").checked) {
-    //     this.ceVel = new ROSLIB.Topic({
-    //       ros: this.ros,
-    //       name: '/ce_vel',
-    //       messageType: 'geometry_msgs/Twist'
-    //     });
-    //     this.twist_ce.linear.x = Math.round(this.brush_speed);
-    //     this.twist_ce.angular.z = Math.round(this.brush_speed);
-    //     this.ceVel.publish(this.twist_ce);
-    //     // alert("ss");
-    //   }
+    send_brush_speed() {
+        this.twist_ce.linear.x = Math.round(this.brush_speed);
+        this.twist_ce.angular.z = Math.round(this.brush_speed);
+        this.ceVel.publish(this.twist_ce);
+        // alert("ss");
+      }
 
-    // },
+    },
     send_cmd() {
       var cmd_srv = new ROSLIB.Service({
         ros: this.ros,
