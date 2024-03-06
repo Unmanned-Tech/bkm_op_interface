@@ -358,9 +358,15 @@ export default {
       });
     },
     joystick_move(evt, data) {
+
       this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
 
+      // Если lin_speed отрицательна, меняем знак у ang_speed
+      if (this.lin_speed < 0) {
       this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+      } else {
+      this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+      }
     },
     joystick_start(evt, data) {
       
