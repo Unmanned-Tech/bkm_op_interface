@@ -156,7 +156,7 @@
         </div>
         <div class="row" ref="imageRow">
           <div class="col d-flex justify-content-end">
-            <img src="/src/assets/image6.png" id="backCam" class="slide-out">
+            <img ref="video" width="370" height="156" class="slide-out video">
           </div>
         </div>
         
@@ -206,6 +206,7 @@ export default {
       ang_max_speed: 0,
       lin_speed: 0,
       ang_speed: 0,
+      video: null,
       speed_send_timer: {},
       brush_send_timer: {},
       ros: {},
@@ -266,6 +267,7 @@ export default {
         },
   },
   mounted: function () {
+    this.video = this.$refs.video;
     var options = {
       zone: document.getElementById('zone_joystick'),
       mode: 'static',
@@ -281,8 +283,17 @@ export default {
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
     this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
-    // Then we create the payload to be published. The object we pass in to ros.Message matches the
-    // fields defined in the geometry_msgs/Twist.msg definition.
+
+    var imageSub = new ROSLIB.Topic({
+      ros: this.ros,
+      name: '/image_raw/compressed',
+      messageType: 'sensor_msgs/msg/CompressedImage',
+    });
+
+    imageSub.subscribe((message) => {
+      const imageData = 'data:image/' + message.format + ';base64,' + message.data;
+      this.video.src = imageData;
+    })
   },
   methods: {
     disable_brush_speed() {
@@ -498,9 +509,7 @@ img {
   transform: scale(-1, -1);
 }
 
-#backCam {
-  width: 370px;
-  height: 156px;
+.video {
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
 }
