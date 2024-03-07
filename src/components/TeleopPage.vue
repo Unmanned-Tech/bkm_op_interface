@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <img ref="video" class="slide-out video">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
@@ -154,9 +155,9 @@
             </button>
           </div>
         </div>
-        <div class="row" ref="imageRow">
+        <div class="row">
           <div class="col d-flex justify-content-end">
-            <img ref="video" width="370" height="156" class="slide-out video">
+            <img src="/src/assets/image6.png" class="slide-out img">
           </div>
         </div>
         
@@ -282,7 +283,7 @@ export default {
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
+    this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.106:9090" });
 
     var imageSub = new ROSLIB.Topic({
       ros: this.ros,
@@ -444,14 +445,18 @@ export default {
 </script>
 
 <style scoped>
-img {
-  box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
-}
 .main {
-  background: url("/src/assets/image5.png");
-  background-size:cover;
   overflow: hidden;
   margin-inline: -.75rem;
+}
+
+.main .video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
 }
 .zone {
   position: relative;
@@ -491,7 +496,7 @@ img {
 }
 
 .hiddenX {
-  transform: translateX(-320px);
+  transform: translateX(-322px);
 }
 
 .slide-out-columnX.mapHide {
@@ -502,16 +507,19 @@ img {
 }
 
 .slide-out-columnY.hidden {
-  transform: translateY(calc(156px));
-
+  transform: translateY(156px);
+  
 }
 .poly {
   transform: scale(-1, -1);
 }
 
-.video {
+.img {
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
+  box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
+  width: 370px;
+  height: 156px;
 }
 
 .tongue{
@@ -519,7 +527,7 @@ img {
   border: solid .125rem var(--grey2);
   border-top-right-radius: 1.125rem;
   border-bottom-right-radius: 1.125rem;
-  padding-block: 6px;
+  padding-block: 5px;
   color: var(--text-color);
 }
 .bi {
