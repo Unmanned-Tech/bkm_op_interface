@@ -187,7 +187,7 @@ import Strobe from "../assets/strobe.svg"
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
-import ROSLIB, * as roslib from 'roslib/src/RosLib'
+import ROSLIB  from 'roslib/src/RosLib'
 import Map from "./maps/Map1.vue";
 
 export default {
@@ -207,11 +207,11 @@ export default {
   data: function () {
     return {
       isCameraVisible: false,
-      isSmLightsEnabled: false,
+      isSmLightsEnabled: true,
       isOptionsVisible: false,
       isMapVisible: false,
       isSliderVisible: false,
-      isStrobeEnabled: false,
+      isStrobeEnabled: true,
       brush_speed: 0,
       brush_angle: 0,
       lin_max_speed: 0,
@@ -398,11 +398,11 @@ export default {
 
       if (this.isSmLightsEnabled) {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "SM_LIGHTS_EN"
+          cmd: "SM_LIGHTS_DIS"
         });
       } else {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "SM_LIGHTS_DIS"
+          cmd: "SM_LIGHTS_EN"
         });
       }
 
@@ -419,11 +419,11 @@ export default {
       });
       if (this.isStrobeEnabled) {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "STROBE_EN"
+          cmd: "STROBE_DIS"
         });
       } else {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "STROBE_DIS"
+          cmd: "STROBE_EN"
         });
       }
 
