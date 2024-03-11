@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <img class="slide-out video" src="http://192.168.0.106:8080/stream">
+    <img class="slide-out video" src="http://192.168.1.1:8080/stream">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
@@ -294,7 +294,7 @@ export default {
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.106:9090" });
+    this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
     var imageSub = new ROSLIB.Topic({
       ros: this.ros,
