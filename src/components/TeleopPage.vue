@@ -1,11 +1,12 @@
 <template>
   <div class="main">
-    <img ref="video" class="slide-out video">
+    <img class="slide-out video" src="http://192.168.0.106:8080/stream">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
+            <!-- <div id="map"></div> -->
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-2" @click="toggleMap">
@@ -20,13 +21,13 @@
           <div class="col pe-0 slide-col">
             <div class="slide p-3 py-1">
               <div class="lin_speed">
-                <label for="lin_max_speed_range1" class="form-label">
+                <label for="lin_max_speed_range" class="form-label">
                   <div class="row">
                     <span class="col-auto caption_low">Скорость робота</span> 
                     <span class="col-auto d-flex justify-content-center caption_low pe-0" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
                   </div>
                 </label>
-                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="15" value="0" step="1" id="lin_max_speed_range1"/>
+                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="15" value="0" step="1" id="lin_max_speed_range"/>
               </div>
               <div class="robot_rotate">
                 <label for="ang_max_speed_range" class="form-label">
@@ -38,40 +39,40 @@
                 <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".5" id="ang_max_speed_range"/>
               </div>
               <div class="brush_speed">
-                <label for="brush_speed_range1" class="form-label">
+                <label for="brush_speed_range" class="form-label">
                   <div class="row">
                     <span class="col-auto caption_low">Скорость щётки</span> 
                     <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
                   </div>
                 </label>
-                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" v-model="brush_speed" step="20" id="brush_speed_range1"/>
+                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" v-model="brush_speed" step="20" id="brush_speed_range"/>
               </div>
               <div class="brush_rotate">
-                <label for="brush_rotate_range1" class="form-label">
+                <label for="brush_rotate_range" class="form-label">
                   <div class="row">
                     <span class="col-auto caption_low">Поворот щетки</span> 
                   </div>
                 </label>
                 <div class="range-container">
                   <div class="letter left">L</div>
-                  <input type="range" class="form-range" min="0" max="2" value="1" step="1" id="brush_rotate_range1"/>
+                  <input v-on:input="setBrushRotation" type="range" class="form-range" min="-1" max="1" value="0" step="1" id="brush_rotate_range"/>
                   <div class="letter right">R</div>
                 </div>
               </div>
             </div>
           </div>
           <div class="col-auto ps-0 d-flex flex-column justify-content-center">
-            <button class="tongue">
-
+            <button class="tongue" style="background-color: var(--red);" @click="disable_all_sliders()">
+              <i class="bi bi-sign-stop"></i>
             </button>
-            <button class="tongue p-2" @click="toggleSlider">
+            <button class="tongue p-2 my-3" @click="toggleSlider">
               <div :style="{ 'transform': isSliderVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
                 <Polygon style="scale: .9;"/>
               </div>
               <i class="bi bi-sliders"></i>
             </button>
-            <button class="tongue mt-5" style="background-color: var(--red);" @click="disable_brush_speed">
-              <i class="bi bi-brush"></i>
+            <button class="tongue" style="background-color: var(--red);" @click="disable_brush_speed()">
+              <Brush />
             </button>
           </div>
         </div>
@@ -94,7 +95,7 @@
           <div class="col butt-col">
             <div class="row align-items-center">
               <div class="col">
-                <button @click="toggleStrobe" class="buttonSet" :class="{ 'active': isStrobeEnabled }">
+                <button @click="toggleSmLights" class="buttonSet" :class="{ 'active': isSmLightsEnabled }">
                   <Headlight style="transform: scale(2);"/>
                 </button>
               </div>
@@ -106,6 +107,11 @@
               <div class="col">
                 <button class="buttonSet sound">
                   <Sound style="transform: scale(2);"/>
+                </button>
+              </div>
+              <div class="col">
+                <button @click="toggleStrobeLights" class="buttonSet" :class="{ 'active': isStrobeEnabled }">
+                  <Strobe style="transform: scale(2);"/>
                 </button>
               </div>
             </div>
@@ -140,7 +146,7 @@
           </div>
         </div>
       </div>
-      <div class="col slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
+      <div class="col-auto slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
         <div class="row">
           <div class="col d-flex justify-content-end">
             <button class="px-3 fixed-button button" @click="toggleCamera">
@@ -156,8 +162,8 @@
           </div>
         </div>
         <div class="row">
-          <div class="col d-flex justify-content-end">
-            <img src="/src/assets/image6.png" class="slide-out img">
+          <div class="col d-flex justify-content-start">
+            <img id="depth" class="slide-out img">
           </div>
         </div>
         
@@ -175,11 +181,13 @@ import Mic from "../assets/mic-fill.svg";
 import Sound from "../assets/sound.svg";
 import Lights from "../assets/Lights.svg";
 import Polygon from "../assets/Polygon.svg";
-import Headlight from "../assets/headlights.svg"
+import Headlight from "../assets/headlights.svg";
+import Brush from "../assets/brush.svg";
+import Strobe from "../assets/strobe.svg"
 import EmerStopButton from "./EmerStopButton.vue";
 import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
-import * as roslib from "../../roslib";
+import ROSLIB, * as roslib from 'roslib/src/RosLib'
 import Map from "./maps/Map1.vue";
 
 export default {
@@ -193,10 +201,13 @@ export default {
     Headlight, 
     Mic, 
     Map,
+    Brush,
+    Strobe,
   },
   data: function () {
     return {
       isCameraVisible: false,
+      isSmLightsEnabled: false,
       isOptionsVisible: false,
       isMapVisible: false,
       isSliderVisible: false,
@@ -207,10 +218,10 @@ export default {
       ang_max_speed: 0,
       lin_speed: 0,
       ang_speed: 0,
-      video: null,
       speed_send_timer: {},
       brush_send_timer: {},
       ros: {},
+      janus: null,
       twist: {
         linear: {
           x: 0.0,
@@ -238,6 +249,7 @@ export default {
       cmdVel: 0,
     };
   },
+  
   computed: {
         linSpeedColorStyle() {
             if (this.lin_max_speed <= 5) {
@@ -268,7 +280,6 @@ export default {
         },
   },
   mounted: function () {
-    this.video = this.$refs.video;
     var options = {
       zone: document.getElementById('zone_joystick'),
       mode: 'static',
@@ -287,22 +298,41 @@ export default {
 
     var imageSub = new ROSLIB.Topic({
       ros: this.ros,
-      name: '/image_raw/compressed',
+      name: '/out/compressed',
       messageType: 'sensor_msgs/msg/CompressedImage',
-    });
-
-    imageSub.subscribe((message) => {
-      const imageData = 'data:image/' + message.format + ';base64,' + message.data;
-      this.video.src = imageData;
     })
+
+    imageSub.subscribe(function(message) {
+      document.getElementById('depth').src = "data:image/" + message.format + ";base64," + message.data;
+    }) 
+
   },
   methods: {
+    
+    toggleSmLights() {
+      this.isSmLightsEnabled = !this.isSmLightsEnabled;
+      this.set_sm_lights();
+    },
+    toggleStrobeLights() {
+      this.isStrobeEnabled = !this.isStrobeEnabled;
+      this.set_strobe_lights();
+    },
     disable_brush_speed() {
-      document.getElementById("brush_speed_range1").value = 0;
+      document.getElementById("brush_speed_range").value = 0;
       this.brush_speed = 0;
     },
-    toggleStrobe() {
-      this.isStrobeEnabled = !this.isStrobeEnabled;
+    disable_all_sliders() {
+      document.getElementById("lin_max_speed_range").value = 0;
+      this.lin_max_speed = 0;
+
+      document.getElementById("ang_max_speed_range").value = 0;
+      this.ang_max_speed = 0;
+
+      document.getElementById("brush_speed_range").value = 0;
+      this.brush_speed = 0;
+
+      document.getElementById("brush_rotate_range").value = 0;
+      
     },
     toggleSlider() {
       this.isSliderVisible = !this.isSliderVisible;
@@ -317,17 +347,47 @@ export default {
       this.isCameraVisible = !this.isCameraVisible;
     },
     set_brush_speed() {
-      this.brush_speed = document.getElementById("brush_speed_range1").value;
+      this.brush_speed = document.getElementById("brush_speed_range").value;
       this.send_brush_speed();
     },
     set_brush_angle() {
       this.brush_angle = document.getElementById("brush_angle_range").value
     },
     set_linear_speed() {
-      this.lin_max_speed = document.getElementById("lin_max_speed_range1").value
+      this.lin_max_speed = document.getElementById("lin_max_speed_range").value
     },
     set_angular_speed() {
       this.ang_max_speed = document.getElementById("ang_max_speed_range").value
+    },
+    setBrushRotation(event) {
+      const value = parseInt(event.target.value);
+      let angle = 0;
+
+      if (value === -1) {
+        angle = -19;
+      } else if (value === 1) {
+        angle = 29;
+      }
+
+      this.sendBrushRotationCommand(angle);
+    },
+
+    sendBrushRotationCommand(angle) {
+      var cmd_srv = new ROSLIB.Service({
+        ros: this.ros,
+        name: '/bkm_cmd_srv',
+        serviceType: 'mcu_msgs/srv/TextCmd'
+      });
+
+      var request = new ROSLIB.ServiceRequest({
+        cmd: "set_angle",
+        angle: angle,
+      });
+
+      cmd_srv.callService(request, function (result) {
+        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+      });
+      console.log(request);
     },
     set_sm_lights() {
       var cmd_srv = new ROSLIB.Service({
@@ -335,7 +395,8 @@ export default {
         name: '/bkm_cmd_srv',
         serviceType: 'mcu_msgs/srv/TextCmd'
       });
-      if (document.getElementById("sm_lights_check").checked) {
+
+      if (this.isSmLightsEnabled) {
         var request = new ROSLIB.ServiceRequest({
           cmd: "SM_LIGHTS_EN"
         });
@@ -346,8 +407,9 @@ export default {
       }
 
       cmd_srv.callService(request, function (result) {
-        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
+      console.log(request)
     },
     set_strobe_lights() {
       var cmd_srv = new ROSLIB.Service({
@@ -355,7 +417,7 @@ export default {
         name: '/bkm_cmd_srv',
         serviceType: 'mcu_msgs/srv/TextCmd'
       });
-      if (document.getElementById("strobe_lights_check").checked) {
+      if (this.isStrobeEnabled) {
         var request = new ROSLIB.ServiceRequest({
           cmd: "STROBE_EN"
         });
@@ -366,8 +428,9 @@ export default {
       }
 
       cmd_srv.callService(request, function (result) {
-        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
+      console.log(request);
     },
     joystick_move(evt, data) {
 
@@ -407,11 +470,6 @@ export default {
       this.lin_speed = 0;
       this.ang_speed = 0;
     },
-    stop_brush() {
-      // document.getElementById("brush_enabled").checked = false;
-      document.getElementById("brush_speed_range").value = 0;
-      this.brush_speed = 0;
-    },
     send_brush_speed() {
       this.ce_vel = new ROSLIB.Topic({
           ros: this.ros,
@@ -448,15 +506,17 @@ export default {
 .main {
   overflow: hidden;
   margin-inline: -.75rem;
+  position: relative;
 }
 
 .main .video {
-  position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
+  position: absolute;
   width: 100%;
   height: 100%;
+  /* z-index: -1; */
+
 }
 .zone {
   position: relative;
@@ -496,7 +556,7 @@ export default {
 }
 
 .hiddenX {
-  transform: translateX(-322px);
+  transform: translateX(-424px);
 }
 
 .slide-out-columnX.mapHide {
@@ -520,6 +580,7 @@ export default {
   box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
   width: 370px;
   height: 156px;
+  /* transform: rotate(90deg); */
 }
 
 .tongue{
@@ -540,7 +601,8 @@ export default {
   background-color: transparent;
   cursor: pointer;
 }
-.buttonSet.mic:active {
+.buttonSet.mic:active,
+.buttonSet.sound:active {
   border-color: var(--green);
 }
 .butt-col {

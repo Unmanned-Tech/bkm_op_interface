@@ -24,6 +24,8 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+      '~leafletdraw': path.resolve(__dirname, 'node_modules/leaflet-draw/dist'),
+      '~leaflet': path.resolve(__dirname, 'node_modules/leaflet/dist'),
     },
   },
 });

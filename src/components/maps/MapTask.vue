@@ -1,23 +1,89 @@
 <template>
-    <div id="map"></div>
+    <div>
+        <div id="map" class="maper"></div>
+    </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<script>
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
+// import 'leaflet-draw';
+import '~leafletdraw/leaflet.draw'
 
-const initialMap1 = ref(null);
+export default {
+    mounted: function() {
+        var map = L.map('map', { 
+            zoomControl: false,
+            zoom:1,
+            zoomAnimation:false,
+            fadeAnimation:true,
+            markerZoomAnimation:true, 
+            attributionControl:false
+        }).setView([55.02240, 73.29929], 17);
 
-onMounted(()=> {
-    initialMap1.value = L.map('map', { zoomControl: false,zoom:1,zoomAnimation:false,fadeAnimation:true,markerZoomAnimation:true, attributionControl:false}).setView([55.02240, 73.29929], 17);
-    L.tileLayer('/src/assets/Tiles//{z}/{x}/{y}.png', {
-        className: 'map-tiles'
-    }).addTo(initialMap1.value);
-    L.control.zoom({
-        position: 'topright',
-    }).addTo(initialMap1.value)
-});
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            className: 'map-tiles',
+        }).addTo(map);
+        L.control.zoom({
+            position: 'topright',
+        }).addTo(map);
+        
+        var editableLayers = new L.FeatureGroup();
+        map.addLayer(editableLayers);
+        
+        var MyCustomMarker = L.Icon.extend({
+            options: {
+                shadowUrl: null,
+                iconAnchor: new L.Point(12, 12),
+                iconSize: new L.Point(24, 24),
+                iconUrl: '/src/assets/battery.svg'
+            }
+        });
+        var options = {
+            position: 'topleft',
+            draw: {
+                polyline: {
+                    shapeOptions: {
+                        color: '#f357a1',
+                        weight: 7
+                    }
+                },
+                polygon: {
+                    allowIntersection: false, // Restricts shapes to simple polygons
+                    drawError: {
+                        color: '#e1e100', // Color the shape will turn when intersects
+                        message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                    },
+                    shapeOptions: {
+                        color: '#bada55'
+                    }
+                },
+                circle: false, // Turns off this drawing tool
+                rectangle: false,
+                marker: {
+                    icon: new MyCustomMarker()
+                }
+            },
+            edit: {
+                featureGroup: editableLayers, //REQUIRED!!
+                remove: false
+            }
+        };
+        var drawControl = new L.Control.Draw(options);
+        map.addControl(drawControl);
+        
+        map.on(L.Draw.Event.CREATED, function (e) {
+            var type = e.layerType,
+                layer = e.layer;
+        
+            if (type === 'marker') {
+                layer.bindPopup('A popup!');
+            }
+        
+            editableLayers.addLayer(layer);
+        });
+    },
+}
 </script>
 
 <style>
@@ -28,17 +94,16 @@ onMounted(()=> {
 .map-tiles {
     filter:var(--map-tiles-filter);
 }
-
-.leaflet-control-zoom-in,
-    .leaflet-control-zoom-out {
-        font: bold 1rem 'SF Pro Rounded';
-        text-indent: 1px;
-    }
 </style>
 
 <style scoped>
 #map {
     min-height: 100%;
+}
+.maper {
+  border: solid var(--grey2) .25rem;
+  border-radius: 1.125rem;
+  height: 25rem;
 }
 </style>
 

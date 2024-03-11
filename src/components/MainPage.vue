@@ -24,7 +24,7 @@
       </div>
     <div class="row">
       <div class="col">
-        <img class="img-fluid rounded-4" src="../assets/image7.jpg">
+        <img class="img-fluid rounded-4" src="http://192.168.0.106:8080/stream">
         <div class="row mt-4">
           <MPButtons1 />
         </div>

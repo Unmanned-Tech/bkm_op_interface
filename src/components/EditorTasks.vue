@@ -34,8 +34,10 @@
                 <segmented />
             </div>
         </div>
-        <settingsEditTask v-if="anotherSelectedOption === 'Настройки'"/>
-        <mapEditTask v-if="anotherSelectedOption === 'Карта'"/>
+        <div>
+            <settingsEditTask v-if="anotherSelectedOption === 'Настройки'"/>
+            <mapEditTask v-if="anotherSelectedOption === 'Карта'"/>
+        </div>
         <div class="row">
             <div class="col">
                 <button class="ms-3 button">
@@ -48,25 +50,17 @@
 
 <script setup>
 import { useAnotherStore } from '../stores/store';
-import { useRoute, useRouter } from 'vue-router';
-import { watchEffect, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 import { useStore } from '../stores/store';
 
 const store = useStore();
 
 const anotherStore = useAnotherStore();
 
-const route = useRoute();
 const router = useRouter();
 
 const anotherSelectedOption = computed(() => anotherStore.anotherSelectedOption);
-
-watchEffect(() => {
-  const anotherSelectedOptionFromRoute = route.params.mode;
-  if (anotherSelectedOptionFromRoute !== anotherStore.anotherSelectedOption) {
-    anotherStore.setAnotherSelectedOption(anotherSelectedOptionFromRoute);
-  }
-});
 
 function goBack() {
     router.push({ name: 'tasks', params: { selectedOption: store.selectedOption } })

@@ -1,6 +1,6 @@
 <template>
   <div class="row mt-3">
-    <div class="col-3 ms-4">
+    <div class="col-auto ms-4">
       <label class="rad-label">
         <input type="radio" class="rad-input" name="rad" checked>
         <div class="rad-design"></div>
@@ -20,7 +20,7 @@
       </label>
     </div>
     <div class="col">
-      <Map class="map"/>
+      <Map />
     </div>
   </div>
 </template>
@@ -64,7 +64,6 @@ export default {
 }
 .rad-design::before {
   content: '';
-
   display: inline-block;
   width: inherit;
   height: inherit;
@@ -88,10 +87,6 @@ export default {
 .rad-input:not(:checked)~.rad-text {
   color: hsl(0, 0%, 40%);
 }
-.map {
-  border: solid var(--grey2) .25rem;
-  border-radius: 1.125rem;
-  height: 25rem;
-}
+
 
 </style>

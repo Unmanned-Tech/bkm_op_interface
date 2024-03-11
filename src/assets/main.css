@@ -1,4 +1,6 @@
 @import './base.css';
+@import '~leafletdraw/leaflet.draw-src.css';
+@import '~leaflet/leaflet.css';
 
 a.router-link-active.router-link-exact-active.link {
   background-color: var(--bg-secondary);
@@ -37,10 +39,43 @@ body {
   border-radius: .5rem !important;
   transform: scale(1.2) !important;
   border: 0 !important;
-  margin-top: 5rem !important;
+  /* margin-top: 5rem !important; */
 }
 
-.leaflet-bar a {
+a.leaflet-draw-draw-polyline {
+  border-top-left-radius: .25rem !important;
+  border-top-right-radius: .25rem !important;
+  border: none !important;
+}
+a.leaflet-draw-draw-polygon {
+  border: none !important;
+}
+a.leaflet-draw-draw-rectangle {
+  border: none !important;
+}
+a.leaflet-draw-draw-marker {
+  border: none !important;
+}
+a.leaflet-draw-draw-circlemarker {
+  border: none !important;
+  border-bottom-left-radius: .25rem !important;
+  border-bottom-right-radius: .25rem !important;
+  margin-bottom: 11rem;
+}
+a.leaflet-draw-toolbar.leaflet-bar.leaflet-draw-toolbar-top {
+  transform: scale(1.6) !important;
+}
+
+div.leaflet-top.leaflet-left {
+  margin-top: 2rem !important;
+  margin-inline-start: .5rem;
+  /* transform: scale(1.6) !important; */
+  border: none !important;
+}
+a.leaflet-control-zoom-in span {
+  content: none;
+}
+/*.leaflet-bar a {
   background-color: transparent !important;
   color: var(--text-color) !important;
   width: 30px !important;
@@ -57,7 +92,9 @@ body {
 	border-radius: .25rem !important;
   border: solid .125rem var(--text-color) !important;
   border-top: none;
-}
+} */
+
+
 
 :root {
   --red: #FF453A;

@@ -1,6 +1,5 @@
 <script setup>
 import main_menu from "./components/MainMenu.vue";
-import { ref } from 'vue';
 
 </script>
 

@@ -12,7 +12,7 @@
             <div class="col mb-4">
                 <SegmentedControl />
             </div>
-            <div class="col-md-3 mb-4 d-flex justify-content-center">
+            <div class="col-md-3 mb-4 d-flex justify-content-end">
               <router-link :to="{ name: 'edit', params: { mode: 'Настройки' } }">
                 <button class="set">
                     <plusSVG />
@@ -217,10 +217,10 @@ td {
 }
 .time {
   font-weight: 400;
-  font-size: 2rem;
+  font-size: 1.5rem;
   border: .125rem solid var(--grey);
   border-radius: 0 1.125rem 1.125rem 0;
-  padding: .125rem .35rem;
+  padding: .25rem .85rem;
 }
 .time.date {
   border-radius: 1.125rem 0 0 1.125rem;
