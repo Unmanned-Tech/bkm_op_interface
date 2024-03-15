@@ -189,6 +189,7 @@ import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import ROSLIB  from 'roslib/src/RosLib'
 import Map from "./maps/Map1.vue";
+import axios from 'axios';
 
 export default {
   name: "TeleopPage",
@@ -308,6 +309,17 @@ export default {
 
   },
   methods: {
+
+    async sendCommand() {
+      try {
+        const response = await axios.post('/send_command', {
+          command: 'v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=1'
+        });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
     
     toggleSmLights() {
       this.isSmLightsEnabled = !this.isSmLightsEnabled;
