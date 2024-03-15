@@ -1,12 +1,11 @@
 <template>
   <div class="main">
-    <img class="slide-out video" src="http://192.168.1.1:8080/stream">
+    <img class="slide-out video" src="http://192.168.0.106:8080/stream">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
-            <!-- <div id="map"></div> -->
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-2" @click="toggleMap">
@@ -91,7 +90,7 @@
     </div>
     <div class="row align-items-end">
       <div class="col-auto ms-4 mb-2 slide-out-columnX" :class="{ 'slide-out-columnX': isOptionsVisible, 'hiddenX': !isOptionsVisible }">
-        <div class="row align-items-center">
+        <div class="row">
           <div class="col butt-col">
             <div class="row align-items-center">
               <div class="col">
@@ -162,14 +161,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col d-flex justify-content-start">
+          <div class="col-auto d-flex justify-content-start">
             <img id="depth" class="slide-out img">
           </div>
         </div>
         
       </div>
-      <div class="col-3">
-        
+      <div class="col">
+        <camSettings />
       </div>
 
     </div>
@@ -189,7 +188,7 @@ import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import ROSLIB  from 'roslib/src/RosLib'
 import Map from "./maps/Map1.vue";
-import axios from 'axios';
+import camSettings from "./camSettings.vue";
 
 export default {
   name: "TeleopPage",
@@ -204,6 +203,7 @@ export default {
     Map,
     Brush,
     Strobe,
+    camSettings,
   },
   data: function () {
     return {
@@ -297,6 +297,10 @@ export default {
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
     this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
+    this.ros.on('connection', function () {
+      console.log('Connected to websocket server.');
+    });
+
     var imageSub = new ROSLIB.Topic({
       ros: this.ros,
       name: '/out/compressed',
@@ -309,17 +313,6 @@ export default {
 
   },
   methods: {
-
-    async sendCommand() {
-      try {
-        const response = await axios.post('/send_command', {
-          command: 'v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=1'
-        });
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
     
     toggleSmLights() {
       this.isSmLightsEnabled = !this.isSmLightsEnabled;
