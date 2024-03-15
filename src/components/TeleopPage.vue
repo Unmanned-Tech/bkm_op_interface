@@ -407,7 +407,7 @@ export default {
       }
 
       cmd_srv.callService(request, function (result) {
-        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
       console.log(request)
     },
@@ -428,7 +428,7 @@ export default {
       }
 
       cmd_srv.callService(request, function (result) {
-        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
       console.log(request);
     },
@@ -515,7 +515,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  /* z-index: -1; */
+  z-index: -1;
 
 }
 .zone {
