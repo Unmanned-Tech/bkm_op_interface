@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex mb-2 justify-content-end me-2">
         <div class="btn-group dropstart">
-            <button class="set" data-bs-toggle="dropdown" aria-expanded="false">
+            <button class="set" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                 <settingsSVG />
             </button>
             <div class="dropdown-menu animate fade">
@@ -19,12 +19,12 @@
                     <div class="mb-2">Режим экспозиции (по умолчанию: Auto):</div>
                     <div class="row justify-content-center">
                         <div class="col-auto">
-                            <button class="tongue" @click="sendExposure(3)">
+                            <button class="tongue" :class="{ active: exposureMode === 3 }" @click="sendExposure(3)">
                                 Auto
                             </button>
                         </div>
                         <div class="col-auto">
-                            <button class="tongue" @click="sendExposure(1)">
+                            <button class="tongue" :class="{ active: exposureMode === 1 }" @click="sendExposure(1)">
                                 Manual
                             </button>
                         </div>
@@ -74,16 +74,22 @@ export default {
         return {
             brightness: 0,
             contrast: 50,
+            exposureMode: 3,
         }
     },
 
+    mounted: function() {
+        this.sendExposure(3);
+    },
+
     methods: {
-        async sendExposure(value) {
+        async sendExposure(mode) {
             try {
                 const response = await axios.post('http://192.168.0.106:5000/send_command', {
-                    command: `v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=${value}`
+                    command: `v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=${mode}`
                 });
                 console.log(response.data);
+                this.exposureMode = mode;
             } catch (error) {
                 console.error(error);
             }
@@ -132,7 +138,7 @@ export default {
   font-size: 1.25rem;
   color: var(--text-color);
 }
-.tongue:active {
+.tongue.active {
     border-color: var(--green);
 }
 
