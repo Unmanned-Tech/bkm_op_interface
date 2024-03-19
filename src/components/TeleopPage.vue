@@ -554,31 +554,25 @@ export default {
   transition: transform .5s ease;
   transform: translateY(0);
 }
-
 .slide-out-columnX {
   transition: transform .5s ease;
   transform: translateX(0);
 }
-
 .hiddenX {
   transform: translateX(-424px);
 }
-
 .slide-out-columnX.mapHide {
   transform: translateX(-320px);
 }
 .slide-out-columnX.slideHide {
   transform: translateX(-320px);
 }
-
 .slide-out-columnY.hidden {
   transform: translateY(156px);
-  
 }
 .poly {
   transform: scale(-1, -1);
 }
-
 .img {
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
@@ -587,7 +581,6 @@ export default {
   height: 156px;
   /* transform: rotate(90deg); */
 }
-
 .tongue{
   background-color: var(--bg-tertiary);
   border: solid .125rem var(--grey2);
@@ -617,7 +610,6 @@ export default {
   border-top-left-radius: 1.125rem;
   border-bottom-left-radius: 1.125rem;
 }
-
 .slide {
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
