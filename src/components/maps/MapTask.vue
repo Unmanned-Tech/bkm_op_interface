@@ -60,13 +60,12 @@ export default {
                 },
                 circle: false, // Turns off this drawing tool
                 rectangle: false,
-                marker: {
-                    icon: new MyCustomMarker()
-                }
+                marker: false,
+                circlemarker: false
             },
             edit: {
                 featureGroup: editableLayers, //REQUIRED!!
-                remove: false
+                remove: true
             }
         };
         var drawControl = new L.Control.Draw(options);
@@ -76,11 +75,20 @@ export default {
             var type = e.layerType,
                 layer = e.layer;
         
-            if (type === 'marker') {
-                layer.bindPopup('A popup!');
+            if (type === 'polygon' || type === 'polyline') {
+                var coordinates = layer.getLatLngs();
+                console.log(coordinates);
             }
         
             editableLayers.addLayer(layer);
+        });
+        
+        map.on('draw:drawstart', function () {
+            map.dragging.disable();
+        });
+
+        map.on('draw:drawstop', function () {
+            map.dragging.enable();
         });
     },
 }

@@ -53,14 +53,9 @@ a.leaflet-draw-draw-polygon {
 a.leaflet-draw-draw-rectangle {
   border: none !important;
 }
-a.leaflet-draw-draw-marker {
+a.leaflet-draw-edit-edit {
+  margin-top: 2rem !important;
   border: none !important;
-}
-a.leaflet-draw-draw-circlemarker {
-  border: none !important;
-  border-bottom-left-radius: .25rem !important;
-  border-bottom-right-radius: .25rem !important;
-  margin-bottom: 11rem;
 }
 a.leaflet-draw-toolbar.leaflet-bar.leaflet-draw-toolbar-top {
   transform: scale(1.6) !important;
