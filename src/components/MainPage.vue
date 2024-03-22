@@ -24,19 +24,21 @@
       </div>
     <div class="row">
       <div class="col">
-        <img class="img-fluid rounded-4" src="http://192.168.1.1:8080/stream">
+        <div style="height: 189.5px; overflow: hidden;">
+          <img class="img-fluid rounded-4" :src="streamSrc" @error="handleError" @load="handleLoad">
+        </div>
         <div class="row mt-4">
           <MPButtons1 />
         </div>
       </div>
       <div class="col">
-        <img class="img-fluid rounded-4" src="../assets/image7.jpg">
+        <img class="img-fluid rounded-4" src="../assets/black-screen.jpg">
         <div class="row mt-4">
           <MPButtons2 />
         </div>
       </div>
       <div class="col">
-        <img class="img-fluid rounded-4" src="../assets/image7.jpg">
+        <img class="img-fluid rounded-4" src="../assets/black-screen.jpg">
         <div class="row mt-4">
           <MPButtons3 />
         </div>
@@ -65,13 +67,13 @@ import MPButtons1 from './ButtonsBKM/MPButtons1.vue';
 import MPButtons2 from './ButtonsBKM/MPButtons2.vue';
 import MPButtons3 from './ButtonsBKM/MPButtons3.vue';
 
-
 import Map1 from './maps/Map1.vue';
 import Map2 from './maps/Map2.vue';
 import Map3 from './maps/Map3.vue';
 
 import axios from 'axios';
 import * as roslib from "../../roslib.js";
+import { handleError } from 'vue';
 
 export default {
   name: "RobotPage",
@@ -91,7 +93,9 @@ export default {
     return {
       rstatus: 1,
       refresh_timer: '',
-      
+      streamSrc: 'https://192.168.0.106:8080/stream',
+      placeholderSrc: '/src/assets/black-screen.jpg',
+      loaded: false,
     }
   },
   mounted: function () {
@@ -113,8 +117,9 @@ export default {
       // If desired, we can unsubscribe from the topic as well.
       
     });
-
-
+    setTimeout(() => {
+      this.handleError();
+    }, 1000);
   },
   beforeUnmount() {
     // this.stopRefreshing();
@@ -137,6 +142,14 @@ export default {
       clearInterval(this.refresh_timer);
       console.info("refreshing stoped")
     },
+    handleError() {
+      if(!this.loaded) {
+        this.streamSrc = this.placeholderSrc;
+      }
+    },
+    handleLoad() {
+      this.loaded = true;
+    }
   }
 }
 </script>

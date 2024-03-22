@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <img class="slide-out video" src="http://192.168.0.106:8080/stream">
+    <img class="slide-out video" :src="streamSrc" @error="handleError" @load="handleLoad">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
@@ -248,6 +248,9 @@ export default {
         }
       },
       cmdVel: 0,
+      streamSrc: 'https://192.168.0.106:8080/stream',
+      placeholderSrc: '/src/assets/black-screen.jpg',
+      loaded: false,
     };
   },
   
@@ -310,7 +313,9 @@ export default {
     imageSub.subscribe(function(message) {
       document.getElementById('depth').src = "data:image/" + message.format + ";base64," + message.data;
     }) 
-
+    setTimeout(() => {
+      this.handleError();
+    }, 1000);
   },
   methods: {
     
@@ -500,6 +505,14 @@ export default {
       cmd_srv.callService(request, function (result) {
         alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
+    },
+    handleError() {
+      if(!this.loaded) {
+        this.streamSrc = this.placeholderSrc;
+      }
+    },
+    handleLoad() {
+      this.loaded = true;
     },
     
   }
