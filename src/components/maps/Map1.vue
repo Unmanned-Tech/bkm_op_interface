@@ -34,6 +34,9 @@ onMounted(()=> {
         font: bold 1rem 'SF Pro Rounded';
         text-indent: 1px;
     }
+div.leaflet-control-zoom.leaflet-bar.leaflet-control {
+    margin-top: 5rem;
+}
 
 
 </style>

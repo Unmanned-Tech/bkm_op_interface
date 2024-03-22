@@ -24,6 +24,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import Map from '../maps/MapTask.vue';
 

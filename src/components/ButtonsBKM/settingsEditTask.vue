@@ -1,5 +1,5 @@
 <template>
-        <div class="row mt-4 mb-auto">
+    <div class="row mt-4 mb-auto" style="height: 328.8px;">
         <div class="col-3">
             <div class="caption_low mb-3">Оборудование:</div>
             <select class="ms-3 form__select">

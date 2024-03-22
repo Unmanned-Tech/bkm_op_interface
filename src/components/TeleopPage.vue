@@ -248,7 +248,7 @@ export default {
         }
       },
       cmdVel: 0,
-      streamSrc: 'https://192.168.0.106:8080/stream',
+      streamSrc: 'http://192.168.0.106:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     };
@@ -318,7 +318,14 @@ export default {
     }, 1000);
   },
   methods: {
-    
+    handleError() {
+      if(!this.loaded) {
+        this.streamSrc = this.placeholderSrc;
+      }
+    },
+    handleLoad() {
+      this.loaded = true;
+    },
     toggleSmLights() {
       this.isSmLightsEnabled = !this.isSmLightsEnabled;
       this.set_sm_lights();
@@ -505,14 +512,6 @@ export default {
       cmd_srv.callService(request, function (result) {
         alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
-    },
-    handleError() {
-      if(!this.loaded) {
-        this.streamSrc = this.placeholderSrc;
-      }
-    },
-    handleLoad() {
-      this.loaded = true;
     },
     
   }

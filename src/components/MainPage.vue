@@ -24,7 +24,7 @@
       </div>
     <div class="row">
       <div class="col">
-        <div style="height: 189.5px; overflow: hidden;">
+        <div style="height: 189.5px;">
           <img class="img-fluid rounded-4" :src="streamSrc" @error="handleError" @load="handleLoad">
         </div>
         <div class="row mt-4">
@@ -93,7 +93,7 @@ export default {
     return {
       rstatus: 1,
       refresh_timer: '',
-      streamSrc: 'https://192.168.0.106:8080/stream',
+      streamSrc: 'http://192.168.0.106:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     }
