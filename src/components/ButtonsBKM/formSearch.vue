@@ -2,7 +2,7 @@
     <main>
         <div class="wrap" :class="{ active: showSearchInput }">
             <form>
-                <input v-model="searchQuery" type="text" class="input" placeholder="Поиск" :class="{ active: showSearchInput }" @input="handleInput"/>
+                <input enter-key-hint="search" v-model="searchQuery" type="text" class="input" placeholder="Поиск" :class="{ active: showSearchInput }" @input="handleInput"/>
             </form>
             <i class="bi bi-search" aria-hidden="true" @click="toggleSearch"></i>
         </div>
