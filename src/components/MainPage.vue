@@ -93,7 +93,7 @@ export default {
     return {
       rstatus: 1,
       refresh_timer: '',
-      streamSrc: 'http://192.168.1.46:8080/stream',
+      streamSrc: 'http://192.168.1.1:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     }
