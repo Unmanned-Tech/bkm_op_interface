@@ -119,7 +119,7 @@ export default {
     });
     setTimeout(() => {
       this.handleError();
-    }, 500);
+    }, 100);
   },
   beforeUnmount() {
     // this.stopRefreshing();
