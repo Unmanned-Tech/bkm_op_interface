@@ -35,7 +35,7 @@ screen -S npm-dev -dm bash -c 'npm run dev'
 cd ~
 
 screen -S rosbridge -dm bash -c 'ros2 launch rosbridge_server rosbridge_websocket_launch.xml' 
-# screen -S mcu_agent -dm bash -c 'ros2 run bkm_mcu_agent bkm_mcu_agent'
+screen -S mcu_agent -dm bash -c 'ros2 run bkm_mcu_agent bkm_mcu_agent'
 # screen -S transport -dm bash -c 'ros2 run image_transport republish raw in:=/depth'
 screen -S camComServ -dm bash -c 'python3 serv.py'
 

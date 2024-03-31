@@ -248,7 +248,7 @@ export default {
         }
       },
       cmdVel: 0,
-      streamSrc: 'http://192.168.0.106:8080/stream',
+      streamSrc: 'http://192.168.1.46:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     };
@@ -315,7 +315,7 @@ export default {
     }) 
     setTimeout(() => {
       this.handleError();
-    }, 1000);
+    }, 500);
   },
   methods: {
     handleError() {

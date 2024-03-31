@@ -79,13 +79,19 @@ export default {
     },
 
     mounted: function() {
+        if (localStorage.getItem('brightness')) {
+            this.brightness = parseInt(localStorage.getItem('brightness'));
+        }
+        if (localStorage.getItem('contrast')) {
+            this.contrast = parseInt(localStorage.getItem('contrast'));
+        }
         this.sendExposure(3);
     },
 
     methods: {
         async sendExposure(mode) {
             try {
-                const response = await axios.post('http://192.168.0.106:5000/send_command', {
+                const response = await axios.post('http://192.168.1.46:5000/send_command', {
                     command: `v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=${mode}`
                 });
                 console.log(response.data);
@@ -96,20 +102,22 @@ export default {
         },
         async sendBrightness() {
             try {
-                const response = await axios.post('http://192.168.0.106:5000/send_command', {
-                    command: `v4l2-ctl -d /dev/video0 --set-ctrl brightness=${this.brightness}`
+                const response = await axios.post('http://192.168.1.46:5000/send_command', {
+                    command: `v4l2-ctl -d /dev/video0 --set-ctrl brightness=${ this.brightness }`
                 });
                 console.log(response.data);
+                localStorage.setItem('brightness', this.brightness);
             } catch (error) {
                 console.error(error)
             }
         },
         async sendContrast() {
             try {
-                const response = await axios.post('http://192.168.0.106:5000/send_command', {
-                    command: `v4l2-ctl -d /dev/video0 --set-ctrl contrast=${this.contrast}`
+                const response = await axios.post('http://192.168.1.46:5000/send_command', {
+                    command: `v4l2-ctl -d /dev/video0 --set-ctrl contrast=${ this.contrast }`
                 });
                 console.log(response.data);
+                localStorage.setItem('contrast', this.contrast);
             } catch (error) {
                 console.error(error)
             }
