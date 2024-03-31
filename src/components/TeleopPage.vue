@@ -77,9 +77,31 @@
         </div>
       </div>
       <div class="col"></div>
-      <div class="col mt-4">
+      <div class="col mt-1">
+        <div class="row justify-content-end me-1">
+          <div class="col-auto">
+            <table class="current">
+              <tr>
+                <td class="start">
+                  Скорость робота
+                </td>
+                <td class="start1">
+                  <span>{{ lin_speed }} м/c</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="end">
+                  Скорость щётки
+                </td>
+                <td class="end1">
+                  <span>{{ brush_speed }} об/м</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
         <div class="row align-items-center">
-          <div class="col d-flex justify-content-center p-5">
+          <div class="col d-flex justify-content-center p-4">
             <EmerStopButton />
           </div>
         </div>
@@ -248,7 +270,7 @@ export default {
         }
       },
       cmdVel: 0,
-      streamSrc: 'http://192.168.1.46:8080/stream',
+      streamSrc: 'http://192.168.1.1:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     };
@@ -454,10 +476,10 @@ export default {
       this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
 
       // Если lin_speed отрицательна, меняем знак у ang_speed
-      if (this.lin_speed < 0) {
-      this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+      if (this.lin_speed < -0.15) {
+        this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
       } else {
-      this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+        this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
       }
     },
     joystick_start(evt, data) {
@@ -609,6 +631,40 @@ export default {
   border: solid var(--grey2) .125rem; 
   background-color: transparent;
   cursor: pointer;
+}
+.current {
+  border-radius: 1.125rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .95rem;
+}
+tr {
+  padding-inline: 2rem;
+}
+td {
+  background-color: var(--bg-tertiary);
+  padding: .25rem;
+  border: solid 2px var(--grey2);
+}
+td.start {
+  border-top-left-radius: 1rem;
+  border-bottom: none;
+}
+td.start1 {
+  border-top-right-radius: 1rem;
+  border-bottom: none;
+  border-left: none;
+  text-align: center;
+  /* padding-inline: 1.75rem; */
+}
+td.end {
+  border-bottom-left-radius: 1rem;
+}
+td.end1 {
+  border-bottom-right-radius: 1rem;
+  border-left: none;
+  text-align: center;
+  width: 4.95rem;
 }
 .buttonSet.mic:active,
 .buttonSet.sound:active {
