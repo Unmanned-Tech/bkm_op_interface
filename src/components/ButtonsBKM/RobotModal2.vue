@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="title">Информация</div>
+          <div class="title">Статус робота</div>
           <div class="col d-flex justify-content-end">
             <table class="tab">
               <tr>

@@ -1,12 +1,11 @@
 <template>
   <div class="main">
-    <img class="slide-out video" src="http://192.168.1.1:8080/stream">
+    <img class="slide-out video" :src="streamSrc" @error="handleError" @load="handleLoad">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
-            <!-- <div id="map"></div> -->
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-2" @click="toggleMap">
@@ -78,9 +77,31 @@
         </div>
       </div>
       <div class="col"></div>
-      <div class="col mt-4">
+      <div class="col mt-1">
+        <div class="row justify-content-end me-1">
+          <div class="col-auto">
+            <table class="current">
+              <tr>
+                <td class="start">
+                  Скорость робота
+                </td>
+                <td class="start1">
+                  <span>{{ lin_speed }} м/c</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="end">
+                  Скорость щётки
+                </td>
+                <td class="end1">
+                  <span>{{ brush_speed }} об/м</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
         <div class="row align-items-center">
-          <div class="col d-flex justify-content-center p-5">
+          <div class="col d-flex justify-content-center p-4">
             <EmerStopButton />
           </div>
         </div>
@@ -91,7 +112,7 @@
     </div>
     <div class="row align-items-end">
       <div class="col-auto ms-4 mb-2 slide-out-columnX" :class="{ 'slide-out-columnX': isOptionsVisible, 'hiddenX': !isOptionsVisible }">
-        <div class="row align-items-center">
+        <div class="row">
           <div class="col butt-col">
             <div class="row align-items-center">
               <div class="col">
@@ -162,14 +183,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col d-flex justify-content-start">
+          <div class="col-auto d-flex justify-content-start">
             <img id="depth" class="slide-out img">
           </div>
         </div>
         
       </div>
-      <div class="col-3">
-        
+      <div class="col">
+        <camSettings />
       </div>
 
     </div>
@@ -189,6 +210,7 @@ import BatteryInfo from "./BatteryInfo.vue";
 import nipplejs from "nipplejs";
 import ROSLIB  from 'roslib/src/RosLib'
 import Map from "./maps/Map1.vue";
+import camSettings from "./camSettings.vue";
 
 export default {
   name: "TeleopPage",
@@ -203,6 +225,7 @@ export default {
     Map,
     Brush,
     Strobe,
+    camSettings,
   },
   data: function () {
     return {
@@ -247,6 +270,9 @@ export default {
         }
       },
       cmdVel: 0,
+      streamSrc: 'http://192.168.1.1:8080/stream',
+      placeholderSrc: '/src/assets/black-screen.jpg',
+      loaded: false,
     };
   },
   
@@ -296,6 +322,10 @@ export default {
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
     this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
+    this.ros.on('connection', function () {
+      console.log('Connected to websocket server.');
+    });
+
     var imageSub = new ROSLIB.Topic({
       ros: this.ros,
       name: '/out/compressed',
@@ -305,10 +335,25 @@ export default {
     imageSub.subscribe(function(message) {
       document.getElementById('depth').src = "data:image/" + message.format + ";base64," + message.data;
     }) 
-
+    setTimeout(() => {
+      this.handleError();
+    }, 500);
+    var listner1 = new ROSLIB.Topic({
+      ros: this.ros,
+      name: '/c1_telem',
+      messageType: 'mcu_msgs/msg/BkdcStatus'
+    });
+    listner1.subscribe(this.set_c1_msg.bind(this));
   },
   methods: {
-    
+    handleError() {
+      if(!this.loaded) {
+        this.streamSrc = this.placeholderSrc;
+      }
+    },
+    handleLoad() {
+      this.loaded = true;
+    },
     toggleSmLights() {
       this.set_sm_lights();
       this.isSmLightsEnabled = !this.isSmLightsEnabled;
@@ -437,10 +482,10 @@ export default {
       this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
 
       // Если lin_speed отрицательна, меняем знак у ang_speed
-      if (this.lin_speed < -0.1) {
-      this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+      if (this.lin_speed < -0.15) {
+        this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
       } else {
-      this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
+        this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
       }
     },
     joystick_start(evt, data) {
@@ -549,40 +594,32 @@ export default {
   transition: transform .5s ease;
   transform: translateY(0);
 }
-
 .slide-out-columnX {
   transition: transform .5s ease;
   transform: translateX(0);
 }
-
 .hiddenX {
   transform: translateX(-424px);
 }
-
 .slide-out-columnX.mapHide {
   transform: translateX(-320px);
 }
 .slide-out-columnX.slideHide {
   transform: translateX(-320px);
 }
-
 .slide-out-columnY.hidden {
   transform: translateY(156px);
-  
 }
 .poly {
   transform: scale(-1, -1);
 }
-
 .img {
   border-top-left-radius: 1.125rem; 
   border: solid var(--grey2) .125rem;
   box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
   width: 370px;
   height: 156px;
-  /* transform: rotate(90deg); */
 }
-
 .tongue{
   background-color: var(--bg-tertiary);
   border: solid .125rem var(--grey2);
@@ -601,6 +638,40 @@ export default {
   background-color: transparent;
   cursor: pointer;
 }
+.current {
+  border-radius: 1.125rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .95rem;
+}
+tr {
+  padding-inline: 2rem;
+}
+td {
+  background-color: var(--bg-tertiary);
+  padding: .25rem;
+  border: solid 2px var(--grey2);
+}
+td.start {
+  border-top-left-radius: 1rem;
+  border-bottom: none;
+}
+td.start1 {
+  border-top-right-radius: 1rem;
+  border-bottom: none;
+  border-left: none;
+  text-align: center;
+  /* padding-inline: 1.75rem; */
+}
+td.end {
+  border-bottom-left-radius: 1rem;
+}
+td.end1 {
+  border-bottom-right-radius: 1rem;
+  border-left: none;
+  text-align: center;
+  width: 4.95rem;
+}
 .buttonSet.mic:active,
 .buttonSet.sound:active {
   border-color: var(--green);
@@ -612,7 +683,6 @@ export default {
   border-top-left-radius: 1.125rem;
   border-bottom-left-radius: 1.125rem;
 }
-
 .slide {
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;

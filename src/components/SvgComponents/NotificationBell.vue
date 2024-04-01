@@ -96,7 +96,7 @@ p {
     padding: .5rem;
     border-radius: 1.125rem;
     border: none;
-  }
+}
 .badge {
     font: 400 .75rem "SF Pro"
 }
