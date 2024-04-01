@@ -338,6 +338,12 @@ export default {
     setTimeout(() => {
       this.handleError();
     }, 500);
+    var listner1 = new ROSLIB.Topic({
+      ros: this.ros,
+      name: '/c1_telem',
+      messageType: 'mcu_msgs/msg/BkdcStatus'
+    });
+    listner1.subscribe(this.set_c1_msg.bind(this));
   },
   methods: {
     handleError() {
