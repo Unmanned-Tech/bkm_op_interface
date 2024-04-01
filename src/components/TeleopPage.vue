@@ -619,7 +619,6 @@ export default {
   box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, .25);
   width: 370px;
   height: 156px;
-  /* transform: rotate(90deg); */
 }
 .tongue{
   background-color: var(--bg-tertiary);
