@@ -112,7 +112,7 @@ export default {
       messageType: 'mcu_msgs/msg/BldcStatus'
     });
     listener.subscribe(function (message) {
-      console.log('Received message on ' + listener.name + ': ' + message.bat_voltage);
+      /* console.log('Received message on ' + listener.name + ': ' + message.bat_voltage); */
       
       // If desired, we can unsubscribe from the topic as well.
       

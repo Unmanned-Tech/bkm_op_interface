@@ -356,12 +356,12 @@ export default {
       this.loaded = true;
     },
     toggleSmLights() {
-      this.isSmLightsEnabled = !this.isSmLightsEnabled;
       this.set_sm_lights();
+      this.isSmLightsEnabled = !this.isSmLightsEnabled;
     },
     toggleStrobeLights() {
-      this.isStrobeEnabled = !this.isStrobeEnabled;
       this.set_strobe_lights();
+      this.isStrobeEnabled = !this.isStrobeEnabled;
     },
     disable_brush_speed() {
       document.getElementById("brush_speed_range").value = 0;

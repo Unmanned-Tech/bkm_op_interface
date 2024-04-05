@@ -19,7 +19,7 @@ export default {
             attributionControl:false
         }).setView([55.02240, 73.29929], 17);
 
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        L.tileLayer('/src/assets/Tiles//{z}/{x}/{y}.png', {
             className: 'map-tiles',
         }).addTo(map);
         L.control.zoom({
