@@ -86,7 +86,7 @@
                   Скорость робота
                 </td>
                 <td class="start1">
-                  <span>{{ lin_speed }} м/c</span>
+                  <span>{{ c1_msg }} м/c</span>
                 </td>
               </tr>
               <tr>
@@ -270,6 +270,7 @@ export default {
         }
       },
       cmdVel: 0,
+      c1_msg: {},
       streamSrc: 'http://192.168.1.1:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
