@@ -86,7 +86,7 @@
                   Скорость робота
                 </td>
                 <td class="start1">
-                  <span>{{ lin_speed }} м/c</span>
+                  <span>{{ c1_msg }} м/c</span>
                 </td>
               </tr>
               <tr>
@@ -105,7 +105,7 @@
             <EmerStopButton />
           </div>
         </div>
-        <div class="row mt-5 justify-content-center">
+        <div class="row mt-1 mt-lg-5 justify-content-center">
           <div id="zone_joystick" class="zone static"></div>
         </div>
       </div>
@@ -117,22 +117,22 @@
             <div class="row align-items-center">
               <div class="col">
                 <button @click="toggleSmLights" class="buttonSet" :class="{ 'active': isSmLightsEnabled }">
-                  <Headlight style="transform: scale(2);"/>
+                  <Headlight class="optin"/>
                 </button>
               </div>
               <div class="col">
                 <button class="buttonSet mic">
-                  <Mic style="transform: scale(2);"/>
+                  <Mic class="optin"/>
                 </button>
               </div>
               <div class="col">
                 <button class="buttonSet sound">
-                  <Sound style="transform: scale(2);"/>
+                  <Sound class="optin"/>
                 </button>
               </div>
               <div class="col">
                 <button @click="toggleStrobeLights" class="buttonSet" :class="{ 'active': isStrobeEnabled }">
-                  <Strobe style="transform: scale(2);"/>
+                  <Strobe class="optin"/>
                 </button>
               </div>
             </div>
@@ -143,22 +143,22 @@
                 <div class="col">
                   <div class="row align-items-center">
                     <div class="col-auto" :style="{ 'transform': isOptionsVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
-                      <Polygon style="transform: scale(.9);"/>
+                      <Polygon class="optin-min"/>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Headlight style="transform: scale(.9);"/>
+                      <Headlight class="optin-min"/>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Mic style="transform: scale(.9);"/>
+                      <Mic class="optin-min"/>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-auto">
-                      <Sound style="transform: scale(.9);"/>
+                      <Sound class="optin-min"/>
                     </div>
                   </div>
                 </div>
@@ -229,6 +229,8 @@ export default {
   },
   data: function () {
     return {
+      pi: 3.1415,
+      wheel_radius: 0.127,
       isCameraVisible: false,
       isSmLightsEnabled: true,
       isOptionsVisible: false,
@@ -270,6 +272,7 @@ export default {
         }
       },
       cmdVel: 0,
+      c1_msg: {},
       streamSrc: 'http://192.168.1.1:8080/stream',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
@@ -341,11 +344,14 @@ export default {
     var listner1 = new ROSLIB.Topic({
       ros: this.ros,
       name: '/c1_telem',
-      messageType: 'mcu_msgs/msg/BkdcStatus'
+      messageType: 'mcu_msgs/msg/BldcStatus'
     });
-    listner1.subscribe(this.set_c1_msg.bind(this));
+    listner1.subscribe(this.set_c1_msg);
   },
   methods: {
+    set_c1_msg(msg) {
+      this.c1_msg = Math.abs(Math.round((2*this.pi*this.wheel_radius*msg.speed_r_meas)/60), 2);
+    },
     handleError() {
       if(!this.loaded) {
         this.streamSrc = this.placeholderSrc;
@@ -552,6 +558,7 @@ export default {
   overflow: hidden;
   margin-inline: -.75rem;
   position: relative;
+  
 }
 
 .main .video {
@@ -725,5 +732,53 @@ td.end1 {
 }
 .active {
   border-color: var(--green);
+}
+.optin {
+  transform: scale(2);
+}
+.optin-min {
+  transform: scale(.9);
+}
+
+@media (max-width: 896px) {
+  .slide-out-columnX.mapHide {
+    transform: translateX(-61cqmax);
+  }
+  .slide-out-columnX.slideHide {
+    transform: translateX(-55.5cqmax);
+  }
+  .caption_low {
+    font-size: 1.5cqmax;
+  }
+  .optin {
+    transform: scale(1);
+  }
+  .optin-min {
+    transform: scale(.6);
+  }
+  .buttonSet {
+    padding: .5rem;
+  } 
+  .map-col {
+    height: 8rem;
+  }
+  .butt-col {
+    background-color: var(--bg-tertiary);
+    border: solid var(--grey2) .125rem;
+    align-items: center;
+    border-top-left-radius: 1.125rem;
+    border-bottom-left-radius: 1.125rem;
+  }
+  .hiddenX {
+    transform: translateX(-82.7cqmax);
+  }
+  .tongue{
+    background-color: var(--bg-tertiary);
+    border: solid .125rem var(--grey2);
+    border-top-right-radius: 1.125rem;
+    border-bottom-right-radius: 1.125rem;
+    padding-block: 0;
+    color: var(--text-color);
+  }
 }
 </style>

@@ -19,12 +19,12 @@
                     <div class="mb-2">Режим экспозиции (по умолчанию: Auto):</div>
                     <div class="row justify-content-center">
                         <div class="col-auto">
-                            <button class="tongue" :class="{ active: exposureMode === 3 }" @click="sendExposure(3)">
+                            <button class="tongue" :class="{ active: exposureMode === 0 }" @click="sendExposure(0)">
                                 Auto
                             </button>
                         </div>
                         <div class="col-auto">
-                            <button class="tongue" :class="{ active: exposureMode === 1 }" @click="sendExposure(1)">
+                            <button class="tongue" :class="{ active: exposureMode === 2 }" @click="sendExposure(2)">
                                 Manual
                             </button>
                         </div>
@@ -74,7 +74,7 @@ export default {
         return {
             brightness: 0,
             contrast: 50,
-            exposureMode: 3,
+            exposureMode: 0,
         }
     },
 
@@ -85,7 +85,7 @@ export default {
         if (localStorage.getItem('contrast')) {
             this.contrast = parseInt(localStorage.getItem('contrast'));
         }
-        this.sendExposure(3);
+        this.sendExposure(0);
     },
 
     methods: {
@@ -127,7 +127,7 @@ export default {
             this.contrast = 50;
             this.sendBrightness();
             this.sendContrast();
-            this.sendExposure(3);
+            this.sendExposure(0);
         }
     },
 }
