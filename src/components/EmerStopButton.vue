@@ -71,4 +71,11 @@ export default {
 .modal-content {
   border-radius: 1.125rem; 
 }
+
+@media (max-width: 896px) {
+  .button {
+    font-size: 2cqmax;
+    border-radius: .9rem;
+  }
+}
 </style>

@@ -27,6 +27,7 @@ const store = useStore();
     display: flex;
     padding: 0;
     list-style-type: none;
+    text-align: center;
   }
   .link {
     box-shadow: 0rem 0.375rem 0.5rem 0rem rgba(0, 0, 0, .25);
@@ -35,7 +36,6 @@ const store = useStore();
     text-decoration: none;
     display: block;
     color: var(--text-color);
-    text-align: center;
     margin: 0;
     width: 100%;
     font-size: 1.25rem;
@@ -45,6 +45,16 @@ const store = useStore();
   .ln {
     padding: .5rem;
     line-height: 1.25rem;
+  }
+
+  @media (max-width: 896px) {
+    .link {
+      font-size: 1rem;
+      line-height: 2.75rem;
+    }
+    .ln {
+      line-height: .865rem;
+    }
   }
 </style>
 
