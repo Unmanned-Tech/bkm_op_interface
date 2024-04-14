@@ -344,7 +344,7 @@ export default {
   },
   methods: {
     set_c1_msg(msg) {
-      this.c1_msg = Math.abs(Math.round((2*this.pi*this.wheel_radius*msg.speed_r_meas)/60), 2);
+      this.c1_msg = (Math.abs((2*this.pi*this.wheel_radius*msg.speed_r_meas) / 60)).toFixed(2);
     },
     handleError() {
       if(!this.loaded) {
