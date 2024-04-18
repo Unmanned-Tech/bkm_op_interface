@@ -3,7 +3,7 @@
     <img class="slide-out video" :src="streamSrc" @error="handleError" @load="handleLoad">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
-        <div class="row slide-out-columnX" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
+        <div class="row slide-out-columnX d-sm-none d-lg-flex" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
           </div>
@@ -49,7 +49,7 @@
               <div class="brush_rotate">
                 <label for="brush_rotate_range" class="form-label">
                   <div class="row">
-                    <span class="col-auto caption_low">Поворот щетки</span> 
+                    <span class="col-auto caption_low">Поворот щётки</span> 
                   </div>
                 </label>
                 <div class="range-container">
@@ -142,7 +142,7 @@
               <button class="tongue" @click="toggleOptions">
                 <div class="col">
                   <div class="row-cols-1 align-items-center">
-                    <div class="col-auto" :style="{ 'transform': isOptionsVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
+                    <div class="col-auto d-sm-none d-lg-block" :style="{ 'transform': isOptionsVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
                       <Polygon class="optin-min"/>
                     </div>
                     <div class="col-auto">
@@ -161,7 +161,7 @@
           </div>
         </div>
       </div>
-      <div class="col-auto slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
+      <div class="col-auto slide-out-columnY d-sm-none d-lg-block" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
         <div class="row">
           <div class="col d-flex justify-content-end">
             <button class="px-3 fixed-button button" @click="toggleCamera">
@@ -311,7 +311,7 @@ export default {
         left: '50%',
         bottom: '50%'
       },
-      size: 175,
+      size: 200,
     };
     this.joystick = nipplejs.create(options);
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
@@ -600,7 +600,7 @@ export default {
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(-414px);
+  transform: translateX(-424px);
 }
 .slide-out-columnX.mapHide {
   transform: translateX(-320px);
@@ -676,7 +676,7 @@ td.end1 {
 .butt-col {
   background-color: var(--bg-tertiary);
   border: solid var(--grey2) .125rem;
-  padding-block: 17px;
+  padding-block: 14px;
   border-top-left-radius: 1.125rem;
   border-bottom-left-radius: 1.125rem;
 }
@@ -732,10 +732,10 @@ td.end1 {
 
 @media (max-width: 896px) {
   .slide-out-columnX.mapHide {
-    transform: translateX(-64cqmax);
+    transform: translateX(-229px);
   }
   .slide-out-columnX.slideHide {
-    transform: translateX(-63.5cqmax);
+    transform: translateX(-229px);
   }
   .caption_low {
     font-size: 1.5cqmax;
@@ -746,32 +746,27 @@ td.end1 {
   .optin {
     transform: scale(1);
   }
-  .optin-min {
-    transform: scale(.6);
-  }
   .buttonSet {
-    padding: .5rem;
+    padding: 3px;
   } 
-  .map-col {
-    height: 8rem;
-  }
   .butt-col {
     background-color: var(--bg-tertiary);
     border: solid var(--grey2) .125rem;
     align-items: center;
+    display: flex;
     border-top-left-radius: 1.125rem;
     border-bottom-left-radius: 1.125rem;
-    padding-block: 1.9rem;
+    padding-block: .5rem;
   }
   .hiddenX {
-    transform: translateX(-82.7cqmax);
+    transform: translateX(-256px);
   }
   .tongue{
     background-color: var(--bg-tertiary);
     border: solid .125rem var(--grey2);
     border-top-right-radius: 1.125rem;
     border-bottom-right-radius: 1.125rem;
-    padding: .5cqmin;
+    padding: 1px;
     color: var(--text-color);
   }
   .bi {
@@ -790,8 +785,9 @@ td.end1 {
     width: 350px;
     height: 1px;
   }
-  .slide-out-columnY.hidden {
-    transform: translateY(1px);
+  .zone {
+    width: 135px;
+    height: 135px;
   }
 }
 </style>

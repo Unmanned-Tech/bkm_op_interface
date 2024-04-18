@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row mt-3">
+    <div class="row">
         <div class="col">
           <ThemeSwithcer></ThemeSwithcer>
           <p class="caption mt-4 mb-2">
@@ -24,9 +24,7 @@
       </div>
     <div class="row">
       <div class="col">
-        <div class="ImageDiv">
-          <img class="img-fluid rounded-4" :src="streamSrc" @error="handleError" @load="handleLoad">
-        </div>
+        <img class="img-fluid rounded-4" :src="streamSrc" @error="handleError" @load="handleLoad">
         <div class="row mt-4">
           <MPButtons1 />
         </div>

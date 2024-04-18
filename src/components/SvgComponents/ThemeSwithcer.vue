@@ -72,6 +72,6 @@ export default {
     border-radius: 1.125rem;
     position: absolute;
     border: none;
-  }
+}
 
 </style>

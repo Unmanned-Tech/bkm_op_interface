@@ -53,7 +53,8 @@ const store = useStore();
       line-height: 2.75rem;
     }
     .ln {
-      line-height: .865rem;
+      font-size: 1rem;
+      line-height: .9rem;
     }
   }
 </style>

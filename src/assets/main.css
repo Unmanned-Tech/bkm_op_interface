@@ -17,15 +17,17 @@ a.router-link-active.router-link-exact-active.link.ln {
   a.router-link-active.router-link-exact-active.link {
     font: 700 .9rem 'SF Pro Bold';
     padding: .5rem;
-    line-height: 1.5rem;
+    line-height: 1rem;
   }
   a.router-link-active.router-link-exact-active.link.ln {
     padding: .5rem;
     font-size: .9rem;
-    /* line-height: 1rem; */
+    line-height: .9rem;
+  }
+  div .nipple {
+    scale: .7;
   }
 }
-
 div .nipple:active {
   opacity: 1 !important;
 }
