@@ -18,7 +18,7 @@
             <div class="col-6 pe-1">
                 <segmentedForHist />
             </div>
-            <div class="col-auto d-flex">
+            <div class="col-auto">
                 <select v-model="selectedOption" class="form__select">
                     <option selected>Тип уведомления</option>
                     <option value="1">Системные</option>
@@ -186,6 +186,10 @@ i.bi-exclamation-triangle {
     background-color: var(--orange);
     padding: 3px 20px;
     border-radius: 1.125rem;
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+        padding: 3px 10px;
+    }
 }
 i.bi-exclamation-diamond {
     font-size: 2rem;
@@ -193,6 +197,10 @@ i.bi-exclamation-diamond {
     background-color: var(--red);
     padding: 3px 20px;
     border-radius: 1.125rem;
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+        padding: 3px 10px;
+    }
 }
 i.bi-info-circle {
     font-size: 2rem;
@@ -200,6 +208,10 @@ i.bi-info-circle {
     background-color: var(--green);
     padding: 3px 20px;
     border-radius: 1.125rem;
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+        padding: 3px 10px;
+    }
 }
 i.bi-check-circle {
     font-size: 2rem;
@@ -207,6 +219,10 @@ i.bi-check-circle {
     background-color: var(--blue);
     padding: 3px 20px;
     border-radius: 1.125rem;
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+        padding: 3px 10px;
+    }
 }
 
 </style>
@@ -222,7 +238,7 @@ i.bi-check-circle {
     font-weight: 400;
     font-size: 1.25rem;
     border: 0;
-    padding: 0 .75rem;
+    padding: 0 2rem;
     text-align: center;
     align-items: center;
     color: var(--text-color);
@@ -230,6 +246,10 @@ i.bi-check-circle {
     border-radius: 1.125rem;
     box-shadow: 0 .1875rem .25rem 0 rgba(0, 0, 0, .25);
     outline: none;
+    @media (max-width: 896px) {
+        font-size: 1rem;
+        padding: 0 3rem;
+    }
 }
 
 input {
@@ -237,16 +257,27 @@ input {
 }
 option {
     font-size: 1.125rem;
+    padding: 0 2rem;
     outline: none;
+    @media (max-width: 896px) {
+        font-size: 1rem;
+    }
 }
 .bi-calendar {
     font-size: 1.75rem;
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+    }
 }
 .set {
     background-color: var(--bg-tertiary);
     padding: 7px .875rem;
     box-shadow: 0 .1875rem .25rem 0 rgba(0, 0, 0, .25);
     border-radius: 1.125rem;
+    @media (max-width: 896px) {
+        padding: 5px .65rem;
+        border-radius: .75rem;
+    }
 }
 
 .tab {
@@ -256,15 +287,24 @@ option {
   border-spacing: 0;
 }
 .thead {
-    font-size: 1.75rem;
-    font-family: "SF Pro Bold";
-    padding: .125rem 1.25rem;
-    border: .125rem solid var(--grey);
-    background-color: var(--grey2);
+  font-weight: 700;
+  font-family: 'SF Pro Bold';
+  font-size: 1.75rem;
+  padding: .5rem 1.25rem;
+  border: .125rem solid var(--grey);
+  background-color: var(--grey2);
+  @media (max-width: 896px) {
+    font-size: 16px;
+    padding: 0px 10px;
+  }
 }
 .thead.start {
-  padding: .125rem 4rem;
+  padding: .5rem 3.5rem ;
   border-top-left-radius: 1.125rem;
+  @media (max-width: 896px) {
+    padding: 0px 2rem;
+    border-top-left-radius: 1.125rem;
+  }
 }
 .thead.mid {
   border-left: none;
@@ -277,6 +317,9 @@ option {
   border-top-right-radius: 1.125rem;
   padding: .125rem 15rem;
   border-left: none;
+  @media (max-width: 896px) {
+    padding: 3px;
+  }
 }
 td {
   font-weight: 400;
@@ -286,7 +329,23 @@ td {
   background-color: var(--bg-tertiary);
   padding: .25rem .5rem;
   border-top: none;
+  @media (max-width: 896px) {
+    font-size: 1rem;
+    padding: 6px 8px;
+  }
 }
+/* td {
+  font-weight: 400;
+  font-size: 1.5rem;
+  border: .125rem solid var(--grey);
+  background-color: var(--bg-tertiary);
+  padding: .5rem;
+  border-top: none;
+  @media (max-width: 896px) {
+    font-size: 14px;
+    padding: 2px;
+  }
+} */
 .notif {
     text-align: left;
 }
@@ -303,16 +362,26 @@ td {
     justify-content: center;
     font-weight: 400;
     font-size: 1.75rem;
-    padding: .25rem .75rem;
+    padding: .5rem .75rem;
     text-decoration: none;
+    @media (max-width: 896px) {
+        font-size: 1.25rem;
+        padding: 5px 10px;
+        border-radius: .75rem;
+    }
 }
 .header {
     font-weight: 400;
-    font-size: 2.25rem;
+    font-size: 1.75rem;
+    font-family: "SF Pro";
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
     padding: .125rem 1.5rem;
     border: solid .125rem var(--grey);
+    @media (max-width: 896px) {
+        font-size: 1.25rem;
+        border-radius: .75rem;
+    }
 }
 .line {
     border-top: solid .125rem var(--bg-tertiary);
