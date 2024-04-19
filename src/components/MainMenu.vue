@@ -1,18 +1,26 @@
 <template>
-  <ul class="con mb-1">
-    <li class="col">
-      <router-link to="/" class="link">Главная</router-link>
-    </li>
-    <li class="col">
-      <router-link :to="{ name: 'tasks', params: { selectedOption: store.selectedOption } }" class="link">Задачи</router-link>
-    </li>
-    <li class="col">
-      <router-link to="/teleop" class="link">Телеуправление</router-link>
-    </li>
-    <li class="col">
-      <router-link to="/status" class="link ln">Системная<br/>информация</router-link>
-    </li>
-  </ul>
+  <div class="row text-center d-flex mb-1" style="margin-inline: .5px;">
+    <div class="col p-0">
+      <router-link to="/" class="link h-100">
+        Главная
+      </router-link>
+    </div>
+    <div class="col p-0">
+      <router-link :to="{ name: 'tasks', params: { selectedOption: store.selectedOption } }" class="link  h-100">
+        Задачи
+      </router-link>
+    </div>
+    <div class="col p-0">
+      <router-link to="/teleop" class="link h-100">
+        Телеуправление
+      </router-link>
+    </div>
+    <div class="col p-0">
+      <router-link to="/status" class="link ln h-100">
+        Системная <br>информация
+      </router-link>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -23,24 +31,18 @@ const store = useStore();
 </script>
 
 <style scoped>
-  .con {
-    display: flex;
-    padding: 0;
-    list-style-type: none;
-    text-align: center;
-  }
   .link {
     box-shadow: 0rem 0.375rem 0.5rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--bg-tertiary);
     transition: background-color .3s;
     text-decoration: none;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--text-color);
-    margin: 0;
-    width: 100%;
     font-size: 1.25rem;
-    line-height: 3.5rem;
     font-weight: 400;
+    padding: .5rem;
   }
   .ln {
     padding: .5rem;
@@ -50,7 +52,6 @@ const store = useStore();
   @media (max-width: 896px) {
     .link {
       font-size: 1rem;
-      line-height: 2.75rem;
     }
     .ln {
       font-size: 1rem;

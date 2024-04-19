@@ -75,8 +75,14 @@ export default {
 <style scoped>
 .caption {
     font-size: 1.95rem;
+    @media (max-width: 896px) {
+        font-size: 1.2rem;
+    }
 }
 .caption_low {
     font-size: 1.75rem;
+    @media (max-width: 896px) {
+        font-size: 1.2rem;
+    }
 }
 </style>

@@ -120,6 +120,9 @@
     background-color: rgba(255, 255, 255, 0);
     color: var(--text-color);
     font-size: 24px;
+    @media (max-width: 896px) {
+        font-size: 16px;
+    }
 }
 
 .segmented-control .option label::before,
@@ -195,7 +198,6 @@
 
 .segmented-control .selection label {
     color: var(--text-color);
-    font-size: 24px;
 }
 
 .segmented-control .option label span {

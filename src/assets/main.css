@@ -5,27 +5,48 @@
 a.router-link-active.router-link-exact-active.link {
   background-color: var(--bg-secondary);
   box-shadow: 0 .75rem 10px -5px rgba(0, 0, 0, .25) inset;
-  font: 700 1.25rem/3.5rem 'SF Pro Bold';
+  font: 700 1.25rem 'SF Pro Bold';
 }
 
 a.router-link-active.router-link-exact-active.link.ln {
-  padding: .5rem;
   line-height: 1.25rem;
+  padding: .5rem;
 }
 
 @media (max-width: 896px) {
   a.router-link-active.router-link-exact-active.link {
-    font: 700 .9rem 'SF Pro Bold';
-    padding: .5rem;
-    line-height: 1rem;
+    font: 700 1rem 'SF Pro Bold';
   }
   a.router-link-active.router-link-exact-active.link.ln {
-    padding: .5rem;
-    font-size: .9rem;
+    font-size: 1rem;
     line-height: .9rem;
   }
   div .nipple {
-    scale: .7;
+    transform: scale(.7);
+  }
+  svg.dots {
+    width: 30px;
+    height: 30px;
+  }
+  svg.arrow {
+    width: 24px;
+    height: 24px;
+  }
+  svg.sun-fill {
+    width: 24px;
+    height: 24px;
+  }
+  svg.bell {
+    width: 24px;
+    height: 24px;
+  }
+  svg.android {
+    width: 30px;
+    height: 30px;
+  }
+  svg.battery {
+    width: 30px;
+    height: 30px;
   }
 }
 div .nipple:active {

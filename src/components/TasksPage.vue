@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row mt-4 mb-2 align-items-center header">
-            <div class="col-md-3 mb-4">
+            <div class="col col-lg-3 mb-4">
                 <table class="tab">
                     <tr>
                         <td class="time date">{{ localeDate }}</td>
@@ -12,7 +12,7 @@
             <div class="col mb-4">
                 <SegmentedControl />
             </div>
-            <div class="col-md-3 mb-4 d-flex justify-content-end">
+            <div class="col-2 col-lg-3 mb-4 d-flex justify-content-end">
               <router-link :to="{ name: 'edit', params: { mode: 'Настройки' } }">
                 <button class="set">
                     <plusSVG />
@@ -35,7 +35,7 @@
                         <td class="mid">{{ task.time }}</td>
                         <td class="mid">{{ task.status }}</td>
                         <td class="mid">{{ task.charge }}</td>
-                        <td class="mid" :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick"><editTask /></td>
+                        <td class="mid edd" :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick"><editTask /></td>
                     </tr>
                 </table>
             </div>
@@ -53,12 +53,11 @@
                 </table>
             </div>
         </div>
-        <div class="row mt-4">
+        <!-- <div class="row mt-4">
             <div class="col d-flex justify-content-end">
                 <button class="set add">Добавить</button>
             </div>
-
-        </div>
+        </div> -->
 
     </div>
     
@@ -158,8 +157,11 @@ export default {
 .last-cell-right {
   border-bottom-right-radius: 1.125rem;
 }
+.edd {
+  padding: 8px 
+}
 .header{
-    border-bottom: solid .125rem var(--bg-tertiary);
+  border-bottom: solid .125rem var(--bg-tertiary);
 }
 .tab {
   border-radius: 1.125rem;
@@ -174,25 +176,36 @@ td {
   background-color: var(--bg-tertiary);
   padding: .5rem;
   border-top: none;
+  @media (max-width: 896px) {
+    font-size: 14px;
+    padding: 2px;
+  }
 }
 
 .last-cell-left {
   border-bottom-left-radius: 1.125rem;
 }
 .last-cell-right {
-    border-bottom-right-radius: 1.125rem;
+  border-bottom-right-radius: 1.125rem;
 }
 
 .thead {
-    font-weight: 700;
-    font-family: 'SF Pro Bold';
-    font-size: 1.75rem;
-    padding: .5rem 1.25rem;
-    border: .125rem solid var(--grey);
-    background-color: var(--grey2);
+  font-weight: 700;
+  font-family: 'SF Pro Bold';
+  font-size: 1.75rem;
+  padding: .5rem 1.25rem;
+  border: .125rem solid var(--grey);
+  background-color: var(--grey2);
+  @media (max-width: 896px) {
+    font-size: 16px;
+    padding: 0px 10px;
+  }
 }
 .thead.start {
   padding: .5rem 3.5rem ;
+  @media (max-width: 896px) {
+    padding: 0px 2rem;
+  }
 }
 .thead.status {
   padding: .5rem 3rem;
@@ -221,26 +234,33 @@ td {
   border: .125rem solid var(--grey);
   border-radius: 0 1.125rem 1.125rem 0;
   padding: .25rem .85rem;
+  @media (max-width: 896px) {
+    font-size: 1.25rem;
+    border-radius: 0 .75rem .75rem 0;
+  } 
 }
 .time.date {
-  border-radius: 1.125rem 0 0 1.125rem;
+  border-radius: .75rem 0 0 .75rem;
   border-right: 0;
 }
-
 .set {
-    box-shadow: 0 0.1875rem 0.25rem 0 rgba(0, 0, 0, .25);
-    background-color: var(--bg-tertiary);
-    padding: .661rem .75rem;
-    border-radius: 1.125rem;
-    border: none;
-    font-weight: 400;
-    font-size: 2rem;
-    color: var(--text-color);
+  box-shadow: 0 0.1875rem 0.25rem 0 rgba(0, 0, 0, .25);
+  background-color: var(--bg-tertiary);
+  padding: .661rem .75rem;
+  border-radius: 1.125rem;
+  border: none;
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--text-color);
+  @media (max-width: 896px) {
+    padding: 2px;
+  }
 }
-.add {
-    padding: .75rem 1.5rem;
-}
-
-
-
+/* .add {
+  padding: .75rem 1.5rem;
+  @media (max-width: 896px) {
+    padding: 8px 16px;
+    font-size: 1rem;
+  }
+} */
 </style>

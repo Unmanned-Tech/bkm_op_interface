@@ -3,20 +3,20 @@
     <div class="row">
         <div class="col">
           <ThemeSwithcer></ThemeSwithcer>
-          <p class="caption mt-4 mb-2">
+          <p class="caption mt-1 mt-lg-4 mb-2">
             БКМ-1: <span style="color: var(--green);">Уборка</span><br/>
             Общее состояние: <span style="color: var(--green);">Хорошо</span><br/>
           </p>
         </div>
         <div class="col">
-          <p class="caption mt-4 mb-2">
+          <p class="caption mt-1 mt-lg-4 mb-2">
             БКМ-2: <span style="color: var(--blue);">Уборка</span><br/> 
             Общее состояние: <span style="color: var(--orange);">Есть ограничения</span>
           </p>
         </div>
         <div class="col">
           <NotificationBell></NotificationBell>
-          <p class="caption mt-4 mb-2">
+          <p class="caption mt-1 mt-lg-4 mb-2">
             БКМ-3: <span style="color: var(--blue);">Подзарядка</span><br/> 
             Общее состояние: <span style="color: var(--red);">Плохо</span>
           </p>
@@ -25,24 +25,24 @@
     <div class="row">
       <div class="col">
         <img class="img-fluid rounded-4" :src="streamSrc" @error="handleError" @load="handleLoad">
-        <div class="row mt-4">
+        <div class="row mt-2 mt-lg-4">
           <MPButtons1 />
         </div>
       </div>
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/black-screen.jpg">
-        <div class="row mt-4">
+        <div class="row mt-2 mt-lg-4">
           <MPButtons2 />
         </div>
       </div>
       <div class="col">
         <img class="img-fluid rounded-4" src="../assets/black-screen.jpg">
-        <div class="row mt-4">
+        <div class="row mt-2 mt-lg-4">
           <MPButtons3 />
         </div>
       </div>
     </div>
-    <div class="row mt-3">
+    <div class="row mt-2 mt-lg-3">
       <div class="col ">
         <Map3 class="map" />
       </div>
@@ -91,14 +91,14 @@ export default {
     return {
       rstatus: 1,
       refresh_timer: '',
-      streamSrc: 'http://192.168.1.1:8080/stream',
+      streamSrc: 'http://192.168.0.106:1984/api/stream.mjpeg?src=linux_webcam',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     }
   },
   mounted: function () {
     // this.startRefreshing();
-    const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
+    const ros = new ROSLIB.Ros({ url: "ws://192.168.0.106:9090" });
 
     ros.on('connection', function () {
       console.log('Connected to websocket server.');
@@ -129,7 +129,7 @@ export default {
     },
     fetchRstatus() {
       axios
-        .get('http://192.168.1.1:5003/api/telemetry/rstatus/')
+        .get('http://192.168.0.106:5003/api/telemetry/rstatus/')
         .then(response => (this.rstatus = response.data))
       console.info("statuses updated")
     },
@@ -152,9 +152,6 @@ export default {
 }
 </script>
 <style scoped>
-  .ImageDiv {
-    height: 189.5px;
-  }
   .caption{
     font-weight: 400;
     font-size: 1.25rem;
@@ -170,7 +167,20 @@ export default {
     
   }
   img {
-    line-height: normal;
+    min-height: 13rem;
+    width: 100%;
+  }
+  @media (max-width: 896px) {
+    .caption {
+      font-size: 14px;
+    }
+    img {
+      min-height: 8rem;
+      max-height: 8rem;
+    }
+    .map {
+      max-height: 7rem;
+    }
   }
 
 </style>

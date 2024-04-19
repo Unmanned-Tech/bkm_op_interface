@@ -36,20 +36,34 @@
                     <div>Заряд батареи</div>
                   </div>
                   <div class="col-md-3 inf end d-flex">
-                    <div class="battery">42%</div>
+                    <div class="battery_stat">42%</div>
                   </div>
                 </div>
-                <div class="row mt-5 pe-3">
-                  <button class="button mb-2" data-bs-dismiss="modal">
+                <div class="row mt-5">
+                  <button class="button" data-bs-dismiss="modal">
                     <router-link :to="{ name: 'tasks', params: { selectedOption: 'БКМ-2' } }" class="caption">
-                        <div>Задачи<span class="ps-2"><arrowSVG /></span></div>
+                        <div class="row align-items-center">
+                          <div class="col">
+                            Задачи
+                          </div>
+                          <div class="col ps-0">
+                            <arrowSVG />
+                          </div>
+                        </div>
                     </router-link>
                   </button>
                 </div>
-                <div class="row mt-2 pe-3">
+                <div class="row mt-2">
                   <button class="button" data-bs-dismiss="modal">
                     <router-link to="/settings" class="caption">
-                        <div>Сервис<span class="ps-2"><arrowSVG /></span></div>
+                        <div class="row">
+                          <div class="col">
+                            Сервис
+                          </div>
+                          <div class="col ps-0">
+                            <arrowSVG />
+                          </div>
+                        </div>
                     </router-link>
                   </button>
                 </div>
@@ -188,6 +202,9 @@ export default {
 .caption {
   text-decoration: none;
   color: var(--text-color);
+  @media (max-width: 896px) {
+    font-size: 1rem;
+  }
 }
 .last-cell-left {
   border-bottom-left-radius: 1.125rem;
@@ -215,13 +232,19 @@ td {
   background-color: var(--bg-tertiary);
   border-top: none;
   padding: .5rem;
+  @media (max-width: 896px) {
+    font-size: 14px;
+  }
 }
 th {
-  font-family: 'SF Pro Bold';
+  font-family: "SF Pro Bold";
   font-size: 1.425rem;
   padding: .125rem;
   border: .125rem solid var(--grey);
   background-color: var(--grey2);
+  @media (max-width: 896px) {
+    font-size: 1.125rem;
+  }
 }
 .head {
   border-radius: 0rem 1.125rem 0rem 0rem;
@@ -235,7 +258,6 @@ td.left-cell.last {
 td.last {
   border-radius: 0rem 0rem 1.125rem;
 }
-
 .header {
   border-radius: 1.125rem 1.125rem 0rem 0rem;
   padding: .125rem 1.25rem;
@@ -245,29 +267,29 @@ td.last {
   border-bottom: none;
   text-align: center;
   background-color: var(--bg-tertiary);
+  @media (max-width: 896px) {
+    font-size: 1.125rem;
+  }
 }
 .left-cell {
   border-right: none;
 }
 .button {
-    box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
-    background-color: var(--bg-tertiary);
-    border-radius: 1.125rem;
-    color: var(--text-color);
-    border: none;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 400;
-    font-size: 1.75rem;
-    padding: .5rem;
-    text-decoration: none;
-    width: 50%;
+  box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
+  background-color: var(--bg-tertiary);
+  border-radius: 1.125rem;
+  color: var(--text-color);
+  border: none;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.75rem;
+  padding: .5rem 1.25rem;
+  text-decoration: none;
+  width: auto;
+  @media (max-width: 896px) {
+    border-radius: .75rem;
   }
-
-
-  
+}
 .modal-content {
   border-radius: 1.125rem; 
 }
@@ -277,11 +299,17 @@ td.last {
   font-size: 1.5rem;
   border: solid var(--grey) .125rem;
   text-align: center;
+  @media (max-width: 896px) {
+    font-size: 14px;
+  }
 }
 .inf.start {
   border-radius: 1.125rem 0rem 0rem 1.125rem;
   border-right: 0;
   padding: .25rem;
+  @media (max-width: 896px) {
+    border-radius: .75rem 0 0 .75rem;
+  }
 }
 .inf.cap {
   border-left: 0;
@@ -293,8 +321,11 @@ td.last {
   justify-content: center;
   margin-right: 1rem;
   border-radius: 0rem 1.125rem 1.125rem 0rem;
+  @media (max-width: 896px) {
+    border-radius: 0 .75rem .75rem 0;
+  }
 }
-.battery {
+.battery_stat {
   background-color: var(--orange);
   padding: .125rem .5rem;
   border-radius: 1.125rem;
@@ -305,30 +336,43 @@ td.last {
   border-radius: 1.125rem;
 }
 .other {
-    box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
-    background-color: var(--bg-tertiary);
-    padding: 0.5rem;
-    border-radius: 1.125rem;
-    border: none;
+  box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
+  background-color: var(--bg-tertiary);
+  padding: 0.5rem;
+  border-radius: 1.125rem;
+  border: none;
+  @media (max-width: 896px) {
+    padding: .3rem;
+    border-radius: .75rem;
   }
+}
 
 .title {
   font-weight: 400;
-  font-family: 'SF Pro';
   font-size: 3rem;
-
+  @media (max-width: 896px) {
+    font-size: 1.5rem;
+  }
 }
 .time {
+  font-weight: 400;
   font-size: 2.5rem;
-  font-family: 'SF Pro';
+  font-family: "SF Pro";
   border: .125rem solid var(--grey);
   border-radius: 0rem 1.125rem 1.125rem 0rem;
   padding: 0 .35rem;
+  @media (max-width: 896px) {
+    font-size: 1.25rem;
+    border-radius: 0 .75rem .75rem 0;
+  }
 }
 
 .time.date {
   border-radius: 1.125rem 0rem 0rem 1.125rem;
   border-right: 0;
+  @media (max-width: 896px) {
+    border-radius: .75rem 0 0 .75rem;
+  }
 }
 
 

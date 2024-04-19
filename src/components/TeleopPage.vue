@@ -267,7 +267,7 @@ export default {
       },
       cmdVel: 0,
       c1_msg: {},
-      streamSrc: 'http://192.168.1.1:8080/stream',
+      streamSrc: 'http://192.168.0.106:1984/api/stream.mjpeg?src=linux_webcam',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     };
@@ -317,7 +317,7 @@ export default {
     this.joystick.on('start', this.joystick_start).on('move', this.joystick_move).on('end', this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
+    this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.106:9090" });
 
     this.ros.on('connection', function () {
       console.log('Connected to websocket server.');

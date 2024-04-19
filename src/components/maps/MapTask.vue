@@ -110,6 +110,9 @@ export default {
   border: solid var(--grey2) .25rem;
   border-radius: 1.125rem;
   height: 25rem;
+  @media (max-width: 896px) {
+    height: 14rem;
+  }
 }
 </style>
 
