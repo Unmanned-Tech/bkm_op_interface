@@ -18,7 +18,7 @@
             <div class="col-6 pe-1">
                 <segmentedForHist />
             </div>
-            <div class="col-auto">
+            <div class="col-auto d-flex">
                 <select v-model="selectedOption" class="form__select">
                     <option selected>Тип уведомления</option>
                     <option value="1">Системные</option>
