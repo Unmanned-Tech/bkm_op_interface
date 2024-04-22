@@ -98,12 +98,10 @@
                     </thead>
                     <tbody>
                       <tr class="">
-                        <td class="left-cell">З.Камера</td>
-                        <td><p class="error mb-0">Загрязнение</p></td>
-                      </tr>
-                      <tr>
-                        <td class="left-cell last">-</td>
-                        <td class="last">-</td>
+                        <td class="left-cell last">З.Камера</td>
+                        <td class="last">
+                          <p class="error mb-0 ">Загрязнение</p>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -250,13 +248,13 @@ th {
   border-radius: 0rem 1.125rem 0rem 0rem;
 }
 th.left-cell {
-  border-radius: 1.125rem 0rem 0rem;
+  border-radius: 1.125rem 0 0;
 }
 td.left-cell.last {
-  border-radius: 0rem 0rem 0rem 1.125rem;
+  border-radius: 0 0 0 1.125rem;
 }
 td.last {
-  border-radius: 0rem 0rem 1.125rem;
+  border-radius: 0 0 1.125rem 0;
 }
 .header {
   border-radius: 1.125rem 1.125rem 0rem 0rem;

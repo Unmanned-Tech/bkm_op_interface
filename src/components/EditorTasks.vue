@@ -13,7 +13,7 @@
                 </span>
             </div>
             <div class="col d-flex justify-content-center">
-                <button class="ms-3 button">
+                <button class="button">
                     <div class="px-3 py-1 ln">Сохранить задачу</div>
                 </button> 
             </div>
@@ -29,9 +29,9 @@
             <div class="col-4 mb-auto d-flex justify-content-end">
                 <select class="form__select">
                     <option disabled selected>Робот</option>
-                    <option value="1">БКМ-1</option>
-                    <option value="2">БКМ-2</option>
-                    <option value="3">БКМ-3</option>
+                    <option value="БКМ-1">БКМ-1</option>
+                    <option value="БКМ-2">БКМ-2</option>
+                    <option value="БКМ-3">БКМ-3</option>
                 </select>
                 
             </div>
@@ -53,9 +53,7 @@ import { computed } from 'vue';
 import { useStore } from '../stores/store';
 
 const store = useStore();
-
 const anotherStore = useAnotherStore();
-
 const router = useRouter();
 
 const anotherSelectedOption = computed(() => anotherStore.anotherSelectedOption);
@@ -169,7 +167,7 @@ option:checked {
     font-family: "SF Pro";
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
-    padding: .125rem 1.5rem;
+    padding: .25rem 1.5rem;
     border: solid .125rem var(--grey);
     @media (max-width: 896px) {
         font-size: 1.25rem;

@@ -14,45 +14,61 @@
             </tr>
             <tr>
               <td class="Start">LiDAR</td>
-              <td class="Mid">
+              <td class="mid">
                 <span class="statusBg">Исправен</span>
               </td>
-              <td class="End error"> - </td>
+              <td class="mid error"> - </td>
             </tr>
             <tr>
               <td class="Start">GPS</td>
-              <td class="Mid">
+              <td class="mid">
                 <span class="statusBg">Исправен</span>
               </td>
-              <td class="End error"> - </td>
+              <td class="mid error"> - </td>
             </tr>
             <tr>
               <td class="Start">IMU</td>
-              <td class="Mid">
+              <td class="mid">
                 <span class="statusBg">Исправен</span>
               </td>
-              <td class="End error"> - </td>
+              <td class="error mid"> - </td>
             </tr>
             <tr>
               <td class="Start">П.Камера</td>
-              <td class="Mid">
+              <td class="mid">
                 <span class="statusBgWarn">Неполадка</span>
               </td>
-              <td class="End position-relative error"> <span> Снижение видимости из-за загрязнения</span> 
-                <div class="position-absolute">
-                  <button class="other">
-                    <otherSVG />
-                  </button>
-                </div> </td>
+              <td class="error mid">
+                <div class="row">
+                  <div class="col">
+                    Снижение видимости из-за загрязнения
+                  </div> 
+                  <div class="col-auto">
+                    <button class="other">
+                      <otherSVG />
+                    </button>
+                  </div> 
+                </div>
+              </td>
             </tr>
             <tr>
               <td class="last-cell-left">З.Камера</td>
-              <td class="Mid">
+              <td class="mid">
                 <span class="statusBgError">Ошибка</span>
               </td>
-              <td class="last-cell-right error"> Потеря сигнала </td>
+              <td class="last-cell-right error mid">
+                <div class="row">
+                  <div class="col">
+                    Потеря сигнала 
+                  </div>
+                  <div class="col-auto">
+                    <button class="other">
+                      <otherSVG />
+                    </button>
+                  </div>
+                </div>
+              </td>
             </tr>
-            
           </table>
         </div>
       </div>
@@ -110,6 +126,7 @@ td {
 }
 .thead.status {
   padding: .5rem 3rem;
+  border-left: none;
 }
 .thead.end {
   padding: .5rem 7rem ;
