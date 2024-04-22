@@ -20,14 +20,18 @@ trap cleanup INT
 
 # Ваши команды
 cd ~
-# ~/PS5-Camera-Firmware-Loader/cpp/ps5_camera_firmware_loader /home/kam3do/Downloads/21.01-03.20.00.04-00.00.00.bin
+~/PS5-Camera-Firmware-Loader/cpp/ps5_camera_firmware_loader /home/kam3do/Downloads/21.01-03.20.00.04-00.00.00.bin
 
-# sleep 3s
+sleep 2s 
 
-# v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=0
+./go2rtc_linux_amd64 
 
-sudo systemctl enable ustreamer-ps5.service
-sudo systemctl start ustreamer-ps5.service
+sleep 3s
+
+v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=0
+
+#sudo systemctl enable ustreamer-ps5.service
+#sudo systemctl start ustreamer-ps5.service
 
 cd ~/bkm_op_interface
 screen -S npm-dev -dm bash -c 'npm run dev'
