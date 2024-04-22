@@ -58,7 +58,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 svg {
   fill: rgba(0, 0, 0, 1);
-  stroke: rgba(0, 0, 0, 1);
 }
 
 svg.arrow {
@@ -72,6 +71,12 @@ path.arrow {
 
 path.pol {
   fill: black;
+}
+svg.brush {
+  fill: none;
+  path.brush {
+    stroke: black;
+  }
 }
 
 .form-check-input {
