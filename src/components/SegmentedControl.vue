@@ -35,8 +35,13 @@
   const route = useRoute();
   const router = useRouter();
 
-  const segmentedControl = ref(null);
-  const backgroundPill = ref(null);
+  let segmentedControl;
+  let backgroundPill;
+
+  onBeforeUnmount(() => {
+    document.body.removeEventListener("input", updatePillPosition);
+    window.removeEventListener("resize", updatePillPosition);
+  });
   
   onMounted(() => {
     segmentedControl.value = document.querySelector(SEGMENTED_CONTROL_BASE_SELECTOR);
@@ -61,10 +66,6 @@
     window.addEventListener("resize", updatePillPosition);
   });
   
-  onBeforeUnmount(() => {
-    document.body.removeEventListener("input", updatePillPosition);
-    window.removeEventListener("resize", updatePillPosition);
-  });
   
   function updatePillPosition() {
     const selectedInput = segmentedControl.value.querySelector(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR + ":checked");

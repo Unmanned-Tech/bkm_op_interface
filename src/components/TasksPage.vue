@@ -1,75 +1,81 @@
 <template>
-    <div>
-        <div class="row mt-4 mb-2 align-items-center header">
-            <div class="col col-lg-3 mb-4">
-                <table class="tab">
-                    <tr>
-                        <td class="time date">{{ localeDate }}</td>
-                        <td class="time">{{ localeTime }}</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col mb-4">
-                <SegmentedControl />
-            </div>
-            <div class="col-2 col-lg-3 mb-4 d-flex justify-content-end">
-              <router-link :to="{ name: 'edit', params: { mode: 'Настройки' } }">
-                <button class="set">
-                    <plusSVG />
-                </button>
-              </router-link>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col">
-                <table class="tab">
-                    <tr>
-                        <th class="thead start">Задача</th>
-                        <th class="thead mid">Время</th>
-                        <th class="thead mid status">Статус</th>
-                        <th class="thead mid">Заряд</th>
-                        <th class="thead end"></th>
-                    </tr>
-                    <tr v-for="(task, index) in filteredTasks" :key="index" :style="{ color: getBackgroundColor(task.status) }">
-                        <td :class="{ 'last-cell-left': isLastColumn(index) }" @click="handleEditClick">{{ task.name }}</td>
-                        <td class="mid">{{ task.time }}</td>
-                        <td class="mid">{{ task.status }}</td>
-                        <td class="mid">{{ task.charge }}</td>
-                        <td class="mid edd" :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick"><editTask /></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col d-flex justify-content-end">
-                <table class="tab">
-                    <tr>
-                        <th class="thead tasks">Сохраненные задачи</th>
-                    </tr>
-                    <tr><td>Задача 2</td></tr>
-                    <tr><td>-</td></tr>
-                    <tr><td>-</td></tr>
-                    <tr><td>-</td></tr>
-                    <tr><td>-</td></tr>
-                    <tr><td class="lastcell">-</td></tr>
-                </table>
-            </div>
-        </div>
-        <!-- <div class="row mt-4">
-            <div class="col d-flex justify-content-end">
-                <button class="set add">Добавить</button>
-            </div>
-        </div> -->
-
+  <div>
+    <div class="row mt-4 mb-2 align-items-center header">
+      <div class="col col-lg-3 mb-4">
+          <table class="tab">
+              <tr>
+                  <td class="time date">{{ localeDate }}</td>
+                  <td class="time">{{ localeTime }}</td>
+              </tr>
+          </table>
+      </div>
+      <div class="col mb-4">
+          <SegmentedControl />
+      </div>
+      <div class="col-2 col-lg-3 mb-4 d-flex justify-content-end">
+        <router-link :to="{ name: 'edit', params: { mode: 'Настройки' } }">
+          <button class="set">
+              <plusSVG />
+          </button>
+        </router-link>
+      </div>
     </div>
-    
-
+    <div class="row mt-4">
+      <div class="col">
+        <table class="tab">
+          <thead>
+            <tr>
+              <th class="thead start">Задача</th>
+              <th class="thead mid">Время</th>
+              <th class="thead mid status">Статус</th>
+              <th class="thead mid">Заряд</th>
+              <th class="thead end"></th>
+            </tr>
+          </thead>
+          <draggable v-model="filteredTasks" tag="tbody" item-key="index">
+            <template #item="{ element, index }">
+              <tr :style="{ color: getBackgroundColor(element.status) }">
+                <td :class="{ 'last-cell-left': isLastColumn(index) }">{{ element.name }}</td>
+                <td class="mid">{{ element.time }}</td>
+                <td class="mid">{{ element.status }}</td>
+                <td class="mid">{{ element.charge }}</td>
+                <td class="mid edd" :class="{ 'last-cell-right': isLastColumn(index) }"><editTask /></td>
+              </tr>
+            </template>
+          </draggable>
+        </table>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <table class="tab">
+          <tr>
+            <th class="thead tasks">Сохраненные задачи</th>
+          </tr>
+          <draggable v-model="list" tag="tbody" item-key="name">
+            <template #item="{ element, index }">
+              <tr>
+                <td :class="{ 'lastcell': index === list.length - 1 }">{{ element.name }}</td>
+              </tr>
+            </template>
+          </draggable>
+        </table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { fetchDataByOption } from './fetchDataByOption';
 import { useStore } from '../stores/store';
 
 const store = useStore();
+
+const filteredTasks = ref([]);
+
+// Обновляем данные filteredTasks при изменении store.selectedOption
+watchEffect(() => {
+  filteredTasks.value = fetchDataByOption(store.selectedOption);
+});
 
 const isLastColumn = ref((index) => {
   return index === filteredTasks.value.length - 1;
@@ -86,11 +92,11 @@ const getBackgroundColor = (status) => {
   }
 };
 
-const filteredTasks = computed(() => fetchDataByOption(store.selectedOption));
 
 </script>
 
 <script>
+import draggable from 'vuedraggable';
 import SegmentedControl from './SegmentedControl.vue';
 import plusSVG from '/src/assets/plus.svg';
 import otherSVG from '/src/assets/three-dots.svg';
@@ -99,15 +105,23 @@ import EditorTasks from './EditorTasks.vue';
 
 export default {
     components: {
-    SegmentedControl,
-    plusSVG,
-    otherSVG,
-    editTask,
-    EditorTasks,
-},
+      SegmentedControl,
+      plusSVG,
+      otherSVG,
+      editTask,
+      EditorTasks,
+      draggable,
+    },
     data() {
         return {
-            date: 1580558031264,
+          date: 1580558031264,
+          list: [
+            { name: 'Задача 1' },
+            { name: 'Задача 2' },
+            { name: 'Задача 3' },
+            { name: 'Задача 4' }
+          ],
+          drag: false
         }
     },
     computed: {
@@ -240,8 +254,11 @@ td {
   } 
 }
 .time.date {
-  border-radius: .75rem 0 0 .75rem;
+  border-radius: 1.125rem 0 0 1.125rem;
   border-right: 0;
+  @media (max-width: 896px) {
+    border-radius: .75rem 0 0 .75rem;
+  } 
 }
 .set {
   box-shadow: 0 0.1875rem 0.25rem 0 rgba(0, 0, 0, .25);
@@ -256,11 +273,4 @@ td {
     padding: 2px;
   }
 }
-/* .add {
-  padding: .75rem 1.5rem;
-  @media (max-width: 896px) {
-    padding: 8px 16px;
-    font-size: 1rem;
-  }
-} */
 </style>
