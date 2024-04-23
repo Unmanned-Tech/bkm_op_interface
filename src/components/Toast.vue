@@ -55,5 +55,8 @@ import { Toast } from 'bootstrap';
     .toast-body{
         color: var(--text-color);
         font-size: 1rem;
+        @media (max-width: 896px) {
+            font-size: 12px;
+        }
     }
 </style>

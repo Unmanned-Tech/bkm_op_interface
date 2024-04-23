@@ -58,6 +58,10 @@ export default {
     border-radius: 1.125rem;
     border: none;
     margin: 0rem 1rem;
+    @media (max-width: 896px) {
+        padding: 3px;
+        border-radius: .75rem;
+    }
 }
 
 .actions {

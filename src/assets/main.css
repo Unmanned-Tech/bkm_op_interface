@@ -5,14 +5,50 @@
 a.router-link-active.router-link-exact-active.link {
   background-color: var(--bg-secondary);
   box-shadow: 0 .75rem 10px -5px rgba(0, 0, 0, .25) inset;
-  font: 700 1.25rem/3.5rem 'SF Pro Bold';
+  font: 700 1.25rem 'SF Pro Bold';
 }
 
 a.router-link-active.router-link-exact-active.link.ln {
-  padding: .5rem;
   line-height: 1.25rem;
+  padding: .5rem;
 }
 
+@media (max-width: 896px) {
+  a.router-link-active.router-link-exact-active.link {
+    font: 700 1rem 'SF Pro Bold';
+  }
+  a.router-link-active.router-link-exact-active.link.ln {
+    font-size: 1rem;
+    line-height: .9rem;
+  }
+  div .nipple {
+    transform: scale(.7);
+  }
+  svg.dots {
+    width: 30px;
+    height: 30px;
+  }
+  svg.arrow {
+    width: 24px;
+    height: 24px;
+  }
+  svg.sun-fill {
+    width: 24px;
+    height: 24px;
+  }
+  svg.bell {
+    width: 24px;
+    height: 24px;
+  }
+  svg.android {
+    width: 30px;
+    height: 30px;
+  }
+  svg.battery {
+    width: 30px;
+    height: 30px;
+  }
+}
 div .nipple:active {
   opacity: 1 !important;
 }
@@ -69,8 +105,12 @@ div.leaflet-top.leaflet-left {
 }
 a.leaflet-control-zoom-in span {
   content: none;
+
 }
-/*.leaflet-bar a {
+.leaflet-control-zoom.leaflet-bar.leaflet-control {
+  margin-top: 2rem !important;
+}
+/* .leaflet-bar a {
   background-color: transparent !important;
   color: var(--text-color) !important;
   width: 30px !important;

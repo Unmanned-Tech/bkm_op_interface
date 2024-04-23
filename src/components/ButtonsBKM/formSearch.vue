@@ -41,6 +41,11 @@ export default {
     box-shadow: 0 .1875rem .25rem 0 rgba(0, 0, 0, .25);
     transition: all .5s ease;
     caret-color: var(--blue);
+    @media (max-width: 896px) {
+        height: 46px;
+        line-height: 46px;
+        padding-right: 49px;
+    }
 }
 
 .input{
@@ -52,6 +57,10 @@ export default {
     color: var(--text-color);
     transition: all .5s ease-out;
     position: relative;
+    @media (max-width: 896px) {
+        font-size: 1rem;
+        line-height: 46px;
+    }
 }
 
 .wrap .bi{
@@ -61,17 +70,29 @@ export default {
     top: 0px;
     font-size: 1.75rem;
     cursor: pointer;
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+    }
 }
 
 .wrap.active{
-    max-width: 240px;
+    max-width: 205px;
     padding-left: 20px;
     transition: all .5s ease;
+    @media (max-width: 896px) {
+        max-width: 150px;
+        padding-left: 8px;
+    }
 }
 
 .input.active{
     max-width: 100%;
     transition: all .5s .6s ease;
+    line-height: 1.25rem;
+    @media (max-width: 896px) {
+        line-height: normal;
+    }
+    
 }
 
 input::placeholder {

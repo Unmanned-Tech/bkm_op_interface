@@ -7,13 +7,18 @@
                     <div class="col p-0 me-3">Назад</div>
                 </button>        
             </div>
-            <div class="col d-flex justify-content-end">
+            <div class="col d-flex justify-content-center">
                 <span class="header">
                     Редактор задач
                 </span>
             </div>
+            <div class="col d-flex justify-content-center">
+                <button class="button">
+                    <div class="px-3 py-1 ln">Сохранить задачу</div>
+                </button> 
+            </div>
         </div>
-        <div class="row line mb-4 mt-4"></div>
+        <div class="row line mb-3 mb-lg-4 mt-3 mt-lg-4"></div>
         <div class="row">
             <div class="col-3">
                 <div class="form__group">
@@ -24,9 +29,9 @@
             <div class="col-4 mb-auto d-flex justify-content-end">
                 <select class="form__select">
                     <option disabled selected>Робот</option>
-                    <option value="1">БКМ-1</option>
-                    <option value="2">БКМ-2</option>
-                    <option value="3">БКМ-3</option>
+                    <option value="БКМ-1">БКМ-1</option>
+                    <option value="БКМ-2">БКМ-2</option>
+                    <option value="БКМ-3">БКМ-3</option>
                 </select>
                 
             </div>
@@ -38,13 +43,6 @@
             <settingsEditTask v-if="anotherSelectedOption === 'Настройки'"/>
             <mapEditTask v-if="anotherSelectedOption === 'Карта'"/>
         </div>
-        <div class="row">
-            <div class="col">
-                <button class="ms-3 button">
-                    <div class="px-3 py-1 ln">Сохранить<br/>задачу</div>
-                </button> 
-            </div>
-        </div>
     </div>
 </template>
 
@@ -55,9 +53,7 @@ import { computed } from 'vue';
 import { useStore } from '../stores/store';
 
 const store = useStore();
-
 const anotherStore = useAnotherStore();
-
 const router = useRouter();
 
 const anotherSelectedOption = computed(() => anotherStore.anotherSelectedOption);
@@ -99,6 +95,10 @@ export default {
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
     box-shadow: 0 0.1875rem 0.25rem 0 rgba(0, 0, 0, .25);
+    @media (max-width: 896px) {
+        font-size: 1.25rem;
+        border-radius: .75rem;
+    }
 }
 select:focus,
 select:active,
@@ -130,6 +130,9 @@ option:checked {
     background: transparent;
     transition: border-color 0.2s;
     caret-color: var(--blue);
+    @media (max-width: 896px) {
+        font-size: 1rem;
+    }
 
     &::placeholder {
         color: transparent;
@@ -140,6 +143,10 @@ option:checked {
         font-size: 1.5rem;
         cursor: text;
         top: 1.125rem;
+        @media (max-width: 896px) {
+            font-size: 1.1rem;
+            top: 1rem;
+        }
     }
 }
 .form__label {
@@ -156,12 +163,16 @@ option:checked {
 }
 .header {
     font-weight: 400;
-    font-size: 2.25rem;
+    font-size: 1.75rem;
     font-family: "SF Pro";
     background-color: var(--bg-tertiary);
     border-radius: 1.125rem;
-    padding: .125rem 1.5rem;
+    padding: .25rem 1.5rem;
     border: solid .125rem var(--grey);
+    @media (max-width: 896px) {
+        font-size: 1.25rem;
+        border-radius: .75rem;
+    }
 }
 .svg {
     padding: 0;
@@ -182,5 +193,10 @@ option:checked {
     font-size: 1.75rem;
     padding: .5rem .75rem;
     text-decoration: none;
+    @media (max-width: 896px) {
+        font-size: 1.25rem;
+        padding: 5px 10px;
+        border-radius: .75rem;
+    }
   }
 </style>

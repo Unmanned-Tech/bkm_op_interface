@@ -121,6 +121,9 @@
     background-color: rgba(255, 255, 255, 0);
     color: var(--text-color);
     font-size: 24px;
+    @media (max-width: 896px) {
+        font-size: 16px;
+    }
 }
 
 .io-segmented-control .option label::before,

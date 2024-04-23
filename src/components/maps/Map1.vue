@@ -36,6 +36,9 @@ onMounted(()=> {
     }
 div.leaflet-control-zoom.leaflet-bar.leaflet-control {
     margin-top: 5rem;
+    @media (max-width: 896px) {
+        scale: .7;
+    }
 }
 
 

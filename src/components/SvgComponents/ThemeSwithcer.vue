@@ -72,6 +72,10 @@ export default {
     border-radius: 1.125rem;
     position: absolute;
     border: none;
-  }
+    @media (max-width: 896px) {
+        border-radius: .85rem;
+        padding: 6px;
+    }
+}
 
 </style>

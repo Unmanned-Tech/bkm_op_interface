@@ -35,8 +35,13 @@
   const route = useRoute();
   const router = useRouter();
 
-  const segmentedControl = ref(null);
-  const backgroundPill = ref(null);
+  let segmentedControl;
+  let backgroundPill;
+
+  onBeforeUnmount(() => {
+    document.body.removeEventListener("input", updatePillPosition);
+    window.removeEventListener("resize", updatePillPosition);
+  });
   
   onMounted(() => {
     segmentedControl.value = document.querySelector(SEGMENTED_CONTROL_BASE_SELECTOR);
@@ -61,10 +66,6 @@
     window.addEventListener("resize", updatePillPosition);
   });
   
-  onBeforeUnmount(() => {
-    document.body.removeEventListener("input", updatePillPosition);
-    window.removeEventListener("resize", updatePillPosition);
-  });
   
   function updatePillPosition() {
     const selectedInput = segmentedControl.value.querySelector(SEGMENTED_CONTROL_INDIVIDUAL_SEGMENT_SELECTOR + ":checked");
@@ -120,6 +121,9 @@
     background-color: rgba(255, 255, 255, 0);
     color: var(--text-color);
     font-size: 24px;
+    @media (max-width: 896px) {
+        font-size: 16px;
+    }
 }
 
 .segmented-control .option label::before,
@@ -195,7 +199,6 @@
 
 .segmented-control .selection label {
     color: var(--text-color);
-    font-size: 24px;
 }
 
 .segmented-control .option label span {

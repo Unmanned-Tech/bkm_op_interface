@@ -3,7 +3,7 @@
         <div class="btn-group dropstart position-absolute me-2">
             <button class="set" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                 <bellSVG />
-                <span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">
+                <span class="position-absolute top-0 start-100 translate-middle badge bg-danger">
                     4
                     <span class="visually-hidden">alert</span>
                 </span>
@@ -21,10 +21,10 @@
                 </div>
                 <div>
                 </div>
-                <div class="p-3">
+                <div class="mt-1 px-3">
                     <Toast />
                 </div>
-                <p class="p-3 d-flex justify-content-center">
+                <p class=" mt-3 d-flex justify-content-center">
                     Нет более старых уведомлений
                 </p>
             </div>
@@ -89,6 +89,9 @@ p {
     font-weight: 400;
     font-size: 2rem;
     color: var(--text-color);
+    @media (max-width: 896px) {
+        font-size: 1.5rem;
+    }
 }
 .set {
     box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
@@ -96,15 +99,27 @@ p {
     padding: .5rem;
     border-radius: 1.125rem;
     border: none;
+    @media (max-width: 896px) {
+        padding: 6px;
+        border-radius: .85rem;
+    }
 }
 .badge {
-    font: 400 .75rem "SF Pro"
+    font: 400 .75rem "SF Pro";
+    border-radius: 50%;
+    @media (max-width: 896px) {
+        font-size: .6rem;
+    }
 }
 
 .set.notts {
     background-color: var(--grey3);
     padding: .5px;
     margin-left: 1rem;
+    @media (max-width: 896px) {
+        font-size: rem;
+        padding: .125px;
+    }
 }
 
 </style>

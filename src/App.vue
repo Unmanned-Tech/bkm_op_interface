@@ -4,18 +4,17 @@ import main_menu from "./components/MainMenu.vue";
 </script>
 
 <template>
-    <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
-    <div class="container-fluid" @contextmenu.prevent>
-        <FullScreen></FullScreen>
-        <router-view v-slot="{ Component }">
-            <Transition name="fade" mode="out-in">
-                <Component :is="Component" />
-            </Transition>
-        </router-view>
+    <div style="height: 100vh;">
+        <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
+        <div class="container-fluid">
+            <FullScreen></FullScreen>
+            <router-view v-slot="{ Component }">
+                <Transition name="fade" mode="out-in">
+                    <Component :is="Component" />
+                </Transition>
+            </router-view>
+        </div>
     </div>
-
-
-
 </template>
 
 <style>

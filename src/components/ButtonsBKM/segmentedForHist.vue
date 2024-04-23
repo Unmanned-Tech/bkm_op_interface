@@ -119,7 +119,10 @@
     padding: 1px 4vmin;
     background-color: rgba(255, 255, 255, 0);
     color: var(--text-color);
-    font-size: 1.5rem;
+    font-size: 24px;
+    @media (max-width: 896px) {
+        font-size: 16px;
+    }
 }
 
 .io-segmented-control .option label::before,

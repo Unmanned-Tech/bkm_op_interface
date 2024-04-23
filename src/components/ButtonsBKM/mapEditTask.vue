@@ -19,7 +19,7 @@
         <div class="rad-text">Уборка области</div>
       </label>
     </div>
-    <div class="col">
+    <div class="col map_col">
       <Map />
     </div>
   </div>
@@ -62,6 +62,10 @@ export default {
 
   background: var(--blue);
   position: relative;
+  @media (max-width: 896px) {
+    width: 1rem;
+    height: 1rem;
+  }
 }
 .rad-design::before {
   content: '';
@@ -82,8 +86,11 @@ export default {
     margin-left: 1rem;
     font-size: 1.5rem;
     font-weight: 400;
-
     transition: .3s;
+    @media (max-width: 896px) {
+      font-size: 1rem;
+      margin-left: .75rem;
+    }
 }
 .rad-input:not(:checked)~.rad-text {
   color: hsl(0, 0%, 40%);
