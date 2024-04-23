@@ -31,11 +31,11 @@
               <div class="robot_rotate">
                 <label for="ang_max_speed_range" class="form-label">
                   <div class="row">
-                    <span class="col-auto caption_low">Скорость поворота</span> 
+                    <span class="col-auto caption_low pe-1">Скорость поворота</span> 
                     <span class="col-auto d-flex justify-content-center caption_low p-0" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
                   </div>
                 </label>
-                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".5" id="ang_max_speed_range"/>
+                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".25" id="ang_max_speed_range"/>
               </div>
               <div class="brush_speed">
                 <label for="brush_speed_range" class="form-label">
