@@ -136,7 +136,7 @@ export default {
     mounted: function () {
         
         this.ConfigStore = useConfigStore();
-        this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.106:9090" });
+        this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
         this.ros.on('connection', () => {
             console.log('Connected to websocket server.');

@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 export const useConfigStore = defineStore("configStore",{
     store: ()=>({
         robotConfig:{
-            ros_bridge_url: "ws://192.168.0.106:9090",
+            ros_bridge_url: "ws://192.168.1.1:9090",
         },
     })
     // const count = ref(0);

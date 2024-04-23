@@ -91,14 +91,14 @@ export default {
     return {
       rstatus: 1,
       refresh_timer: '',
-      streamSrc: 'http://192.168.0.106:1984/api/stream.mjpeg?src=linux_webcam',
+      streamSrc: 'http://192.168.1.1:1984/api/stream.mjpeg?src=linux_webcam',
       placeholderSrc: '/src/assets/black-screen.jpg',
       loaded: false,
     }
   },
   mounted: function () {
     // this.startRefreshing();
-    const ros = new ROSLIB.Ros({ url: "ws://192.168.0.106:9090" });
+    const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
 
     ros.on('connection', function () {
       console.log('Connected to websocket server.');
@@ -129,7 +129,7 @@ export default {
     },
     fetchRstatus() {
       axios
-        .get('http://192.168.0.106:5003/api/telemetry/rstatus/')
+        .get('http://192.168.1.1:5003/api/telemetry/rstatus/')
         .then(response => (this.rstatus = response.data))
       console.info("statuses updated")
     },

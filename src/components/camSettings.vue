@@ -91,7 +91,7 @@ export default {
     methods: {
         async sendExposure(mode) {
             try {
-                const response = await axios.post('http://192.168.0.106:5000/send_command', {
+                const response = await axios.post('http://192.168.1.1:5000/send_command', {
                     command: `v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=${mode}`
                 });
                 console.log(response.data);
@@ -102,7 +102,7 @@ export default {
         },
         async sendBrightness() {
             try {
-                const response = await axios.post('http://192.168.0.106:5000/send_command', {
+                const response = await axios.post('http://192.168.1.1:5000/send_command', {
                     command: `v4l2-ctl -d /dev/video0 --set-ctrl brightness=${ this.brightness }`
                 });
                 console.log(response.data);
@@ -113,7 +113,7 @@ export default {
         },
         async sendContrast() {
             try {
-                const response = await axios.post('http://192.168.0.106:5000/send_command', {
+                const response = await axios.post('http://192.168.1.1:5000/send_command', {
                     command: `v4l2-ctl -d /dev/video0 --set-ctrl contrast=${ this.contrast }`
                 });
                 console.log(response.data);

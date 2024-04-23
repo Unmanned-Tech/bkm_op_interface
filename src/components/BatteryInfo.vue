@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     fetchRbattPercentage() {
-      axios.get('http://192.168.0.106:5003/api/telemetry/rbattery/').then(response => (response.data)).then((data) => {
+      axios.get('http://192.168.1.1:5003/api/telemetry/rbattery/').then(response => (response.data)).then((data) => {
         this.rbatt = data
       });
     }
