@@ -51,5 +51,10 @@ $theme-colors: (
        font-weight: 700;
 }
 
+@font-face {
+  font-family: 'Shine More';
+  src: url('/src/assets/fonts/shine-more.otf') format('opentype');
+}
+
 @import "~bootstrap/scss/bootstrap";
 

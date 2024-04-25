@@ -16,7 +16,7 @@
             </button>
           </div>
         </div>
-        <div class="row mt-1 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, 'slideHide' : !isSliderVisible }">
+        <div class="row my-1 my-lg-4 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, 'slideHide' : !isSliderVisible }">
           <div class="col pe-0 slide-col">
             <div class="slide p-3 py-1">
               <div class="lin_speed">
@@ -77,35 +77,42 @@
         </div>
       </div>
       <div class="col"></div>
-      <div class="col mt-1">
+      <div class="col mt-1 pe-0">
         <div class="row justify-content-end me-1">
           <div class="col-auto">
             <table class="current">
               <tr>
-                <td class="start">
-                  Скорость робота
+                <td class="start1 px-lg-2 px-0 rounded-4">
+                  <span class="speedometr">
+                    {{ displayC1Msg }}
+                  </span>
+                  <span>м/с</span>
                 </td>
-                <td class="start1">
-                  <span>{{ c1_msg }} м/c</span>
+                <td class="end1 px-lg-2 px-0 rounded-4">
+                  <span class="speedometr">
+                    {{ brush_speed }}
+                  </span>
+                  <span>об/м</span>
+                  
                 </td>
               </tr>
               <tr>
-                <td class="end">
-                  Скорость щётки
+                <td class="text-center rounded-4 px-lg-2 px-0">
+                  <span><i class="bi bi-robot"></i></span>
                 </td>
-                <td class="end1">
-                  <span>{{ brush_speed }} об/м</span>
+                <td class="text-center rounded-4 px-lg-2 px-0">
+                  <span><Brush /></span>
                 </td>
               </tr>
             </table>
           </div>
         </div>
-        <div class="row align-items-center">
-          <div class="col d-flex justify-content-center p-lg-4 p-2">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-auto py-lg-4 py-2 px-2">
             <EmerStopButton />
           </div>
         </div>
-        <div class="row mt-0 mt-lg-5 justify-content-center">
+        <div class="row mt-0 mt-lg-4 justify-content-center">
           <div id="zone_joystick" class="zone static"></div>
         </div>
       </div>
@@ -161,10 +168,10 @@
           </div>
         </div>
       </div>
-      <div class="col-auto slide-out-columnY d-sm-none d-lg-block" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
+      <div class="col slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, 'hidden': !isCameraVisible }">
         <div class="row">
-          <div class="col d-flex justify-content-end">
-            <button class="px-3 fixed-button button" @click="toggleCamera">
+          <div class="col">
+            <button class="px-3 button" @click="toggleCamera" style="position: absolute; right: -46px; top: -168px">
               <div class="row align-items-center">
                 <div class="col-auto px-lg-1 px-sm-0" :style="{ transform: isCameraVisible ? 'none' : 'scale(-1, -1)' }">
                   <Polygon class="optin-min"/>
@@ -176,17 +183,15 @@
             </button>
           </div>
         </div>
-        <div class="row">
+        <div class="row" style="position: absolute; bottom: -23px;">
           <div class="col-auto d-flex justify-content-start">
             <img id="depth" class="slide-out img">
           </div>
         </div>
-        
       </div>
       <div class="col">
         <camSettings />
       </div>
-
     </div>
   </div>
 </template>
@@ -299,6 +304,13 @@ export default {
             return { color: 'var(--orange)' };
           } else {
             return { color: 'var(--red)' };
+          }
+        },
+        displayC1Msg() {
+          if (!this.c1_msg || Object.keys(this.c1_msg).length === 0) {
+            return '0';
+          } else {
+            return `${this.c1_msg}`;
           }
         },
   },
@@ -430,7 +442,7 @@ export default {
       });
 
       cmd_srv.callService(request, function (result) {
-        alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
+        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
       });
       console.log(request);
     },
@@ -552,10 +564,10 @@ export default {
   overflow: hidden;
   margin-inline: -.75rem;
   position: relative;
-  height: 100%;
+  height: 91.5vh;
 }
 
-.main .video {
+.video {
   top: 0;
   left: 0;
   position: absolute;
@@ -629,6 +641,12 @@ export default {
 .bi {
   font-size: 1.5rem;
 }
+.bi-robot {
+  font-size: 28px;
+  @media (max-width: 896px) {
+    font-size: 1rem;
+  }
+}
 .buttonSet {
   border-radius: 50%; 
   padding: 1.5rem;
@@ -637,37 +655,35 @@ export default {
   cursor: pointer;
 }
 .current {
-  border-radius: 1.125rem;
   border-collapse: separate;
-  border-spacing: 0;
-  font-size: .95rem;
-}
-tr {
-  padding-inline: 2rem;
 }
 td {
   background-color: var(--bg-tertiary);
-  padding: .25rem;
+  padding: 1px;
   border: solid 2px var(--grey2);
 }
-td.start {
-  border-top-left-radius: 1rem;
-  border-bottom: none;
-}
 td.start1 {
-  border-top-right-radius: 1rem;
-  border-bottom: none;
-  border-left: none;
   text-align: center;
-}
-td.end {
-  border-bottom-left-radius: 1rem;
+  width: 8rem;
+  @media (max-width: 896px) {
+    width: 5rem;
+  }
 }
 td.end1 {
-  border-bottom-right-radius: 1rem;
-  border-left: none;
   text-align: center;
-  width: 4.95rem;
+  width: 8rem;
+  @media (max-width: 896px) {
+    width: 5rem;
+  }
+}
+.speedometr {
+  font-family: 'Shine More';
+  font-size: 2.2rem;
+  margin: 0;
+  padding: 0;
+  @media (max-width: 896px) {
+    font-size: 1rem;
+  }
 }
 .buttonSet.mic:active,
 .buttonSet.sound:active {

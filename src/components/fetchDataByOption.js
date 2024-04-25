@@ -17,7 +17,7 @@ export function fetchDataByOption(option) {
     ],
   };
 
-  return dataMap[option] || [];
+  return dataMap[option] || ['БКМ-1'];
 }
 
 export function fetchDataByOption1(option, searchQuery, selectedStatus) {
