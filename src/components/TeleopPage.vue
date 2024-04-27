@@ -54,7 +54,7 @@
                 </label>
                 <div class="range-container">
                   <div class="letter left">L</div>
-                  <input v-on:input="setBrushRotation" type="range" class="form-range" min="-1" max="1" value="0" step="1" id="brush_rotate_range"/>
+                  <input v-on:input="setBrushRotation" type="range" class="form-range" min="-2" max="2" value="0" step="1" id="brush_rotate_range"/>
                   <div class="letter right">R</div>
                 </div>
               </div>
@@ -421,9 +421,13 @@ export default {
       let angle = 0;
 
       if (value === -1) {
-        angle = -19;
+        angle = -9;
       } else if (value === 1) {
-        angle = 29;
+        angle = 9;
+      } else if (value === -2) {
+        angle = -15
+      } else if (value === 2) {
+        angle = 15;
       }
 
       this.sendBrushRotationCommand(angle);
@@ -437,7 +441,7 @@ export default {
       });
 
       var request = new ROSLIB.ServiceRequest({
-        cmd: "SA",
+        cmd: "set_angle",
         angle: angle,
       });
 
