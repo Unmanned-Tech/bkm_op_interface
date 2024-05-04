@@ -24,19 +24,19 @@
       </div>
     <div class="row">
       <div class="col">
-        <img class="img-fluid rounded-4" :src="streamSrc" @error="handleError" @load="handleLoad">
+        <img class="img-fluid rounded-4" style="max-height: 5rem;" :src="streamSrc" @load="handleLoad">
         <div class="row mt-2 mt-lg-4">
           <MPButtons1 />
         </div>
       </div>
       <div class="col">
-        <img class="img-fluid rounded-4" src="../assets/black-screen.jpg">
+        <img class="img-fluid rounded-4" style="max-height: 5rem;" src="../assets/black-screen.gif">
         <div class="row mt-2 mt-lg-4">
           <MPButtons2 />
         </div>
       </div>
       <div class="col">
-        <img class="img-fluid rounded-4" src="../assets/black-screen.jpg">
+        <img class="img-fluid rounded-4" style="max-height: 5rem;" src="../assets/black-screen.gif">
         <div class="row mt-2 mt-lg-4">
           <MPButtons3 />
         </div>
@@ -91,8 +91,8 @@ export default {
     return {
       rstatus: 1,
       refresh_timer: '',
-      streamSrc: 'http://192.168.1.1:1984/api/stream.mjpeg?src=linux_webcam',
-      placeholderSrc: '/src/assets/black-screen.jpg',
+      streamSrc: 'http://192.168.0.106:1984/api/stream.mjpeg?src=linux_webcam',
+      placeholderSrc: '/src/assets/black-screen.gif',
       loaded: false,
     }
   },
@@ -117,7 +117,7 @@ export default {
     });
     setTimeout(() => {
       this.handleError();
-    }, 100);
+    }, 700);
   },
   beforeUnmount() {
     // this.stopRefreshing();

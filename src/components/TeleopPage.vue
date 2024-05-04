@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <img class="slide-out video" :src="streamSrc" @error="handleError" @load="handleLoad">
+    <img class="slide-out video" :src="streamSrc" @load="handleLoad">
     <div class="row">
       <div class="col p-0 ms-4 mt-1">
         <div class="row slide-out-columnX d-sm-none d-lg-flex" :class="{ 'slide-out-columnX':  isMapVisible, 'mapHide': !isMapVisible }">
@@ -272,8 +272,8 @@ export default {
       },
       cmdVel: 0,
       c1_msg: {},
-      streamSrc: 'http://192.168.1.1:8080/stream',
-      placeholderSrc: '/src/assets/black-screen.jpg',
+      streamSrc: 'http://192.168.0.106:1984/api/stream.mjpeg?src=linux_webcam',
+      placeholderSrc: '/src/assets/black-screen.gif',
       loaded: false,
     };
   },
@@ -346,7 +346,7 @@ export default {
     }) 
     setTimeout(() => {
       this.handleError();
-    }, 500);
+    }, 700);
     var listner1 = new ROSLIB.Topic({
       ros: this.ros,
       name: '/c1_telem',
