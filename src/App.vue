@@ -4,7 +4,7 @@ import main_menu from "./components/MainMenu.vue";
 </script>
 
 <template>
-    <div style="min-height: 100vh;">
+    <div style="min-height: 100vh;" @contextmenu.prevent>
         <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
         <div class="container-fluid">
             <FullScreen></FullScreen>
