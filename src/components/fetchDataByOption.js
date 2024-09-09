@@ -3,7 +3,7 @@ export function fetchDataByOption(option) {
   const dataMap = {
     'БКМ-1': [
       { name: 'Уборка на тер. 2', time: '10:00', status: 'Выполнена', charge: '79%' },
-      { name: 'Уборка на тер. N', time: '11:30', status: 'Ожидание', charge: '-' },
+      { name: 'Уборка на тер. N', time: '11:30', status: 'Ожидание', charge: '20%' },
       // Add more tasks for 'БКМ-1' option
     ],
     'БКМ-2': [

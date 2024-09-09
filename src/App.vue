@@ -1,35 +1,36 @@
 <script setup>
 import main_menu from "./components/MainMenu.vue";
-
 </script>
 
 <template>
-    <div style="min-height: 100vh;" @contextmenu.prevent>
-        <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
-        <div class="container-fluid">
-            <FullScreen></FullScreen>
-            <router-view v-slot="{ Component }">
-                <Transition name="fade" mode="out-in">
-                    <Component :is="Component" />
-                </Transition>
-            </router-view>
-        </div>
+  <div style="min-height: 100dvh" @contextmenu.prevent>
+    <main_menu
+      v-if="$route.name !== 'edit' && $route.name !== 'hist' && $route.name !== 'teleop'"
+    ></main_menu>
+    <div class="container-fluid">
+      <FullScreen></FullScreen>
+      <router-view v-slot="{ Component }">
+        <Transition name="fade" mode="out-in">
+          <Component :is="Component" />
+        </Transition>
+      </router-view>
     </div>
+  </div>
 </template>
 
 <style>
 .container-fluid {
-    -webkit-user-select: none;
-    user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .fade-enter-from,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity .15s ease-out;
+  transition: opacity 0.15s ease-out;
 }
 
 .slide-up-enter-active,
@@ -37,31 +38,29 @@ import main_menu from "./components/MainMenu.vue";
   transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-.slide-up-enter, .slide-up-leave-to {
+.slide-up-enter,
+.slide-up-leave-to {
   transform: translateY(100%);
 }
 
-.slide-up-enter-to, .slide-up-leave-from {
+.slide-up-enter-to,
+.slide-up-leave-from {
   transform: translateY(0);
 }
-
-
 </style>
 
 <script>
-import FullScreen from './components/FullScreen.vue';
+import FullScreen from "./components/FullScreen.vue";
 export default {
-    components: {
-        FullScreen,
+  components: {
+    FullScreen,
+  },
+  methods: {
+    getTransitionName() {
+      return this.$route.name === "edit" ? "slide-up" : "fade";
     },
-    methods: {
-        getTransitionName() {
-            return this.$route.name === 'edit' ? 'slide-up' : 'fade'
-        }
-    }
-}
-
+  },
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

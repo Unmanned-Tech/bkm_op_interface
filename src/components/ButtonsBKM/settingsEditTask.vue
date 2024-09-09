@@ -1,14 +1,14 @@
 <template>
     <div class="row mt-2 mt-lg-4" style="height: 328.8px;">
-        <div class="col-3">
+        <!-- <div class="col-3">
             <div class="caption_low mb-3">Оборудование:</div>
             <select class="ms-3 form__select">
                 <option value="1" selected>Щётка</option>
                 <option value="2">БКМ-2</option>
                 <option value="3">БКМ-3</option>
             </select>
-        </div>
-        <div class="col-4">
+        </div> -->
+        <!-- <div class="col-4">
             <div class="row mb-2 mb-lg-3 align-items-center">
                 <div class="col">
                     <span class="caption_low">Триггер задачи:</span>
@@ -57,10 +57,16 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="col-4 ms-auto me-auto">
             <sliderInputTask />
         </div>
+        <div class="col">
+            <Map />
+        </div>
+    </div>
+    <div class="row mt-3">
+        
     </div>
 </template>
 
@@ -111,10 +117,12 @@ function saveCharge(value) {
 
 <script>
 import sliderInputTask from './sliderInputTask.vue';
+import Map from '../maps/MapTask.vue';
 
 export default {
     components: {
         sliderInputTask,
+        Map
     },
     data() {
         return {

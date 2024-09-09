@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import * as roslib from "../../roslib.js";
 
 export default {
   name: "EmerStopButton",

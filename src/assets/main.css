@@ -54,11 +54,11 @@ div .nipple:active {
 }
 
 div .front  {
-  background-color: var(--bg-primary) !important;
-  opacity: .9 !important;
+  background-color: var(--blue) !important;
+  /* opacity: .9 !important; */
 }
 div .back {
-  background-color: var(--bg-secondary) !important;
+  background-color: var(--blue) !important;
 }
 
 * {
@@ -98,9 +98,9 @@ a.leaflet-draw-toolbar.leaflet-bar.leaflet-draw-toolbar-top {
 }
 
 div.leaflet-top.leaflet-left {
-  margin-top: 2rem !important;
+  margin-top: 5.5rem !important;
   margin-inline-start: .5rem;
-  /* transform: scale(1.6) !important; */
+  transform: scale(1.7) !important;
   border: none !important;
 }
 a.leaflet-control-zoom-in span {
@@ -108,7 +108,9 @@ a.leaflet-control-zoom-in span {
 
 }
 .leaflet-control-zoom.leaflet-bar.leaflet-control {
-  margin-top: 2rem !important;
+  margin-top: 4.5rem !important;
+  margin-inline-end: 1.5rem;
+  transform: scale(2) !important;
 }
 /* .leaflet-bar a {
   background-color: transparent !important;

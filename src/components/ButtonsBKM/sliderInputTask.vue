@@ -26,6 +26,15 @@
         </label>
         <input v-on:input="set_aisle_width" type="range" class="form-range" min="40" max="80" value="40" step="5" id="aisle_width_range"/>
     </div>
+    <div class="reagent_count">
+        <label for="reagent_count" class="form-label w-100">
+            <div class="row">
+                <span class="col-9 caption pe-0">Объём реагентов</span> 
+                <span class="col-2 d-flex justify-content-center caption_low p-0">{{ reagent_count }} </span>
+            </div>
+        </label>
+        <input v-on:input="set_reagent_count" type="range" class="form-range" min="0" max="100" value="0" step="10" id="reagent_count_range"/>
+    </div>
 </template>
 
 <script>
@@ -35,6 +44,7 @@ export default {
             lin_max_speed: 0,
             brush_speed: 0,
             aisle_width: 40,
+            reagent_count: 0,
         }
     },
     computed: {
@@ -66,6 +76,9 @@ export default {
         },
         set_aisle_width() {
             this.aisle_width = document.getElementById("aisle_width_range").value;
+        },
+        set_reagent_count() {
+            this.reagent_count = document.getElementById("reagent_count_range").value;
         },
     }
 

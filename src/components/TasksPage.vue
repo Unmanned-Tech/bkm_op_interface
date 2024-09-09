@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { fetchDataByOption } from './fetchDataByOption';
 import { useStore } from '../stores/store';
 
