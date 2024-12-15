@@ -8,7 +8,7 @@
                 <div class="dropdown-header">
                     <div class="row mb-1 align-items-center">
                         <div class="col-auto">
-                            <div class="caption">Настройки камеры</div>
+                            <div class="caption">Настройки</div>
                         </div>
                         <div class="col d-flex justify-content-end">
                             <button class="reset" @click="reset">
@@ -16,6 +16,7 @@
                             </button>
                         </div>
                     </div>
+                    <h5>Камера</h5>
                     <div class="mb-2">Режим экспозиции (по умолчанию: Auto):</div>
                     <div class="row justify-content-center">
                         <div class="col-auto">
@@ -31,29 +32,18 @@
                     </div>
                     <div class="brightness">
                         <div class="mt-2">Яркость (по умолчанию: 0): <span>{{ brightness }}</span></div>
-                        <input type="range" 
-                               class="form-range" 
-                               min="-64" 
-                               max="64" 
-                               v-model="brightness"
-                               step="1" 
-                               id="brightness"
-                               @change="sendBrightness"
-                        />
+                        <input type="range" class="form-range"  min="-64"  max="64"  v-model="brightness" step="1"  id="brightness" @change="sendBrightness"/>
                     </div>
                     <div class="contrast">
                         <div class="mt-2">Контраст (по умолчанию: 50): <span>{{ contrast }}</span></div>
-                        <input type="range" 
-                               class="form-range" 
-                               min="0" 
-                               max="100" 
-                               v-model="contrast" 
-                               step="1" 
-                               id="contrast"
-                               @change="sendContrast"
-                        />
+                        <input type="range" class="form-range"  min="0"  max="100"  v-model="contrast"  step="1"  id="contrast" @change="sendContrast"/>
                     </div>
-                    
+                    <h5>БКМ</h5>
+                    <select class="form-select" v-model="selectedBkm" aria-label="Default select example">
+                        <option disabled>Выбор БКМ</option>
+                        <option selected value="БКМ-1">БКМ-1</option>
+                        <option value="БКМ-2">БКМ-2</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -64,6 +54,7 @@
 import settingsSVG from '/src/assets/settings.svg';
 import axios from 'axios';
 import resetSVG from '/src/assets/arrow-repeat.svg';
+import { useBkmStore } from '../stores/bkmStore';
 
 export default {
     components: {
@@ -75,6 +66,20 @@ export default {
             brightness: 0,
             contrast: 50,
             exposureMode: 0,
+        }
+    },
+
+    computed: {
+        bkmStore() {
+            return useBkmStore();
+        },
+        selectedBkm: {
+            get() {
+                return this.bkmStore.selectedBkm;
+            },
+            set(value) {
+                this.bkmStore.setBkm(value);
+            }
         }
     },
 

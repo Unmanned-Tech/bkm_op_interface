@@ -104,7 +104,8 @@
               </tr>
               <tr>
                 <td class="text-center rounded-3 px-lg-2 px-0">
-                  <span><i class="bi bi-robot"></i></span>
+                  <!-- <span><i class="bi bi-robot"></i></span> -->
+                   <span>{{ bkmStore.selectedBkm }}</span>
                 </td>
                 <td class="text-center rounded-3 px-lg-2 px-0">
                   <span><Brush /></span>
@@ -211,6 +212,7 @@ import nipplejs from "nipplejs";
 import ROSLIB from "roslib/src/RosLib";
 import Map from "./maps/Map1.vue";
 import camSettings from "./camSettings.vue";
+import { useBkmStore } from "../stores/bkmStore";
 
 export default {
   name: "TeleopPage",
@@ -242,6 +244,10 @@ export default {
       ang_max_speed: 0,
       lin_speed: 0,
       ang_speed: 0,
+      target_lin_speed: 0,
+      target_ang_speed: 0,
+      speed_decay_interval: null,
+      decay_step: 0.1,
       speed_send_timer: {},
       brush_send_timer: {},
       ros: {},
@@ -271,6 +277,7 @@ export default {
         },
       },
       cmdVel: 0,
+      speedCmd: 0,
       c1_msg: {},
       streamSrc: "http://192.168.0.17:1984/stream.html?src=camera_1&mode=mse,mjpeg",
       placeholderSrc: "/src/assets/black-screen.gif",
@@ -287,6 +294,9 @@ export default {
       } else {
         return { color: "var(--red)" };
       }
+    },
+    bkmStore() {
+      return useBkmStore();
     },
     brushSpeedColorStyle() {
       if (this.brush_speed >= -75 && this.brush_speed <= 140) {
@@ -335,7 +345,7 @@ export default {
       .on("end", this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.15:9090" });
+    this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.17:9090" });
 
     this.ros.on("connection", function () {
       console.log("Connected to websocket server.");
@@ -518,7 +528,7 @@ export default {
     },
     joystick_move(evt, data) {
       this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
-
+      
       // Если lin_speed отрицательна, меняем знак у ang_speed
       if (this.lin_speed < -0.15) { 
         this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
@@ -529,18 +539,68 @@ export default {
     },
     joystick_start(evt, data) {},
     joystick_end(evt, data) {
-      this.lin_speed = 0;
-      this.ang_speed = 0;
+      this.target_lin_speed = 0;
+      this.target_ang_speed = 0;
+
+      if (!this.speed_decay_interval) {
+        this.speed_decay_interval = setInterval(() => {
+          this.lin_speed = this.reduce_speed(this.lin_speed, this.target_lin_speed);
+          this.ang_speed = this.reduce_speed(this.ang_speed, this.target_ang_speed);
+
+          if (this.lin_speed === 0 && this.ang_speed === 0) {
+            clearInterval(this.speed_decay_interval);
+            this.speed_decay_interval = null;
+          }
+        }, 100);
+      }
+    },
+    reduce_speed(current, target) {
+      const decayStep = this.decay_step;
+      if (Math.abs(current - target) <= decayStep) {
+        return target;
+      }
+      return current > target ? current - decayStep : current + decayStep;
     },
     send_speed() {
-      this.cmdVel = new ROSLIB.Topic({
-        ros: this.ros,
-        name: "/cmd_vel",
-        messageType: "geometry_msgs/Twist",
-      });
-      this.twist.linear.x = this.lin_speed;
-      this.twist.angular.z = this.ang_speed;
-      this.cmdVel.publish(this.twist);
+      const wheelBase = 0.5;
+      const wheelRadius = 0.175;
+      const maxRpm = 150;
+
+      const leftSpeed = Math.round(
+        ((this.lin_speed - (this.ang_speed * wheelBase) / 2) / (this.pi * wheelRadius)) * 60
+      );
+      const rightSpeed = Math.round(
+        ((this.lin_speed + (this.ang_speed * wheelBase) / 2) / (this.pi * wheelRadius)) * 60
+    );
+
+      const limitedLeftSpeed = Math.max(-maxRpm, Math.min(maxRpm, leftSpeed));
+      const limitedRightSpeed = Math.max(-maxRpm, Math.min(maxRpm, rightSpeed));
+
+      const command = `C_SPD_${limitedLeftSpeed}_${limitedRightSpeed}`;
+
+      if (this.bkmStore.selectedBkm === 'БКМ-1') {
+        this.cmdVel = new ROSLIB.Topic({
+          ros: this.ros,
+          name: "/cmd_vel",
+          messageType: "geometry_msgs/Twist",
+        });
+        this.twist.linear.x = this.lin_speed;
+        this.twist.angular.z = this.ang_speed;
+        this.cmdVel.publish(this.twist);
+      } else if (this.bkmStore.selectedBkm === 'БКМ-2') {
+        this.speedCmd = new ROSLIB.Topic({
+          ros: this.ros,
+          name: "/speed_cmd",
+          messageType: "std_msgs/String",
+        });
+        
+        const msg = new ROSLIB.Message({
+          data: command,
+        });
+
+        this.speedCmd.publish(msg);
+      }
+      
     },
     stop_moving() {
       document.getElementById("moveing_enable").checked = false;
