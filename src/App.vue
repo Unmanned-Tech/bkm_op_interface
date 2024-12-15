@@ -4,9 +4,7 @@ import main_menu from "./components/MainMenu.vue";
 
 <template>
   <div style="min-height: 100dvh" @contextmenu.prevent>
-    <main_menu
-      v-if="$route.name !== 'edit' && $route.name !== 'hist' && $route.name !== 'teleop'"
-    ></main_menu>
+    <main_menu v-if="$route.name !== 'edit' && $route.name !== 'hist'"></main_menu>
     <div class="container-fluid">
       <FullScreen></FullScreen>
       <router-view v-slot="{ Component }">

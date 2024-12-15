@@ -1,104 +1,51 @@
 <template>
   <div class="main">
-    <img class="slide-out video" :src="streamSrc" @load="handleLoad" />
+    <iframe class="video" scrolling="no" :src="streamSrc" @load="handleLoad" />
+    <!-- <img v-else class="video" scrolling="no" :src="placeholderSrc" /> -->
     <div class="row">
-      <div class="col p-0 ms-4 mt-1">
-        <div
-          class="row slide-out-columnX d-sm-none d-lg-flex"
-          :class="{ 'slide-out-columnX': isMapVisible, mapHide: !isMapVisible }"
-        >
+      <div class="col">
+        <div class="row slide-out-columnX d-sm-none d-lg-flex" :class="{ 'slide-out-columnX': isMapVisible, mapHide: !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
           </div>
           <div class="col-auto ps-0 d-flex align-items-center">
             <button class="tongue p-lg-2 p-sm-1" @click="toggleMap">
-              <div
-                :style="{
-                  transform: isMapVisible ? 'rotate(90deg)' : 'rotate(-90deg)',
-                }"
-              >
+              <div :style="{ transform: isMapVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
                 <Polygon class="optin-min" />
               </div>
               <i class="bi bi-geo-alt"></i>
             </button>
           </div>
         </div>
-        <div
-          class="row my-1 my-lg-4 slide-out-columnX"
-          :class="{
-            'slide-out-columnX': isSliderVisible,
-            slideHide: !isSliderVisible,
-          }"
-        >
+        <div class="row my-1 my-lg-2 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, slideHide: !isSliderVisible }">
           <div class="col pe-0 slide-col">
             <div class="slide p-3 py-1">
               <div class="lin_speed">
                 <label for="lin_max_speed_range" class="form-label">
                   <div class="row">
-                    <span class="col-auto caption_low">Скорость робота</span>
-                    <span
-                      class="col-auto d-flex justify-content-center caption_low pe-0"
-                      v-bind:style="linSpeedColorStyle"
-                      >{{ lin_max_speed }} м/c</span
-                    >
+                    <span class="col caption_low">Скорость робота</span>
+                    <span class="col-auto d-flex justify-content-end caption_low" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
                   </div>
                 </label>
-                <input
-                  v-on:input="set_linear_speed"
-                  type="range"
-                  class="form-range"
-                  min="0"
-                  max="5"
-                  value="0"
-                  step="1"
-                  id="lin_max_speed_range"
-                />
+                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="5" value="0" step="1" id="lin_max_speed_range"/>
               </div>
               <div class="robot_rotate">
                 <label for="ang_max_speed_range" class="form-label">
                   <div class="row">
-                    <span class="col-auto caption_low pe-1"
-                      >Скорость поворота</span
-                    >
-                    <span
-                      class="col-auto d-flex justify-content-center caption_low p-0"
-                      v-bind:style="angSpeedColorStyle"
-                      >{{ ang_max_speed }} рад/c</span
-                    >
+                    <span class="col caption_low pe-1">Скорость поворота</span>
+                    <span class="col-auto d-flex justify-content-end caption_low" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
                   </div>
                 </label>
-                <input
-                  v-on:input="set_angular_speed"
-                  type="range"
-                  class="form-range"
-                  min="0"
-                  max="5"
-                  value="0"
-                  step=".25"
-                  id="ang_max_speed_range"
-                />
+                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".25" id="ang_max_speed_range"/>
               </div>
               <div class="brush_speed">
                 <label for="brush_speed_range" class="form-label">
                   <div class="row">
-                    <span class="col-auto caption_low">Скорость щётки</span>
-                    <span
-                      class="col-auto d-flex justify-content-center caption_low"
-                      v-bind:style="brushSpeedColorStyle"
-                      >{{ brush_speed }} об/м
-                    </span>
+                    <span class="col caption_low">Скорость щётки</span>
+                    <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
                   </div>
                 </label>
-                <input
-                  v-on:input="set_brush_speed"
-                  type="range"
-                  class="form-range"
-                  min="-200"
-                  max="400"
-                  v-model="brush_speed"
-                  step="20"
-                  id="brush_speed_range"
-                />
+                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" v-model="brush_speed" step="20" id="brush_speed_range" />
               </div>
               <div class="brush_rotate">
                 <label for="brush_rotate_range" class="">
@@ -106,84 +53,49 @@
                 </label>
                 <div class="range-container">
                   <div class="letter left">L</div>
-                  <input
-                    v-on:input="setBrushRotation"
-                    type="range"
-                    class="form-range"
-                    min="-2"
-                    max="2"
-                    value="0"
-                    step="1"
-                    id="brush_rotate_range"
-                  />
+                  <input v-on:input="setBrushRotation" type="range" class="form-range" min="-2" max="2" value="0" step="1" id="brush_rotate_range" />
                   <div class="letter right">R</div>
                 </div>
               </div>
               <div class="wash_pressure">
                 <label for="" class="form-label">
                   <div class="row">
-                    <span class="col-auto d-flex caption_low">Давление</span>
+                    <span class="col caption_low">Давление</span>
                   </div>
                 </label>
-                <input 
-                  v-on:input="setWashPressure"
-                  type="range" 
-                  class="form-range"
-                  min="0"
-                  max="10"
-                  value="0"
-                  step="1"
-                  id="wash_range"
-                />
+                <input v-on:input="setWashPressure" type="range" class="form-range" min="0" max="10" value="0" step="1" id="wash_range" />
               </div>
             </div>
           </div>
           <div class="col-auto ps-0 d-flex flex-column justify-content-center">
-            <button
-              class="tongue"
-              style="background-color: var(--red)"
-              @click="disable_all_sliders()"
-            >
+            <button class="tongue" style="background-color: var(--red)" @click="disable_all_sliders()">
               <i class="bi bi-sign-stop"></i>
             </button>
-            <button
-              class="tongue p-2 p-sm-1 my-3 my-sm-2"
-              @click="toggleSlider"
-            >
-              <div
-                :style="{
-                  transform: isSliderVisible
-                    ? 'rotate(90deg)'
-                    : 'rotate(-90deg)',
-                }"
-              >
+            <button class="tongue p-2 p-sm-1 my-3 my-sm-2" @click="toggleSlider">
+              <div :style="{ transform: isSliderVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
                 <Polygon class="optin-min" />
               </div>
               <i class="bi bi-sliders"></i>
             </button>
-            <button
-              class="tongue"
-              style="background-color: var(--red)"
-              @click="disable_brush_speed()"
-            >
+            <button class="tongue" style="background-color: var(--red)" @click="disable_brush_speed()">
               <Brush class="optin-min" />
             </button>
           </div>
         </div>
       </div>
       <div class="col"></div>
-      <div class="col mt-1 pe-0">
-        <div class="row justify-content-end me-1">
+      <div class="col">
+        <div class="row justify-content-end">
           <div class="col-auto">
-            <table class="current">
+            <table class="current" style="">
               <tr>
-                <td class="start1 px-lg-2 px-0 rounded-4">
+                <td class="start1 px-lg-2 px-0 rounded-3">
                   <span class="speedometr">
                     {{ displayC1Msg }}
                   </span>
                   <span>м/с</span>
                 </td>
-                <td class="end1 px-lg-2 px-0 rounded-4">
+                <td class="end1 px-lg-2 px-0 rounded-3">
                   <span class="speedometr">
                     {{ brush_speed }}
                   </span>
@@ -191,10 +103,10 @@
                 </td>
               </tr>
               <tr>
-                <td class="text-center rounded-4 px-lg-2 px-0">
+                <td class="text-center rounded-3 px-lg-2 px-0">
                   <span><i class="bi bi-robot"></i></span>
                 </td>
-                <td class="text-center rounded-4 px-lg-2 px-0">
+                <td class="text-center rounded-3 px-lg-2 px-0">
                   <span><Brush /></span>
                 </td>
               </tr>
@@ -211,60 +123,35 @@
         </div>
       </div>
     </div>
-    <div class="row align-items-end">
-      <div
-        class="col-auto ms-4 mb-2 slide-out-columnX"
-        :class="{
-          'slide-out-columnX': isOptionsVisible,
-          hiddenX: !isOptionsVisible,
-        }"
-      >
-        <div class="row">
-          <div class="col butt-col">
-            <div class="row align-items-center">
-              <div class="col">
-                <button
-                  @click="toggleSmLights"
-                  class="buttonSet"
-                  :class="{ active: isSmLightsEnabled }"
-                >
-                  <Headlight class="optin" />
-                </button>
-              </div>
-              <div class="col">
-                <button class="buttonSet mic">
-                  <Mic class="optin" />
-                </button>
-              </div>
-              <div class="col">
-                <button class="buttonSet sound">
-                  <Sound class="optin" />
-                </button>
-              </div>
-              <div class="col">
-                <button
-                  @click="toggleStrobeLights"
-                  class="buttonSet"
-                  :class="{ active: isStrobeEnabled }"
-                >
-                  <Strobe class="optin" />
-                </button>
-              </div>
-            </div>
+    <div class="row align-items-center">
+      <div class="col-auto slide-out-columnX px-0" :class="{ 'slide-out-columnX': isOptionsVisible, hiddenX: !isOptionsVisible }">
+        <div class="row align-items-center butt-col">
+          <div class="col">
+            <button @click="toggleSmLights" class="buttonSet" :class="{ active: isSmLightsEnabled }">
+              <Headlight class="optin" />
+            </button>
+          </div>
+          <div class="col">
+            <button class="buttonSet mic">
+              <Mic class="optin" />
+            </button>
+          </div>
+          <div class="col">
+            <button class="buttonSet sound">
+              <Sound class="optin" />
+            </button>
+          </div>
+          <div class="col">
+            <button @click="toggleStrobeLights" class="buttonSet" :class="{ active: isStrobeEnabled }">
+              <Strobe class="optin" />
+            </button>
           </div>
           <div class="col-auto">
             <div class="row align-items-center">
-              <button class="tongue" @click="toggleOptions">
-                <div class="col">
+              <button class="tongue-op" @click="toggleOptions">
+                <div class="col-auto">
                   <div class="row-cols-1 align-items-center">
-                    <div
-                      class="col-auto d-sm-none d-lg-block"
-                      :style="{
-                        transform: isOptionsVisible
-                          ? 'rotate(90deg)'
-                          : 'rotate(-90deg)',
-                      }"
-                    >
+                    <div class="col-auto d-sm-none d-lg-block" :style="{ transform: isOptionsVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
                       <Polygon class="optin-min" />
                     </div>
                     <div class="col-auto">
@@ -283,27 +170,12 @@
           </div>
         </div>
       </div>
-      <div
-        class="col slide-out-columnY"
-        :class="{
-          'slide-out-columnY': isCameraVisible,
-          hidden: !isCameraVisible,
-        }"
-      >
+      <div class="col slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, hidden: !isCameraVisible }">
         <div class="row">
           <div class="col">
-            <button
-              class="px-3 button"
-              @click="toggleCamera"
-              style="position: absolute; right: -46px; top: -168px"
-            >
+            <button class="px-3 button" @click="toggleCamera" style="position: absolute; right: 0px; top: -30px">
               <div class="row align-items-center">
-                <div
-                  class="col-auto px-lg-1 px-sm-0"
-                  :style="{
-                    transform: isCameraVisible ? 'none' : 'scale(-1, -1)',
-                  }"
-                >
+                <div class="col-auto px-lg-1 px-sm-0" :style="{ transform: isCameraVisible ? 'none' : 'scale(-1, -1)' }">
                   <Polygon class="optin-min" />
                 </div>
                 <div class="col px-1">
@@ -313,13 +185,13 @@
             </button>
           </div>
         </div>
-        <div class="row" style="position: absolute; bottom: -23px">
-          <div class="col-auto d-flex justify-content-start">
-            <img id="depth" class="slide-out img" />
+        <div class="row">
+          <div class="col d-flex justify-content-start px-0">
+            <img id="depth" class="slide-out img" alt="backCam"/>
           </div>
         </div>
       </div>
-      <div class="col">
+      <div class="col d-flex justify-content-end">
         <camSettings />
       </div>
     </div>
@@ -400,7 +272,7 @@ export default {
       },
       cmdVel: 0,
       c1_msg: {},
-      streamSrc: "http://192.168.0.106:1984/api/stream.mjpeg?src=linux_webcam",
+      streamSrc: "http://192.168.0.17:1984/stream.html?src=camera_1&mode=mse,mjpeg",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
     };
@@ -481,7 +353,7 @@ export default {
     });
     setTimeout(() => {
       this.handleError();
-    }, 700);
+    }, 1500);
     var listner1 = new ROSLIB.Topic({
       ros: this.ros,
       name: "/c1_telem",
@@ -625,10 +497,6 @@ export default {
           cmd: "SM_LIGHTS_EN",
         });
       }
-
-      cmd_srv.callService(request, function (result) {
-        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
-      });
       console.log(request);
     },
     set_strobe_lights() {
@@ -646,48 +514,18 @@ export default {
           cmd: "STROBE_EN",
         });
       }
-
-      cmd_srv.callService(request, function (result) {
-        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
-      });
       console.log(request);
     },
     joystick_move(evt, data) {
-      this.lin_speed =
-        Math.round(
-          Math.min(
-            Math.max(
-              data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force,
-              -this.lin_max_speed
-            ),
-            this.lin_max_speed
-          ) * 100
-        ) / 100;
+      this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
 
       // Если lin_speed отрицательна, меняем знак у ang_speed
-      if (this.lin_speed < -0.15) {
-        this.ang_speed =
-          Math.round(
-            Math.min(
-              Math.max(
-                data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force,
-                -this.ang_max_speed
-              ),
-              this.ang_max_speed
-            ) * 100
-          ) / 100;
+      if (this.lin_speed < -0.15) { 
+        this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
       } else {
-        this.ang_speed =
-          -Math.round(
-            Math.min(
-              Math.max(
-                data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force,
-                -this.ang_max_speed
-              ),
-              this.ang_max_speed
-            ) * 100
-          ) / 100;
+        this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
       }
+      console.log(this.lin_speed);
     },
     joystick_start(evt, data) {},
     joystick_end(evt, data) {
@@ -744,9 +582,10 @@ export default {
 <style scoped>
 .main {
   overflow: hidden;
-  margin-inline: -0.75rem;
   position: relative;
-  height: 100vh;
+  padding: 10px;
+  margin-inline: -0.75rem;
+  height: 100dvh;
 }
 
 .video {
@@ -770,11 +609,11 @@ export default {
   max-width: 20rem;
 }
 .map {
-  border: solid var(--grey2) 0.25rem;
+  border: 2px solid var(--grey2);
   border-radius: 1.125rem;
 }
 .caption {
-  font-size: 1.35rem;
+  font-size: 1rem;
   color: var(--text-color);
 }
 .button {
@@ -793,27 +632,34 @@ export default {
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(-422px);
+  transform: translateX(-420px);
 }
 .slide-out-columnX.mapHide {
-  transform: translateX(-320px);
+  transform: translateX(-318px);
 }
 .slide-out-columnX.slideHide {
-  transform: translateX(-320px);
+  transform: translateX(-318px);
 }
 .slide-out-columnY.hidden {
-  transform: translateY(154px);
+  transform: translateY(160px);
 }
 .img {
   border-top-left-radius: 1.125rem;
   border: solid var(--grey2) 0.125rem;
   box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, 0.25);
   width: 370px;
-  height: 154px;
+  height: 160px;
+}
+.tongue-op {
+  background-color: transparent;
+  border: none;
+  border-left: 2px solid var(--grey2);
+  padding-block: 5px;
+  color: var(--text-color);
 }
 .tongue {
   background-color: var(--bg-tertiary);
-  border: solid 0.125rem var(--grey2);
+  border: 2px solid var(--grey2);
   border-top-right-radius: 1.125rem;
   border-bottom-right-radius: 1.125rem;
   padding-block: 5px;
@@ -845,21 +691,21 @@ td {
 }
 td.start1 {
   text-align: center;
-  width: 8rem;
+  width: 7.5rem;
   @media (max-width: 896px) {
     width: 5rem;
   }
 }
 td.end1 {
   text-align: center;
-  width: 8rem;
+  width: 7.5rem;
   @media (max-width: 896px) {
     width: 5rem;
   }
 }
 .speedometr {
   font-family: "Shine More";
-  font-size: 2.2rem;
+  font-size: 2rem;
   margin: 0;
   padding: 0;
   @media (max-width: 896px) {
@@ -872,31 +718,32 @@ td.end1 {
 }
 .butt-col {
   background-color: var(--bg-tertiary);
-  border: solid var(--grey2) 0.125rem;
-  padding-block: 14px;
-  border-top-left-radius: 1.125rem;
-  border-bottom-left-radius: 1.125rem;
+  border: 2px solid var(--grey2);
+  margin-inline: 12px;
+  border-radius: 1.125rem;
 }
 .slide {
   background-color: var(--bg-tertiary);
   border-radius: 1.125rem;
-  border: solid var(--grey2);
+  border: 2px solid var(--grey2);
 }
 .caption_low {
-  font-size: 1.3rem;
-  margin-bottom: -1.3rem;
+  font-size: 1.15rem;
+}
+.form-label {
+  display: inline;
 }
 .lin_speed {
-  margin-bottom: -1rem;
+  margin-bottom: -0.5rem;
 }
 .robot_rotate {
-  margin-bottom: -1rem;
+  margin-bottom: -0.5rem;
 }
 .brush_speed {
-  margin-bottom: -1rem;
+  margin-bottom: -0.5rem;
 }
 .brush_rotate {
-  margin-bottom: -1rem;
+  margin-bottom: -0.5rem;
 }
 .range-container {
   position: relative;
@@ -963,12 +810,12 @@ td.end1 {
   }
   .tongue {
     background-color: var(--bg-tertiary);
-    border: solid 0.125rem var(--grey2);
-    border-top-right-radius: 1.125rem;
-    border-bottom-right-radius: 1.125rem;
+    border: none;
+    border-left: 2px solid var(--grey2);
     padding: 1px;
     color: var(--text-color);
   }
+  
   .bi {
     font-size: 1rem;
   }

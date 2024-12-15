@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex mb-2 justify-content-end me-2">
+    <div class="mb-2">
         <div class="btn-group dropstart">
             <button class="set" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                 <settingsSVG />

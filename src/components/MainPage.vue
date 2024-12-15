@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <div class="row">
         <div class="col">
           <ThemeSwithcer></ThemeSwithcer>
