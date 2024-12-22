@@ -1,9 +1,22 @@
 <template>
   <div class="main">
-    <iframe class="video" scrolling="no" :src="streamSrc" @load="handleLoad" />
-    <!-- <img v-else class="video" scrolling="no" :src="placeholderSrc" /> -->
+    <swiper
+      :slidesPerView="1"
+      :spaceBetween="0"
+      :freeMode="true"
+      :modules="modules"
+      class="overlay-video"
+    >
+      <swiper-slide>
+        <iframe class="video" scrolling="no" nocontrols :src="camera_0" @load="handleLoad" />
+      </swiper-slide>
+      <swiper-slide>
+        <iframe class="video" scrolling="no" :src="camera_3" @load="handleLoad" />
+      </swiper-slide>
+    </swiper>
+    
     <div class="row">
-      <div class="col">
+      <div class="col-auto pe-1 z-1">
         <div class="row slide-out-columnX d-sm-none d-lg-flex" :class="{ 'slide-out-columnX': isMapVisible, mapHide: !isMapVisible }">
           <div class="col pe-0 map-col">
             <Map class="map" />
@@ -83,10 +96,18 @@
           </div>
         </div>
       </div>
-      <div class="col"></div>
-      <div class="col">
+      <div class="col px-0">
+        <div class="row mx-0">
+          <div class="col overlay-side">
+            <vue-draggable-resizable :w="920" :h="auto" :resizable="false" style="background-color: transparent; border: none;">
+                <iframe class="side-video-left" scrolling="no" :src="cameras_side" @load="handleLoad" />
+            </vue-draggable-resizable>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto ps-1">
         <div class="row justify-content-end">
-          <div class="col-auto">
+          <div class="col-auto z-1">
             <table class="current" style="">
               <tr>
                 <td class="start1 px-lg-2 px-0 rounded-3">
@@ -104,7 +125,6 @@
               </tr>
               <tr>
                 <td class="text-center rounded-3 px-lg-2 px-0">
-                  <!-- <span><i class="bi bi-robot"></i></span> -->
                    <span>{{ bkmStore.selectedBkm }}</span>
                 </td>
                 <td class="text-center rounded-3 px-lg-2 px-0">
@@ -213,6 +233,12 @@ import ROSLIB from "roslib/src/RosLib";
 import Map from "./maps/Map1.vue";
 import camSettings from "./camSettings.vue";
 import { useBkmStore } from "../stores/bkmStore";
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+import 'swiper/css';
+import "swiper/css/free-mode";
+
+import { FreeMode } from 'swiper/modules';
 
 export default {
   name: "TeleopPage",
@@ -227,6 +253,8 @@ export default {
     Brush,
     Strobe,
     camSettings,
+    Swiper,
+    SwiperSlide
   },
   data: function () {
     return {
@@ -279,10 +307,19 @@ export default {
       cmdVel: 0,
       speedCmd: 0,
       c1_msg: {},
-      streamSrc: "http://192.168.0.17:1984/stream.html?src=camera_1&mode=mse,mjpeg",
+      camera_0: "http://192.168.0.20:1984/stream.html?src=camera_0",
+      camera_1: "http://192.168.0.20:1984/stream.html?src=camera_1",
+      camera_2: "http://192.168.0.20:1984/stream.html?src=camera_2",
+      camera_3: "http://192.168.0.20:1984/stream.html?src=camera_3",
+      cameras_side: "http://192.168.0.20:1984/stream.html?src=camera_1&src=camera_2",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
     };
+  },
+  setup() {
+    return {
+      modules: [FreeMode]
+    }
   },
 
   computed: {
@@ -647,14 +684,41 @@ export default {
   margin-inline: -0.75rem;
   height: 100dvh;
 }
-
+.overlay-video {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+.overlay-side {
+  position: relative;
+  box-sizing: border-box;
+  z-index: 2;
+  scale: 0.7;
+  /* pointer-events: none; */
+  
+}
+.side-video-left {
+  /* position: absolute; */
+  top: 0;
+  left: -110px;
+  width: 100vh;
+  height: 100%;
+  /* max-height: 204px; */
+  pointer-events: none;
+  border-radius: 18px;
+  border: 2px solid var(--grey2);
+}
 .video {
   top: 0;
   left: 0;
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: -2;
+  pointer-events: none;
 }
 .zone {
   position: relative;
@@ -681,7 +745,6 @@ export default {
   background-color: var(--bg-tertiary);
   border-radius: 1.125rem 1.125rem 0 0;
   border: solid 0.125rem var(--grey2);
-  z-index: 1;
 }
 .slide-out-columnY {
   transition: transform 0.5s ease;
@@ -695,10 +758,10 @@ export default {
   transform: translateX(-420px);
 }
 .slide-out-columnX.mapHide {
-  transform: translateX(-318px);
+  transform: translateX(-280px);
 }
 .slide-out-columnX.slideHide {
-  transform: translateX(-318px);
+  transform: translateX(-280px);
 }
 .slide-out-columnY.hidden {
   transform: translateY(160px);
@@ -751,21 +814,21 @@ td {
 }
 td.start1 {
   text-align: center;
-  width: 7.5rem;
+  width: 5.95rem;
   @media (max-width: 896px) {
     width: 5rem;
   }
 }
 td.end1 {
   text-align: center;
-  width: 7.5rem;
+  width: 5.95rem;
   @media (max-width: 896px) {
     width: 5rem;
   }
 }
 .speedometr {
   font-family: "Shine More";
-  font-size: 2rem;
+  font-size: 1.25rem;
   margin: 0;
   padding: 0;
   @media (max-width: 896px) {

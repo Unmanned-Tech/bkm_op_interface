@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="emerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="emerModal" tabindex="-1" data-bs-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -7,7 +7,7 @@
         </div>
         <div class="modal-footer">
           <button  type="button" class="button cancel" data-bs-dismiss="modal"><p class="cap">Отмена</p></button>
-          <button v-on:click="send_emerstop()" type="button" class="button" data-bs-dismiss="modal"><p class="cap">Остановить</p></button>
+          <button @click="send_emerstop()" type="button" class="button" data-bs-dismiss="modal"><p class="cap">Остановить</p></button>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@ export default {
   name: "EmerStopButton",
   methods: {
     send_emerstop() {
-      const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
+      const ros = new ROSLIB.Ros({ url: "ws://192.168.2.111:9090" });
       console.info("EmerStop");
       var EmerStopSrv = new ROSLIB.Service({
         ros: ros,
@@ -43,14 +43,15 @@ export default {
 
 <style scoped>
 .button {
-    box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
-    background-color: var(--red);
-    border-radius: 1.125rem;
-    color: var(--text-color);
-    border: none;
-    font-weight: 400;
-    font-size: 1.5rem;
-  }
+  box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
+  background-color: var(--red);
+  border-radius: 1.125rem;
+  color: var(--text-color);
+  border: none;
+  font-weight: 400;
+  font-size: 1.5rem;
+  position: relative;
+}
 .cap {
   margin: .5rem .5rem;
 }
