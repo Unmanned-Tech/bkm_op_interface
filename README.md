@@ -38,5 +38,5 @@ npm run build
 ## Конфигурация
 Для дополнительной настройки конфигурации Vite посетите [Vite Configuration Reference](https://vitejs.dev/config/).\
 
-## Лицензия
-Проект лицензирован по лицензии [GPL-3.0](https://github.com/sibadi-robotics/bkm_op_interface/blob/master/LICENSE).
+<!-- ## Лицензия
+Проект лицензирован по лицензии [GPL-3.0](https://github.com/sibadi-robotics/bkm_op_interface/blob/master/LICENSE).-->
