@@ -36,7 +36,7 @@
                     <div>Заряд батареи</div>
                   </div>
                   <div class="col-md-3 inf end d-flex">
-                    <div class="battery_stat">42%</div>
+                    <div class="battery_stat" :style="{ backgroundColor: getChargeColor(charge) }">{{ charge }} %</div>
                   </div>
                 </div>
                 <div class="row mt-5">
@@ -119,8 +119,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onBeforeMount } from 'vue';
 import { fetchDataByOption } from '../fetchDataByOption';
+import ROSLIB from "roslib/src/RosLib";
+
+const charge = ref(0);
 
 const getBackgroundColor = (status) => {
   switch (status) {
@@ -132,12 +135,39 @@ const getBackgroundColor = (status) => {
       return 'var(--text-color)';
   }
 };
+const getChargeColor = (charge) => {
+  if (charge > 50) {
+    return 'var(--green)';
+  } else if (charge <= 50 && charge > 20) {
+    return 'var(--orange)';
+  } else if (charge <= 20) {
+    return 'var(--red)';
+  }
+};
 
 const isLastColumn = ref((index) => {
   return index === filteredTasks.value.length - 1;
 });
 
 const filteredTasks = computed(() => fetchDataByOption('БКМ-2'));
+
+onBeforeMount(() => {
+  var ros = new ROSLIB.Ros({ url: "ws://192.168.0.17:9090" });
+  ros.on("connection", function () {
+    console.log("Connected to websocket server.");
+  });
+
+  const bmsData = new ROSLIB.Topic({
+    ros: ros,
+    name: "/bms_data",
+    messageType: "mcu_msgs/msg/BMSData"
+  });
+
+  bmsData.subscribe(set_soc);
+  function set_soc(msg) {
+    charge.value = msg.soc;
+  }
+});
 </script>
 
 <script>
@@ -324,7 +354,7 @@ td.last {
   }
 }
 .battery_stat {
-  background-color: var(--orange);
+  /* background-color: var(--orange); */
   padding: .125rem .5rem;
   border-radius: 1.125rem;
 }

@@ -6,17 +6,13 @@
             </button>
             <div class="dropdown-menu animate fade">
                 <div class="dropdown-header">
-                    <div class="row mb-1 align-items-center">
-                        <div class="col-auto">
+                    <div class="row mb-3 align-items-center">
+                        <div class="col">
                             <div class="caption">Настройки</div>
                         </div>
-                        <div class="col d-flex justify-content-end">
-                            <button class="reset" @click="reset">
-                                <resetSVG />
-                            </button>
-                        </div>
+                        
                     </div>
-                    <h5>Камера</h5>
+                    <!-- <h5>Камера</h5>
                     <div class="mb-2">Режим экспозиции (по умолчанию: Auto):</div>
                     <div class="row justify-content-center">
                         <div class="col-auto">
@@ -37,7 +33,7 @@
                     <div class="contrast">
                         <div class="mt-2">Контраст (по умолчанию: 50): <span>{{ contrast }}</span></div>
                         <input type="range" class="form-range"  min="0"  max="100"  v-model="contrast"  step="1"  id="contrast" @change="sendContrast"/>
-                    </div>
+                    </div> -->
                     <h5>БКМ</h5>
                     <select class="form-select" v-model="selectedBkm" aria-label="Default select example">
                         <option disabled>Выбор БКМ</option>
@@ -198,7 +194,7 @@ export default {
     box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
     background-color: var(--grey2);
     padding: .25rem;
-    border-radius: 1rem;
+    border-radius: 12px;
     border: none;
 }
 </style>

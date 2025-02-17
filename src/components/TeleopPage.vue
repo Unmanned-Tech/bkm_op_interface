@@ -31,13 +31,13 @@
           </div>
         </div>
         <div class="row my-1 my-lg-2 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, slideHide: !isSliderVisible }">
-          <div class="col pe-0 slide-col">
+          <div class="col-auto pe-0 slide-col">
             <div class="slide p-3 py-1">
               <div class="lin_speed">
                 <label for="lin_max_speed_range" class="form-label">
                   <div class="row">
                     <span class="col caption_low">Скорость робота</span>
-                    <span class="col-auto d-flex justify-content-end caption_low" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
+                    <span class="col-auto d-flex justify-content-end caption_low_num" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
                   </div>
                 </label>
                 <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="5" value="0" step="1" id="lin_max_speed_range"/>
@@ -46,7 +46,7 @@
                 <label for="ang_max_speed_range" class="form-label">
                   <div class="row">
                     <span class="col caption_low pe-1">Скорость поворота</span>
-                    <span class="col-auto d-flex justify-content-end caption_low" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
+                    <span class="col-auto d-flex justify-content-end caption_low_num" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
                   </div>
                 </label>
                 <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".25" id="ang_max_speed_range"/>
@@ -55,7 +55,7 @@
                 <label for="brush_speed_range" class="form-label">
                   <div class="row">
                     <span class="col caption_low">Скорость щётки</span>
-                    <span class="col-auto d-flex justify-content-center caption_low" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
+                    <span class="col-auto d-flex justify-content-end caption_low_num" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
                   </div>
                 </label>
                 <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" v-model="brush_speed" step="20" id="brush_speed_range" />
@@ -167,6 +167,11 @@
               <Strobe class="optin" />
             </button>
           </div>
+          <div class="col">
+            <button @click="toggleSideLights" class="buttonSet" :class="{ active: isSideEnabled }">
+              <SideLights class="optin" />
+            </button>
+          </div>
           <div class="col-auto">
             <div class="row align-items-center">
               <button class="tongue-op" @click="toggleOptions">
@@ -191,27 +196,7 @@
           </div>
         </div>
       </div>
-      <div class="col slide-out-columnY" :class="{ 'slide-out-columnY': isCameraVisible, hidden: !isCameraVisible }">
-        <div class="row">
-          <div class="col">
-            <button class="px-3 button" @click="toggleCamera" style="position: absolute; right: 0px; top: -30px">
-              <div class="row align-items-center">
-                <div class="col-auto px-lg-1 px-sm-0" :style="{ transform: isCameraVisible ? 'none' : 'scale(-1, -1)' }">
-                  <Polygon class="optin-min" />
-                </div>
-                <div class="col px-1">
-                  <span class="caption">Вид сзади</span>
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col d-flex justify-content-start px-0">
-            <img id="depth" class="slide-out img" alt="backCam"/>
-          </div>
-        </div>
-      </div>
+      <!-- <div class="col"></div> -->
       <div class="col d-flex justify-content-end">
         <camSettings />
       </div>
@@ -223,6 +208,7 @@
 import Mic from "../assets/mic-fill.svg";
 import Sound from "../assets/sound.svg";
 import Lights from "../assets/Lights.svg";
+import SideLights from "../assets/SideLights.svg";
 import Polygon from "../assets/Polygon.svg";
 import Headlight from "../assets/headlights.svg";
 import Brush from "../assets/brush.svg";
@@ -254,7 +240,8 @@ export default {
     Strobe,
     camSettings,
     Swiper,
-    SwiperSlide
+    SwiperSlide,
+    SideLights
   },
   data: function () {
     return {
@@ -266,6 +253,7 @@ export default {
       isMapVisible: false,
       isSliderVisible: false,
       isStrobeEnabled: true,
+      isSideEnabled: true,
       brush_speed: 0,
       brush_angle: 0,
       lin_max_speed: 0,
@@ -430,6 +418,10 @@ export default {
       this.set_strobe_lights();
       this.isStrobeEnabled = !this.isStrobeEnabled;
     },
+    toggleSideLights() {
+      this.set_side_lights();
+      this.isSideEnabled = !this.isSideEnabled;
+    },
     disable_brush_speed() {
       document.getElementById("brush_speed_range").value = 0;
       this.brush_speed = 0;
@@ -526,42 +518,65 @@ export default {
       cmd_srv.callService(request, function(result) {
 
       });
-      console.log(request); 
     },
     set_sm_lights() {
       var cmd_srv = new ROSLIB.Service({
         ros: this.ros,
-        name: "/bkm_cmd_srv",
-        serviceType: "mcu_msgs/srv/TextCmd",
+        name: "/control_light",
+        serviceType: "mcu_msgs/srv/LightControl",
       });
 
       if (this.isSmLightsEnabled) {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "SM_LIGHTS_DIS",
+          command: 'C_HL_OFF',
+          parameter: '0',
         });
       } else {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "SM_LIGHTS_EN",
+          command: 'C_HL_ON',
+          parameter: '255'
         });
       }
       console.log(request);
+      cmd_srv.callService(request);
     },
     set_strobe_lights() {
       var cmd_srv = new ROSLIB.Service({
         ros: this.ros,
-        name: "/bkm_cmd_srv",
-        serviceType: "mcu_msgs/srv/TextCmd",
+        name: "/control_light",
+        serviceType: "mcu_msgs/srv/LightControl",
       });
       if (this.isStrobeEnabled) {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "STROBE_DIS",
+          command: "C_FL_OFF",
+          parameter: '0'
         });
       } else {
         var request = new ROSLIB.ServiceRequest({
-          cmd: "STROBE_EN",
+          command: "C_FL_ON",
+          parameter: '255'
         });
       }
-      console.log(request);
+      cmd_srv.callService(request);
+    },
+    set_side_lights() {
+      var cmd_srv = new ROSLIB.Service({
+        ros: this.ros,
+        name: "/control_light",
+        serviceType: "mcu_msgs/srv/LightControl",
+      });
+      if (this.isStrobeEnabled) {
+        var request = new ROSLIB.ServiceRequest({
+          command: "C_SL_OFF",
+          parameter: '0'
+        });
+      } else {
+        var request = new ROSLIB.ServiceRequest({
+          command: "C_SL_ON",
+          parameter: '255'
+        });
+      }
+      cmd_srv.callService(request);
     },
     joystick_move(evt, data) {
       this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
@@ -698,10 +713,9 @@ export default {
   z-index: 2;
   scale: 0.7;
   /* pointer-events: none; */
-  
 }
 .side-video-left {
-  /* position: absolute; */
+  position: absolute;
   top: 0;
   left: -110px;
   width: 100vh;
@@ -736,42 +750,18 @@ export default {
   border: 2px solid var(--grey2);
   border-radius: 1.125rem;
 }
-.caption {
-  font-size: 1rem;
-  color: var(--text-color);
-}
-.button {
-  box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, 0.25);
-  background-color: var(--bg-tertiary);
-  border-radius: 1.125rem 1.125rem 0 0;
-  border: solid 0.125rem var(--grey2);
-}
-.slide-out-columnY {
-  transition: transform 0.5s ease;
-  transform: translateY(0);
-}
 .slide-out-columnX {
   transition: transform 0.5s ease;
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(-420px);
+  transform: translateX(-522px);
 }
 .slide-out-columnX.mapHide {
-  transform: translateX(-280px);
+  transform: translateX(-315px);
 }
 .slide-out-columnX.slideHide {
-  transform: translateX(-280px);
-}
-.slide-out-columnY.hidden {
-  transform: translateY(160px);
-}
-.img {
-  border-top-left-radius: 1.125rem;
-  border: solid var(--grey2) 0.125rem;
-  box-shadow: 4px -4px 4px 0 rgba(0, 0, 0, 0.25);
-  width: 370px;
-  height: 160px;
+  transform: translateX(-315px);
 }
 .tongue-op {
   background-color: transparent;
@@ -851,6 +841,10 @@ td.end1 {
   border: 2px solid var(--grey2);
 }
 .caption_low {
+  font-size: 1.15rem;
+}
+.caption_low_num {
+  min-width: 120px;
   font-size: 1.15rem;
 }
 .form-label {
