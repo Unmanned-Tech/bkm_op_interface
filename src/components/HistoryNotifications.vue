@@ -68,7 +68,7 @@
 
 <script>
 import * as roslib from "../../roslib.js";
-import { useConfigStore } from "../stores/ConfigStore";
+import { useRosStore } from "@/stores/ConfigStore";
 import segmentedForHist from "./ButtonsBKM/segmentedForHist.vue";
 import formSearch from "./ButtonsBKM/formSearch.vue";
 import { fetchDataByOption1 } from "./fetchDataByOption";
@@ -99,6 +99,7 @@ export default {
   setup() {
     const router = useRouter();
     const store = useThreeStore();
+    const rosStore = useRosStore();
     const searchQuery = ref("");
     const selectedOption = ref("");
     const selectedStatus = computed(() => {
@@ -143,30 +144,25 @@ export default {
       selectedOption,
       selectedStatus,
       goBack,
+      rosStore,
     };
   },
   mounted: function () {
-    this.ConfigStore = useConfigStore();
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
-
-    this.ros.on("connection", () => {
-      console.log("Connected to websocket server.");
-    });
 
     var listener1 = new ROSLIB.Topic({
-      ros: this.ros,
+      ros: rosStore.ros,
       name: "/c1_telem",
       messageType: "mcu_msgs/msg/BldcStatus",
     });
     listener1.subscribe(this.set_c1_msg.bind(this));
     var listener2 = new ROSLIB.Topic({
-      ros: this.ros,
+      ros: rosStore.ros,
       name: "/c2_telem",
       messageType: "mcu_msgs/msg/BldcStatus",
     });
     listener2.subscribe(this.set_c2_msg.bind(this));
     var listener3 = new ROSLIB.Topic({
-      ros: this.ros,
+      ros: rosStore.ros,
       name: "/ce_telem",
       messageType: "mcu_msgs/msg/BldcStatus",
     });

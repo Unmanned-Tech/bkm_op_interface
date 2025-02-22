@@ -10,34 +10,11 @@
                         <div class="col">
                             <div class="caption">Настройки</div>
                         </div>
-                        
                     </div>
-                    <!-- <h5>Камера</h5>
-                    <div class="mb-2">Режим экспозиции (по умолчанию: Auto):</div>
-                    <div class="row justify-content-center">
-                        <div class="col-auto">
-                            <button class="tongue" :class="{ active: exposureMode === 0 }" @click="sendExposure(0)">
-                                Auto
-                            </button>
-                        </div>
-                        <div class="col-auto">
-                            <button class="tongue" :class="{ active: exposureMode === 2 }" @click="sendExposure(2)">
-                                Manual
-                            </button>
-                        </div>
-                    </div>
-                    <div class="brightness">
-                        <div class="mt-2">Яркость (по умолчанию: 0): <span>{{ brightness }}</span></div>
-                        <input type="range" class="form-range"  min="-64"  max="64"  v-model="brightness" step="1"  id="brightness" @change="sendBrightness"/>
-                    </div>
-                    <div class="contrast">
-                        <div class="mt-2">Контраст (по умолчанию: 50): <span>{{ contrast }}</span></div>
-                        <input type="range" class="form-range"  min="0"  max="100"  v-model="contrast"  step="1"  id="contrast" @change="sendContrast"/>
-                    </div> -->
                     <h5>БКМ</h5>
                     <select class="form-select" v-model="selectedBkm" aria-label="Default select example">
                         <option disabled>Выбор БКМ</option>
-                        <option selected value="БКМ-1">БКМ-1</option>
+                        <option value="БКМ-1">БКМ-1</option>
                         <option value="БКМ-2">БКМ-2</option>
                     </select>
                 </div>
@@ -48,7 +25,6 @@
 
 <script>
 import settingsSVG from '/src/assets/settings.svg';
-import axios from 'axios';
 import resetSVG from '/src/assets/arrow-repeat.svg';
 import { useBkmStore } from '../stores/bkmStore';
 
@@ -56,13 +32,6 @@ export default {
     components: {
         settingsSVG,
         resetSVG,
-    },
-    data: function() {
-        return {
-            brightness: 0,
-            contrast: 50,
-            exposureMode: 0,
-        }
     },
 
     computed: {
@@ -76,59 +45,6 @@ export default {
             set(value) {
                 this.bkmStore.setBkm(value);
             }
-        }
-    },
-
-    mounted: function() {
-        if (localStorage.getItem('brightness')) {
-            this.brightness = parseInt(localStorage.getItem('brightness'));
-        }
-        if (localStorage.getItem('contrast')) {
-            this.contrast = parseInt(localStorage.getItem('contrast'));
-        }
-        this.sendExposure(0);
-    },
-
-    methods: {
-        async sendExposure(mode) {
-            try {
-                const response = await axios.post('http://192.168.1.1:5000/send_command', {
-                    command: `v4l2-ctl -d /dev/video0 --set-ctrl=auto_exposure=${mode}`
-                });
-                console.log(response.data);
-                this.exposureMode = mode;
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async sendBrightness() {
-            try {
-                const response = await axios.post('http://192.168.1.1:5000/send_command', {
-                    command: `v4l2-ctl -d /dev/video0 --set-ctrl brightness=${ this.brightness }`
-                });
-                console.log(response.data);
-                localStorage.setItem('brightness', this.brightness);
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        async sendContrast() {
-            try {
-                const response = await axios.post('http://192.168.1.1:5000/send_command', {
-                    command: `v4l2-ctl -d /dev/video0 --set-ctrl contrast=${ this.contrast }`
-                });
-                console.log(response.data);
-                localStorage.setItem('contrast', this.contrast);
-            } catch (error) {
-                console.error(error)
-            }
-        },
-        reset() {
-            this.brightness = 0;
-            this.contrast = 50;
-            this.sendBrightness();
-            this.sendContrast();
-            this.sendExposure(0);
         }
     },
 }

@@ -19,7 +19,7 @@
               <div class="col">
                 <div class="row mb-2">
                   <div class="col-md-2 inf start">
-                    <robotSVG></robotSVG>
+                    <robotSVG />
                   </div>
                   <div class="col d-flex align-items-center inf cap">
                     <div>Робот</div>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="row mb-2">
                   <div class="col-md-2 inf start">
-                    <batterySVG></batterySVG>
+                    <batterySVG />
                   </div>
                   <div class="col d-flex align-items-center inf cap">
                     <div>Заряд батареи</div>
@@ -83,7 +83,7 @@
                     <tbody>
                       <tr v-for="(task, index) in filteredTasks" :key="index" :style="{ color: getBackgroundColor(task.status) }">
                         <td class="left-cell" :class="{ 'last-cell-left': isLastColumn(index) }" @click="handleEditClick">{{ task.name }}</td>
-                        <td :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick">{{ task.status }}</td>                      
+                        <td :class="{ 'last-cell-right': isLastColumn(index) }" @click="handleEditClick">{{ task.status }}</td>                       
                       </tr>
                     </tbody>
                   </table>
@@ -97,10 +97,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="">
+                      <tr>
                         <td class="left-cell last">З.Камера</td>
                         <td class="last">
-                          <p class="error mb-0 ">Загрязнение</p>
+                          <p class="error mb-0">Загрязнение</p>
                         </td>
                       </tr>
                     </tbody>
@@ -119,11 +119,18 @@
 </template>
 
 <script setup>
-import { computed, ref, onBeforeMount } from 'vue';
+import { computed, ref, onMounted, } from 'vue';
 import { fetchDataByOption } from '../fetchDataByOption';
-import ROSLIB from "roslib/src/RosLib";
+import { useRosStore } from "@/stores/ConfigStore";
 
-const charge = ref(0);
+import arrowSVG from '/src/assets/arrow.svg';
+import batterySVG from '/src/assets/battery.svg';
+import robotSVG from '/src/assets/android.svg';
+import otherSVG from '/src/assets/three-dots.svg';
+
+const charge = ref("-");
+const rosStore = useRosStore();
+const date = ref(Date.now());
 
 const getBackgroundColor = (status) => {
   switch (status) {
@@ -135,6 +142,7 @@ const getBackgroundColor = (status) => {
       return 'var(--text-color)';
   }
 };
+
 const getChargeColor = (charge) => {
   if (charge > 50) {
     return 'var(--green)';
@@ -145,85 +153,47 @@ const getChargeColor = (charge) => {
   }
 };
 
-const isLastColumn = ref((index) => {
+const isLastColumn = (index) => {
   return index === filteredTasks.value.length - 1;
-});
+};
 
 const filteredTasks = computed(() => fetchDataByOption('БКМ-2'));
 
-onBeforeMount(() => {
-  var ros = new ROSLIB.Ros({ url: "ws://192.168.0.17:9090" });
-  ros.on("connection", function () {
-    console.log("Connected to websocket server.");
-  });
+const localeDate = computed(() => {
+  const dateOptions = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
+  return new Date(date.value).toLocaleDateString(undefined, dateOptions);
+});
+
+const localeTime = computed(() => {
+  const timeOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  };
+  return new Date(date.value).toLocaleTimeString(undefined, timeOptions);
+});
+
+onMounted(() => {
+  if (!rosStore.isConnected) {
+    rosStore.connect();
+  }
 
   const bmsData = new ROSLIB.Topic({
-    ros: ros,
+    ros: rosStore.ros,
     name: "/bms_data",
-    messageType: "mcu_msgs/msg/BMSData"
+    messageType: "mcu_msgs/msg/BMSData",
   });
 
-  bmsData.subscribe(set_soc);
-  function set_soc(msg) {
+  bmsData.subscribe((msg) => {
     charge.value = msg.soc;
-  }
+  });
+
+  setInterval(() => date.value = Date.now(), 1000);
 });
-</script>
-
-<script>
-import arrowSVG from '/src/assets/arrow.svg';
-import batterySVG from '/src/assets/battery.svg';
-import robotSVG from '/src/assets/android.svg';
-import otherSVG from '/src/assets/three-dots.svg';
-
-
-export default {
-
-  data() {
-    return {
-      date: 1580558031264,
-    }
-  },
-  
-  components: {
-    robotSVG,
-    batterySVG,
-    otherSVG,
-    arrowSVG,
-  },
-
-  computed: {
-    localeDate() {
-      const dateOptions = {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      };
-      
-      const dateString = new Date(this.date).toLocaleDateString(undefined, dateOptions);
-      
-      return dateString
-    },
-    localeTime() {
-      const timeOptions = {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: false,
-      };
-      const timeString = new Date(this.date).toLocaleTimeString(undefined, timeOptions);
-      return timeString
-    },
-  },
-  created() {
-    this.intervalId = setInterval(() => this.date = Date.now(), 1000);
-  },
-
-  beforeDestroy() {
-    if (this.intervalId) clearInterval(this.intervalId);
-  
-  },
-
-}
 </script>
 
 <style scoped>
@@ -377,14 +347,14 @@ td.last {
 
 .title {
   font-weight: 400;
-  font-size: 3rem;
+  font-size: 2.5rem;
   @media (max-width: 896px) {
     font-size: 1.5rem;
   }
 }
 .time {
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-family: "SF Pro";
   border: .125rem solid var(--grey);
   border-radius: 0rem 1.125rem 1.125rem 0rem;

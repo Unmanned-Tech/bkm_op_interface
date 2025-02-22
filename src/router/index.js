@@ -1,6 +1,5 @@
-import { createRouter, createWebHistory,  createWebHashHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "../components/MainPage.vue";
-import RobotPage from "../components/RobotPage.vue";
 import TeleopPage from "../components/TeleopPage.vue";
 import SettingsPage from "../components/SettingsPage.vue";
 import LogsPage from "../components/LogsPage.vue";
@@ -8,21 +7,13 @@ import HNPage from "../components/HistoryNotifications.vue"
 import TasksPage from "../components/TasksPage.vue"
 import EditorTasks from "../components/EditorTasks.vue"
 
+import { useRosStore } from '@/stores/ConfigStore';
+
 const routes = [
   {
     path: "/",
     name: "MainPage",
     component: MainPage,
-  },
-  {
-    path: "/robot",
-    name: "Robot",
-    component: RobotPage
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // component: () =>
-    //   import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
   {
     path: "/teleop",

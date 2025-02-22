@@ -2,7 +2,7 @@
     <div class="col">
       <EmerStopButton></EmerStopButton>
     </div>
-    <div class="col-3 d-flex justify-content-end">
+    <div class="col d-flex justify-content-end">
       <RobotModal1 />
     </div>
 </template>
@@ -18,20 +18,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-
-  .clean {
-    background-color: var(--green);
-    box-shadow: 0rem 0.1875rem 0.25rem 0rem rgba(0, 0, 0, .25);
-    border-radius: 1.125rem;
-    color: var(--text-color);
-    border: none;
-    font-weight: 400;
-    font-size: 1.25rem;
-  }
-  .capbtn {
-    margin: .75rem;
-  }
-
-</style>

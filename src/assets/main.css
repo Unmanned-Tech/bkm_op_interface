@@ -1,4 +1,3 @@
-@import './base.css';
 @import '~leafletdraw/leaflet.draw-src.css';
 @import '~leaflet/leaflet.css';
 @import "vue-draggable-resizable/style.css";

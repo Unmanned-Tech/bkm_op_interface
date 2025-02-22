@@ -33,50 +33,19 @@
         <div class="row my-1 my-lg-2 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, slideHide: !isSliderVisible }">
           <div class="col-auto pe-0 slide-col">
             <div class="slide p-3 py-1">
-              <div class="lin_speed">
-                <label for="lin_max_speed_range" class="form-label">
-                  <div class="row">
-                    <span class="col caption_low">Скорость робота</span>
-                    <span class="col-auto d-flex justify-content-end caption_low_num" v-bind:style="linSpeedColorStyle">{{ lin_max_speed }} м/c</span>
-                  </div>
-                </label>
-                <input v-on:input="set_linear_speed" type="range" class="form-range" min="0" max="5" value="0" step="1" id="lin_max_speed_range"/>
-              </div>
-              <div class="robot_rotate">
-                <label for="ang_max_speed_range" class="form-label">
-                  <div class="row">
-                    <span class="col caption_low pe-1">Скорость поворота</span>
-                    <span class="col-auto d-flex justify-content-end caption_low_num" v-bind:style="angSpeedColorStyle">{{ ang_max_speed }} рад/c</span>
-                  </div>
-                </label>
-                <input v-on:input="set_angular_speed" type="range" class="form-range" min="0" max="5" value="0" step=".25" id="ang_max_speed_range"/>
-              </div>
-              <div class="brush_speed">
-                <label for="brush_speed_range" class="form-label">
-                  <div class="row">
-                    <span class="col caption_low">Скорость щётки</span>
-                    <span class="col-auto d-flex justify-content-end caption_low_num" v-bind:style="brushSpeedColorStyle">{{ brush_speed }} об/м</span>
-                  </div>
-                </label>
-                <input v-on:input="set_brush_speed" type="range" class="form-range" min="-200" max="400" v-model="brush_speed" step="20" id="brush_speed_range" />
-              </div>
-              <div class="brush_rotate">
-                <label for="brush_rotate_range" class="">
-                  <span class="caption_low">Поворот щётки</span>
-                </label>
-                <div class="range-container">
-                  <div class="letter left">L</div>
-                  <input v-on:input="setBrushRotation" type="range" class="form-range" min="-2" max="2" value="0" step="1" id="brush_rotate_range" />
-                  <div class="letter right">R</div>
-                </div>
-              </div>
-              <div class="wash_pressure">
-                <label for="" class="form-label">
-                  <div class="row">
-                    <span class="col caption_low">Давление</span>
-                  </div>
-                </label>
-                <input v-on:input="setWashPressure" type="range" class="form-range" min="0" max="10" value="0" step="1" id="wash_range" />
+              <div v-for="slider in sliders" :key="slider.id" class="slider-wrapper">
+                <SliderControl 
+                  :id="slider.id"
+                  :label="slider.label"
+                  v-model="slider.model.value"
+                  :min="slider.min"
+                  :max="slider.max"
+                  :step="slider.step"
+                  :unit="slider.unit"
+                  :colorStyle="slider.colorStyle"
+                  :showValue="slider.showValue"
+                  :showLetters="slider.showLetters"
+                />
               </div>
             </div>
           </div>
@@ -85,7 +54,7 @@
               <i class="bi bi-sign-stop"></i>
             </button>
             <button class="tongue p-2 p-sm-1 my-3 my-sm-2" @click="toggleSlider">
-              <div :style="{ transform: isSliderVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }">
+              <div :style="{ transform: isSliderVisible ? 'rotate(90deg)' : 'rotate(-90deg)' }" style="transition: all 0.5s;">
                 <Polygon class="optin-min" />
               </div>
               <i class="bi bi-sliders"></i>
@@ -99,39 +68,21 @@
       <div class="col px-0">
         <div class="row mx-0">
           <div class="col overlay-side">
-            <vue-draggable-resizable :w="920" :h="auto" :resizable="false" style="background-color: transparent; border: none;">
+            <vue-draggable-resizable :w="920" :resizable="false" style="background-color: transparent; border: none;">
                 <iframe class="side-video-left" scrolling="no" :src="cameras_side" @load="handleLoad" />
             </vue-draggable-resizable>
           </div>
         </div>
       </div>
-      <div class="col-auto ps-1">
+      <div class="col-auto ps-1 pe-5">
         <div class="row justify-content-end">
           <div class="col-auto z-1">
-            <table class="current" style="">
-              <tr>
-                <td class="start1 px-lg-2 px-0 rounded-3">
-                  <span class="speedometr">
-                    {{ displayC1Msg }}
-                  </span>
-                  <span>м/с</span>
-                </td>
-                <td class="end1 px-lg-2 px-0 rounded-3">
-                  <span class="speedometr">
-                    {{ brush_speed }}
-                  </span>
-                  <span>об/м</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-center rounded-3 px-lg-2 px-0">
-                   <span>{{ bkmStore.selectedBkm }}</span>
-                </td>
-                <td class="text-center rounded-3 px-lg-2 px-0">
-                  <span><Brush /></span>
-                </td>
-              </tr>
-            </table>
+            <div class="info-grid">
+              <InfoCard :value="displayC1Msg" unit="м/с" class="start1" />
+              <InfoCard :value="brush_speed" unit="об/м" class="end1" />
+              <InfoCard :value="bkmStore.selectedBkm" />
+              <InfoCard><Brush /></InfoCard>
+            </div>
           </div>
         </div>
         <div class="row align-items-center justify-content-center">
@@ -140,38 +91,25 @@
           </div>
         </div>
         <div class="row mt-0 mt-lg-4 justify-content-center">
-          <div id="zone_joystick" class="zone static"></div>
+          <JoystickControl 
+            :lin_max_speed="lin_max_speed"
+            :ang_max_speed="ang_max_speed"
+            @joystickUpdate="handleJoystickUpdate"
+            @joystickStart="handleJoystickStart"
+            @joystickEnd="handleJoystickEnd"
+            @toggleLight="set_light"
+          />
         </div>
       </div>
     </div>
     <div class="row align-items-center">
       <div class="col-auto slide-out-columnX px-0" :class="{ 'slide-out-columnX': isOptionsVisible, hiddenX: !isOptionsVisible }">
         <div class="row align-items-center butt-col">
+
           <div class="col">
-            <button @click="toggleSmLights" class="buttonSet" :class="{ active: isSmLightsEnabled }">
-              <Headlight class="optin" />
-            </button>
+            <OptionsControl @toggleLight="set_light"/>
           </div>
-          <div class="col">
-            <button class="buttonSet mic">
-              <Mic class="optin" />
-            </button>
-          </div>
-          <div class="col">
-            <button class="buttonSet sound">
-              <Sound class="optin" />
-            </button>
-          </div>
-          <div class="col">
-            <button @click="toggleStrobeLights" class="buttonSet" :class="{ active: isStrobeEnabled }">
-              <Strobe class="optin" />
-            </button>
-          </div>
-          <div class="col">
-            <button @click="toggleSideLights" class="buttonSet" :class="{ active: isSideEnabled }">
-              <SideLights class="optin" />
-            </button>
-          </div>
+          
           <div class="col-auto">
             <div class="row align-items-center">
               <button class="tongue-op" @click="toggleOptions">
@@ -196,7 +134,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col"></div> -->
       <div class="col d-flex justify-content-end">
         <camSettings />
       </div>
@@ -205,21 +142,30 @@
 </template>
 
 <script>
-import Mic from "../assets/mic-fill.svg";
-import Sound from "../assets/sound.svg";
-import Lights from "../assets/Lights.svg";
-import SideLights from "../assets/SideLights.svg";
-import Polygon from "../assets/Polygon.svg";
-import Headlight from "../assets/headlights.svg";
-import Brush from "../assets/brush.svg";
-import Strobe from "../assets/strobe.svg";
+import Mic from "@/assets/mic-fill.svg";
+import Sound from "@/assets/sound.svg";
+import Lights from "@/assets/Lights.svg";
+import SideLights from "@/assets/SideLights.svg";
+import Polygon from "@/assets/Polygon.svg";
+import Headlight from "@/assets/headlights.svg";
+import Brush from "@/assets/brush.svg";
+import Strobe from "@/assets/strobe.svg";
 import EmerStopButton from "./EmerStopButton.vue";
-import nipplejs from "nipplejs";
-import ROSLIB from "roslib/src/RosLib";
-import Map from "./maps/Map1.vue";
-import camSettings from "./camSettings.vue";
-import { useBkmStore } from "../stores/bkmStore";
+import Map from "@/components/maps/Map1.vue";
+import camSettings from "@/components/camSettings.vue";
+
+import { useBkmStore } from "@/stores/bkmStore";
+import { useRosStore } from "@/stores/ConfigStore";
+import { useTeleopStore } from "@/stores/teleopStore2";
+
 import { Swiper, SwiperSlide } from "swiper/vue";
+
+import { ref, computed } from "vue";
+
+import SliderControl from "@/components/TeleopComponents/SliderControl.vue";
+import OptionsControl from "@/components/TeleopComponents/OptionsControl.vue";
+import JoystickControl from "@/components/TeleopComponents/JoystickControl.vue";
+import InfoCard from "@/components/TeleopComponents/InfoCard.vue";
 
 import 'swiper/css';
 import "swiper/css/free-mode";
@@ -241,33 +187,25 @@ export default {
     camSettings,
     Swiper,
     SwiperSlide,
-    SideLights
+    SideLights,
+    SliderControl,
+    OptionsControl,
+    JoystickControl,
+    InfoCard
   },
   data: function () {
     return {
-      pi: 3.1415,
       wheel_radius: 0.127,
-      isCameraVisible: false,
-      isSmLightsEnabled: true,
       isOptionsVisible: false,
       isMapVisible: false,
       isSliderVisible: false,
-      isStrobeEnabled: true,
-      isSideEnabled: true,
-      brush_speed: 0,
-      brush_angle: 0,
-      lin_max_speed: 0,
-      ang_max_speed: 0,
       lin_speed: 0,
       ang_speed: 0,
-      target_lin_speed: 0,
-      target_ang_speed: 0,
-      speed_decay_interval: null,
-      decay_step: 0.1,
+      prevLinSpeed: 0,
+      stopSignalOn: false,
+      stopSignalOff: true,
       speed_send_timer: {},
       brush_send_timer: {},
-      ros: {},
-      janus: null,
       twist: {
         linear: {
           x: 0.0,
@@ -292,8 +230,6 @@ export default {
           z: 0.0,
         },
       },
-      cmdVel: 0,
-      speedCmd: 0,
       c1_msg: {},
       camera_0: "http://192.168.0.20:1984/stream.html?src=camera_0",
       camera_1: "http://192.168.0.20:1984/stream.html?src=camera_1",
@@ -304,46 +240,62 @@ export default {
       loaded: false,
     };
   },
-  setup() {
-    return {
-      modules: [FreeMode]
+  watch: {
+    brush_rotation(newVal) {
+      this.sendBrushRotationCommand(newVal);
+    },
+    wash_pressure(newVal) {
+      this.sendWashPressureCommand(newVal);
     }
   },
+  setup() {
+    const states = {
+      lin_max_speed: ref(0),
+      ang_max_speed: ref(0),
+      brush_speed: ref(0),
+      brush_rotation: ref(0),
+      wash_pressure: ref(0),
+    }
 
+    const rosStore = useRosStore();
+    const bkmStore = useBkmStore();
+    const teleopStore = useTeleopStore();
+
+    const getColorStyle = (value, thresholds) => {
+      if (value.value <= thresholds.green) return { color: "var(--green)" };
+      if (value.value <= thresholds.orange) return { color: "var(--orange)" };
+      return { color: "var(--red)" };
+    };
+
+    // Используем функцию для определения цвета
+    const styles = {
+      linSpeedColorStyle: computed(() => getColorStyle(states.lin_max_speed, { green: 1, orange: 3 })),
+      angSpeedColorStyle: computed(() => getColorStyle(states.ang_max_speed, { green: 1, orange: 3 })),
+      brushSpeedColorStyle: computed(() => {
+        const val = states.brush_speed.value;
+        if (val >= -75 && val <= 140) return { color: "var(--green)" };
+        if ((val > -150 && val < -75) || (val > 75 && val < 280)) return { color: "var(--orange)" };
+        return { color: "var(--red)" };
+      }),
+    };
+
+    const sliders = [
+      { id: "lin_max_speed_range", label: "Скорость робота", model: states.lin_max_speed, min: 0, max: 5, step: 1, unit: "м/с", colorStyle: styles.linSpeedColorStyle, showValue: true },
+      { id: "ang_max_speed_range", label: "Скорость поворота", model: states.ang_max_speed, min: 0, max: 5, step: 0.25, unit: "рад/с", colorStyle: styles.angSpeedColorStyle, showValue: true },
+      { id: "brush_speed_range", label: "Скорость щётки", model: states.brush_speed, min: -200, max: 400, step: 20, unit: "об/м", colorStyle: styles.brushSpeedColorStyle, showValue: true },
+      { id: "brush_rotate_range", label: "Поворот щётки", model: states.brush_rotation, min: -2, max: 2, step: 1, unit: "", showLetters: true },
+      { id: "wash_range", label: "Давление", model: states.wash_pressure, min: 0, max: 10, step: 1 }
+    ];
+    return {
+      modules: [FreeMode],
+      sliders,
+      ...states,
+      rosStore,
+      bkmStore,
+      teleopStore,
+    }
+  },
   computed: {
-    linSpeedColorStyle() {
-      if (this.lin_max_speed <= 1) {
-        return { color: "var(--green)" };
-      } else if (this.lin_max_speed <= 3) {
-        return { color: "var(--orange)" };
-      } else {
-        return { color: "var(--red)" };
-      }
-    },
-    bkmStore() {
-      return useBkmStore();
-    },
-    brushSpeedColorStyle() {
-      if (this.brush_speed >= -75 && this.brush_speed <= 140) {
-        return { color: "var(--green)" };
-      } else if (
-        (this.brush_speed > -150 && this.brush_speed < -75) ||
-        (this.brush_speed > 75 && this.brush_speed < 280)
-      ) {
-        return { color: "var(--orange)" };
-      } else {
-        return { color: "var(--red)" };
-      }
-    },
-    angSpeedColorStyle() {
-      if (this.ang_max_speed <= 1) {
-        return { color: "var(--green)" };
-      } else if (this.ang_max_speed <= 3) {
-        return { color: "var(--orange)" };
-      } else {
-        return { color: "var(--red)" };
-      }
-    },
     displayC1Msg() {
       if (!this.c1_msg || Object.keys(this.c1_msg).length === 0) {
         return "0";
@@ -353,50 +305,31 @@ export default {
     },
   },
   mounted: function () {
-    var options = {
-      zone: document.getElementById("zone_joystick"),
-      mode: "static",
-      color: "white",
-      position: {
-        left: "50%",
-        bottom: "50%",
-      },
-      size: 200,
-    };
-    this.joystick = nipplejs.create(options);
-    this.joystick
-      .on("start", this.joystick_start)
-      .on("move", this.joystick_move)
-      .on("end", this.joystick_end);
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
-    this.ros = new ROSLIB.Ros({ url: "ws://192.168.0.17:9090" });
-
-    this.ros.on("connection", function () {
-      console.log("Connected to websocket server.");
-    });
-
-    var imageSub = new ROSLIB.Topic({
-      ros: this.ros,
-      name: "/out/compressed",
-      messageType: "sensor_msgs/msg/CompressedImage",
-    });
-
-    imageSub.subscribe(function (message) {
-      document.getElementById("depth").src =
-        "data:image/" + message.format + ";base64," + message.data;
-    });
     setTimeout(() => {
       this.handleError();
     }, 1500);
     var listner1 = new ROSLIB.Topic({
-      ros: this.ros,
+      ros: this.rosStore.ros,
       name: "/c1_telem",
       messageType: "mcu_msgs/msg/BldcStatus",
     });
     listner1.subscribe(this.set_c1_msg);
+
+    this.teleopStore.subscribeToLightState();
   },
   methods: {
+    handleJoystickUpdate({ lin_speed, ang_speed }) {
+      this.lin_speed = lin_speed;
+      this.ang_speed = ang_speed;
+    },
+    handleJoystickStart() {
+      console.debug("Joystick Activated");
+    },
+    handleJoystickEnd() {
+      console.debug("Joystick reduced");
+    },
     set_c1_msg(msg) {
       this.c1_msg = Math.abs(
         (2 * this.pi * this.wheel_radius * msg.speed_r_meas) / 60
@@ -410,33 +343,24 @@ export default {
     handleLoad() {
       this.loaded = true;
     },
-    toggleSmLights() {
-      this.set_sm_lights();
-      this.isSmLightsEnabled = !this.isSmLightsEnabled;
-    },
-    toggleStrobeLights() {
-      this.set_strobe_lights();
-      this.isStrobeEnabled = !this.isStrobeEnabled;
-    },
-    toggleSideLights() {
-      this.set_side_lights();
-      this.isSideEnabled = !this.isSideEnabled;
-    },
     disable_brush_speed() {
       document.getElementById("brush_speed_range").value = 0;
       this.brush_speed = 0;
     },
     disable_all_sliders() {
-      document.getElementById("lin_max_speed_range").value = 0;
-      this.lin_max_speed = 0;
+      const sliders = {
+        lin_max_speed: "lin_max_speed_range",
+        ang_max_speed: "ang_max_speed_range",
+        brush_speed: "brush_speed_range",
+        brush_rotate: "brush_rotate_range",
+        wash_pressure: "wash_range"
+      };
 
-      document.getElementById("ang_max_speed_range").value = 0;
-      this.ang_max_speed = 0;
-
-      document.getElementById("brush_speed_range").value = 0;
-      this.brush_speed = 0;
-
-      document.getElementById("brush_rotate_range").value = 0;
+      for (const [key, sliderId] of Object.entries(sliders)) {
+        this[key] = 0;
+        document.getElementById(sliderId).value = 0;
+        localStorage.setItem(sliderId, 0);
+      }
     },
     toggleSlider() {
       this.isSliderVisible = !this.isSliderVisible;
@@ -447,41 +371,17 @@ export default {
     toggleOptions() {
       this.isOptionsVisible = !this.isOptionsVisible;
     },
-    toggleCamera() {
-      this.isCameraVisible = !this.isCameraVisible;
-    },
-    set_brush_speed() {
-      this.brush_speed = document.getElementById("brush_speed_range").value;
-      this.send_brush_speed();
-    },
-    set_brush_angle() {
-      this.brush_angle = document.getElementById("brush_angle_range").value;
-    },
-    set_linear_speed() {
-      this.lin_max_speed = document.getElementById("lin_max_speed_range").value;
-    },
-    set_angular_speed() {
-      this.ang_max_speed = document.getElementById("ang_max_speed_range").value;
-    },
-    setBrushRotation(event) {
-      const value = parseInt(event.target.value);
-      let angle = 0;
-
-      if (value === -1) {
-        angle = -9;
-      } else if (value === 1) {
-        angle = 9;
-      } else if (value === -2) {
-        angle = -15;
-      } else if (value === 2) {
-        angle = 15;
-      }
-
-      this.sendBrushRotationCommand(angle);
-    },
     sendBrushRotationCommand(angle) {
+      angle = parseInt(angle);
+      const angleMap = {
+        "-1": -9,
+        "1": 9,
+        "-2": -15,
+        "2": 15
+      };
+      angle = angleMap[angle] ?? angle;
       var cmd_srv = new ROSLIB.Service({
-        ros: this.ros,
+        ros: this.rosStore.ros,
         name: "/brush_cmd_srv",
         serviceType: "mcu_msgs/srv/CmdAng",
       });
@@ -491,21 +391,13 @@ export default {
         angle: angle,
       });
 
-      cmd_srv.callService(request, function (result) {
-        // alert('Команда отправлена ' + cmd_srv.name + ': ' + result.success);
-      });
-      console.log(request);
-    },
-    setWashPressure(event) {
-      const value = parseInt(event.target.value);
-      const pressure = Math.round((value / 10) * 255);
-      console.log(pressure);
-
-      this.sendWashPressureCommand(pressure);
+      cmd_srv.callService(request);
+      console.debug(request);
     },
     sendWashPressureCommand(pressure) {
+      pressure = parseInt(Math.round((pressure / 10) * 255));
       var cmd_srv = new ROSLIB.Service({
-        ros: this.ros,
+        ros: this.rosStore.ros,
         name: "/wash_cmd_srv",
         serviceType: "mcu_msgs/srv/CmdPres",
       });
@@ -515,178 +407,140 @@ export default {
         pressure: pressure,
       });
 
-      cmd_srv.callService(request, function(result) {
-
-      });
+      cmd_srv.callService(request);
+      console.debug(request);
     },
-    set_sm_lights() {
+    set_light(type, isEnabled) {
       var cmd_srv = new ROSLIB.Service({
-        ros: this.ros,
+        ros: this.rosStore.ros,
         name: "/control_light",
         serviceType: "mcu_msgs/srv/LightControl",
       });
 
-      if (this.isSmLightsEnabled) {
-        var request = new ROSLIB.ServiceRequest({
-          command: 'C_HL_OFF',
-          parameter: '0',
-        });
-      } else {
-        var request = new ROSLIB.ServiceRequest({
-          command: 'C_HL_ON',
-          parameter: '255'
-        });
-      }
-      console.log(request);
-      cmd_srv.callService(request);
-    },
-    set_strobe_lights() {
-      var cmd_srv = new ROSLIB.Service({
-        ros: this.ros,
-        name: "/control_light",
-        serviceType: "mcu_msgs/srv/LightControl",
-      });
-      if (this.isStrobeEnabled) {
-        var request = new ROSLIB.ServiceRequest({
-          command: "C_FL_OFF",
-          parameter: '0'
-        });
-      } else {
-        var request = new ROSLIB.ServiceRequest({
-          command: "C_FL_ON",
-          parameter: '255'
-        });
-      }
-      cmd_srv.callService(request);
-    },
-    set_side_lights() {
-      var cmd_srv = new ROSLIB.Service({
-        ros: this.ros,
-        name: "/control_light",
-        serviceType: "mcu_msgs/srv/LightControl",
-      });
-      if (this.isStrobeEnabled) {
-        var request = new ROSLIB.ServiceRequest({
-          command: "C_SL_OFF",
-          parameter: '0'
-        });
-      } else {
-        var request = new ROSLIB.ServiceRequest({
-          command: "C_SL_ON",
-          parameter: '255'
-        });
-      }
-      cmd_srv.callService(request);
-    },
-    joystick_move(evt, data) {
-      this.lin_speed = Math.round(Math.min(Math.max(data.vector.y * (this.lin_max_speed * 0.75) * 0.5 * data.force, -this.lin_max_speed), this.lin_max_speed) * 100) / 100;
-      
-      // Если lin_speed отрицательна, меняем знак у ang_speed
-      if (this.lin_speed < -0.15) { 
-        this.ang_speed = Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
-      } else {
-        this.ang_speed = -Math.round(Math.min(Math.max(data.vector.x * (this.ang_max_speed * 0.75) * 0.5 * data.force, -this.ang_max_speed), this.ang_max_speed) * 100) / 100;
-      }
-      console.log(this.lin_speed);
-    },
-    joystick_start(evt, data) {},
-    joystick_end(evt, data) {
-      this.target_lin_speed = 0;
-      this.target_ang_speed = 0;
+      let commands = {};
 
-      if (!this.speed_decay_interval) {
-        this.speed_decay_interval = setInterval(() => {
-          this.lin_speed = this.reduce_speed(this.lin_speed, this.target_lin_speed);
-          this.ang_speed = this.reduce_speed(this.ang_speed, this.target_ang_speed);
+      // Логика для обработки разных типов
+      switch (type) {
+        case "strobe":
+          commands = {
+              on: ["C_FL_L_BLK", "C_FL_R_BLK"],
+              off: ["C_FL_L_OFF", "C_FL_R_OFF"]
+          };
+          break;
 
-          if (this.lin_speed === 0 && this.ang_speed === 0) {
-            clearInterval(this.speed_decay_interval);
-            this.speed_decay_interval = null;
+        case "side":
+          commands = { on: "C_SL_ON", off: "C_SL_OFF" };
+          break;
+
+        case "rotate":
+          // Если поворот влево
+          if (isEnabled === "left") {
+            commands = { on: "C_SL_L_BLK", off: "C_SL_L_OFF" };
+          } else if (isEnabled === "right") {
+            commands = { on: "C_SL_R_BLK", off: "C_SL_R_OFF" }; // Правый боковой огонь мигает
+          } else if (isEnabled === "stop") {
+            commands = { on: ["C_SL_L_OFF", "C_SL_R_OFF"], off: ["C_SL_L_OFF", "C_SL_R_OFF"] };
           }
-        }, 100);
+          break;
+
+        case "head":
+          commands = { on: "C_HL_ON", off: "C_HL_OFF" };
+          break;
+
+        case "stop":
+          commands = { on: "C_SS_ON", off: "C_SS_OFF" };
+          break;
+
+        default:
+          return;
       }
-    },
-    reduce_speed(current, target) {
-      const decayStep = this.decay_step;
-      if (Math.abs(current - target) <= decayStep) {
-        return target;
+
+      const requestCommands = isEnabled === "stop" || isEnabled && isEnabled !== "left" || isEnabled && isEnabled !== "right" ? commands.off : commands.on;
+      const parameter = (type === "rotate" && isEnabled !== "stop") ? "200" : (isEnabled ? "0" : "255");
+
+      // Если стробоскоп, отправляем две команды
+      if (Array.isArray(requestCommands)) {
+        requestCommands.forEach((command) => {
+          const request = new ROSLIB.ServiceRequest({ command, parameter });
+          cmd_srv.callService(request);
+          console.debug(request);
+        });
+      } else {
+        const request = new ROSLIB.ServiceRequest({ command: requestCommands, parameter });
+        cmd_srv.callService(request);
+        console.debug(request);
       }
-      return current > target ? current - decayStep : current + decayStep;
     },
     send_speed() {
       const wheelBase = 0.5;
       const wheelRadius = 0.175;
       const maxRpm = 150;
 
-      const leftSpeed = Math.round(
-        ((this.lin_speed - (this.ang_speed * wheelBase) / 2) / (this.pi * wheelRadius)) * 60
-      );
-      const rightSpeed = Math.round(
-        ((this.lin_speed + (this.ang_speed * wheelBase) / 2) / (this.pi * wheelRadius)) * 60
-    );
+      this.handleStopSignal();
 
-      const limitedLeftSpeed = Math.max(-maxRpm, Math.min(maxRpm, leftSpeed));
-      const limitedRightSpeed = Math.max(-maxRpm, Math.min(maxRpm, rightSpeed));
+      const { leftSpeed, rightSpeed } = this.calculateWheelSpeeds(wheelBase, wheelRadius, maxRpm);
+      const command = `C_SPD_${leftSpeed}_${rightSpeed}`;
 
-      const command = `C_SPD_${limitedLeftSpeed}_${limitedRightSpeed}`;
+      this.publishSpeed(command);
+    },
+    handleStopSignal() {
+      const prevSpeed = this.prevLinSpeed || 0;
+      this.prevLinSpeed = this.lin_speed;
 
-      if (this.bkmStore.selectedBkm === 'БКМ-1') {
-        this.cmdVel = new ROSLIB.Topic({
-          ros: this.ros,
+      if (this.lin_speed < prevSpeed && !this.stopSignalOn) {
+        console.debug("SS ВКЛЮЧЕН");
+        this.set_light("stop", false);
+        this.stopSignalOn = true;
+        this.stopSignalOff = false;
+      } else if (this.lin_speed > prevSpeed && !this.stopSignalOff) {
+        console.debug("SS ВЫКЛЮЧЕН");
+        this.set_light("stop", true);
+        this.stopSignalOn = false;
+        this.stopSignalOff = true;
+      }
+    },
+    calculateWheelSpeeds(wheelBase, wheelRadius, maxRpm) {
+      const baseSpeed = (this.lin_speed * 60) / (Math.PI * wheelRadius);
+      const angSpeedAdj = (this.ang_speed * wheelBase * 30) / (Math.PI * wheelRadius);
+
+      return {
+        leftSpeed: Math.max(-maxRpm, Math.min(maxRpm, Math.round(baseSpeed - angSpeedAdj))),
+        rightSpeed: Math.max(-maxRpm, Math.min(maxRpm, Math.round(baseSpeed - angSpeedAdj))),
+      };
+    },
+    publishSpeed(command) {
+      const ros = this.rosStore.ros;
+
+      if (this.bkmStore.selectedBkm === "БКМ-1") {
+        const cmdVel = new ROSLIB.Topic({
+          ros,
           name: "/cmd_vel",
           messageType: "geometry_msgs/Twist",
         });
+
         this.twist.linear.x = this.lin_speed;
         this.twist.angular.z = this.ang_speed;
-        this.cmdVel.publish(this.twist);
-      } else if (this.bkmStore.selectedBkm === 'БКМ-2') {
-        this.speedCmd = new ROSLIB.Topic({
-          ros: this.ros,
+        cmdVel.publish(this.twist);
+      } else if (this.bkmStore.selectedBkm === "БКМ-2") {
+        const speedCmd = new ROSLIB.Topic({
+          ros,
           name: "/speed_cmd",
           messageType: "std_msgs/String",
         });
-        
-        const msg = new ROSLIB.Message({
-          data: command,
-        });
 
-        this.speedCmd.publish(msg);
+        speedCmd.publish(new ROSLIB.Message({ data: command }));
       }
-      
-    },
-    stop_moving() {
-      document.getElementById("moveing_enable").checked = false;
-      document.getElementById("lin_max_speed_range1").value = 0;
-      document.getElementById("ang_max_speed_range").value = 0;
-      this.lin_max_speed = 0;
-      this.ang_max_speed = 0;
-      this.lin_speed = 0;
-      this.ang_speed = 0;
     },
     send_brush_speed() {
       this.ce_vel = new ROSLIB.Topic({
-        ros: this.ros,
+        ros: this.rosStore.ros,
         name: "/ce_vel",
         messageType: "geometry_msgs/Twist",
       });
       this.twist_ce.linear.x = Math.round(this.brush_speed);
       this.twist_ce.angular.z = Math.round(this.brush_speed);
       this.ce_vel.publish(this.twist_ce);
-      // alert("ss");
     },
-  },
-  send_cmd() {
-    var cmd_srv = new ROSLIB.Service({
-      ros: this.ros,
-      name: "/bkm_cmd_srv",
-      serviceType: "mcu_msgs/srv/TextCmd",
-    });
-    var request = new ROSLIB.ServiceRequest({
-      cmd: document.getElementById("cmd1").value,
-    });
-    cmd_srv.callService(request, function (result) {
-      alert("Команда отправлена " + cmd_srv.name + ": " + result.success);
-    });
   },
 };
 </script>
@@ -712,7 +566,6 @@ export default {
   box-sizing: border-box;
   z-index: 2;
   scale: 0.7;
-  /* pointer-events: none; */
 }
 .side-video-left {
   position: absolute;
@@ -720,7 +573,6 @@ export default {
   left: -110px;
   width: 100vh;
   height: 100%;
-  /* max-height: 204px; */
   pointer-events: none;
   border-radius: 18px;
   border: 2px solid var(--grey2);
@@ -734,11 +586,6 @@ export default {
   z-index: -2;
   pointer-events: none;
 }
-.zone {
-  position: relative;
-  width: 200px;
-  height: 200px;
-}
 .map-col {
   max-width: 20rem;
   height: 12rem;
@@ -751,11 +598,11 @@ export default {
   border-radius: 1.125rem;
 }
 .slide-out-columnX {
-  transition: transform 0.5s ease;
+  transition: transform 0.5s;
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(-522px);
+  transform: translateX(-5px);
 }
 .slide-out-columnX.mapHide {
   transform: translateX(-315px);
@@ -781,53 +628,24 @@ export default {
 .bi {
   font-size: 1.5rem;
 }
-.bi-robot {
-  font-size: 28px;
-  @media (max-width: 896px) {
-    font-size: 1rem;
-  }
-}
-.buttonSet {
-  border-radius: 50%;
-  padding: 1.5rem;
-  border: solid var(--grey2) 0.125rem;
-  background-color: transparent;
-  cursor: pointer;
-}
-.current {
-  border-collapse: separate;
-}
-td {
-  background-color: var(--bg-tertiary);
-  padding: 1px;
-  border: solid 2px var(--grey2);
-}
-td.start1 {
+.start1 {
   text-align: center;
   width: 5.95rem;
   @media (max-width: 896px) {
     width: 5rem;
   }
 }
-td.end1 {
+.end1 {
   text-align: center;
   width: 5.95rem;
   @media (max-width: 896px) {
     width: 5rem;
   }
 }
-.speedometr {
-  font-family: "Shine More";
-  font-size: 1.25rem;
-  margin: 0;
-  padding: 0;
-  @media (max-width: 896px) {
-    font-size: 1rem;
-  }
-}
-.buttonSet.mic:active,
-.buttonSet.sound:active {
-  border-color: var(--green);
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
 }
 .butt-col {
   background-color: var(--bg-tertiary);
@@ -840,58 +658,8 @@ td.end1 {
   border-radius: 1.125rem;
   border: 2px solid var(--grey2);
 }
-.caption_low {
-  font-size: 1.15rem;
-}
-.caption_low_num {
-  min-width: 120px;
-  font-size: 1.15rem;
-}
-.form-label {
-  display: inline;
-}
-.lin_speed {
-  margin-bottom: -0.5rem;
-}
-.robot_rotate {
-  margin-bottom: -0.5rem;
-}
-.brush_speed {
-  margin-bottom: -0.5rem;
-}
-.brush_rotate {
-  margin-bottom: -0.5rem;
-}
-.range-container {
-  position: relative;
-}
-.letter {
-  position: absolute;
-  z-index: 1;
-  top: 0.4rem;
-  width: 0.75rem;
-  text-align: center;
-  font-weight: 700;
-  font-family: "SF Pro Bold";
-  color: var(--text-color);
-  -webkit-user-select: none;
-  user-select: none;
-  pointer-events: none;
-}
-.left {
-  left: 0.5rem;
-}
-.right {
-  right: 0.5rem;
-}
-.active {
-  border-color: var(--green);
-}
-.optin {
-  transform: scale(2);
-}
 .optin-min {
-  transform: scale(0.9);
+  transform: scale(0.8);
 }
 
 @media (max-width: 896px) {
@@ -900,18 +668,6 @@ td.end1 {
   }
   .slide-out-columnX.slideHide {
     transform: translateX(-229px);
-  }
-  .caption_low {
-    font-size: 1.5cqmax;
-  }
-  .caption {
-    font-size: 1rem;
-  }
-  .optin {
-    transform: scale(1);
-  }
-  .buttonSet {
-    padding: 3px;
   }
   .butt-col {
     background-color: var(--bg-tertiary);
@@ -932,26 +688,11 @@ td.end1 {
     padding: 1px;
     color: var(--text-color);
   }
-  
   .bi {
     font-size: 1rem;
   }
   .current {
     font-size: 1.5cqmax;
-  }
-  .letter {
-    top: 0.25rem;
-    width: 0.75rem;
-    font-weight: 700;
-    font-size: 0.8rem;
-  }
-  .img {
-    width: 350px;
-    height: 1px;
-  }
-  .zone {
-    width: 135px;
-    height: 135px;
   }
 }
 .back-button {

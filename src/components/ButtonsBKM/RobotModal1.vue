@@ -349,17 +349,16 @@ td.last {
     border-radius: .75rem;
   }
 }
-
 .title {
   font-weight: 400;
-  font-size: 3rem;
+  font-size: 2.5rem;
   @media (max-width: 896px) {
     font-size: 1.5rem;
   }
 }
 .time {
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-family: "SF Pro";
   border: .125rem solid var(--grey);
   border-radius: 0rem 1.125rem 1.125rem 0rem;
@@ -369,7 +368,6 @@ td.last {
     border-radius: 0 .75rem .75rem 0;
   }
 }
-
 .time.date {
   border-radius: 1.125rem 0rem 0rem 1.125rem;
   border-right: 0;

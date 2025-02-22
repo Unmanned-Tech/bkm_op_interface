@@ -58,7 +58,6 @@
 
   
 <script>
-
 import NotificationBell from './SvgComponents/NotificationBell.vue';
 import ThemeSwithcer from './SvgComponents/ThemeSwithcer.vue';
 import MPButtons1 from './ButtonsBKM/MPButtons1.vue';
@@ -70,11 +69,9 @@ import Map2 from './maps/Map2.vue';
 import Map3 from './maps/Map3.vue';
 
 import axios from 'axios';
-import * as roslib from "../../roslib.js";
-import { handleError } from 'vue';
 
 export default {
-  name: "RobotPage",
+  name: "MainPage",
   components: {
     MPButtons1,
     MPButtons2,
@@ -96,31 +93,10 @@ export default {
       loaded: false,
     }
   },
-  mounted: function () {
-    // this.startRefreshing();
-    const ros = new ROSLIB.Ros({ url: "ws://192.168.1.1:9090" });
-
-    ros.on('connection', function () {
-      console.log('Connected to websocket server.');
-    });
-
-    var listener = new ROSLIB.Topic({
-      ros: ros,
-      name: '/c2_telem',
-      messageType: 'mcu_msgs/msg/BldcStatus'
-    });
-    listener.subscribe(function (message) {
-      /* console.log('Received message on ' + listener.name + ': ' + message.bat_voltage); */
-      
-      // If desired, we can unsubscribe from the topic as well.
-      
-    });
+  mounted() {
     setTimeout(() => {
       this.handleError();
     }, 700);
-  },
-  beforeUnmount() {
-    // this.stopRefreshing();
   },
   methods: {
     
