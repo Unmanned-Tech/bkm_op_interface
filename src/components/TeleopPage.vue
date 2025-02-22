@@ -429,17 +429,19 @@ export default {
           break;
 
         case "side":
-          commands = { on: "C_SL_ON", off: "C_SL_OFF" };
+          commands = { 
+              on: "C_SL_R_BLK", 
+              off: "C_SL_R_OFF" 
+          };
           break;
 
         case "rotate":
-          // Если поворот влево
           if (isEnabled === "left") {
-            commands = { on: "C_SL_L_BLK", off: "C_SL_L_OFF" };
+              commands = { on: "C_SL_L_BLK", off: "C_SL_L_OFF" };
           } else if (isEnabled === "right") {
-            commands = { on: "C_SL_R_BLK", off: "C_SL_R_OFF" }; // Правый боковой огонь мигает
+              commands = { on: "C_SL_R_BLK", off: "C_SL_R_OFF" };
           } else if (isEnabled === "stop") {
-            commands = { on: ["C_SL_L_OFF", "C_SL_R_OFF"], off: ["C_SL_L_OFF", "C_SL_R_OFF"] };
+              commands = { on: ["C_SL_L_OFF", "C_SL_R_OFF"], off: ["C_SL_L_OFF", "C_SL_R_OFF"] };
           }
           break;
 
@@ -447,7 +449,7 @@ export default {
           commands = { on: "C_HL_ON", off: "C_HL_OFF" };
           break;
 
-        case "stop":
+        case "stopS":
           commands = { on: "C_SS_ON", off: "C_SS_OFF" };
           break;
 
@@ -455,8 +457,8 @@ export default {
           return;
       }
 
-      const requestCommands = isEnabled === "stop" || isEnabled && isEnabled !== "left" || isEnabled && isEnabled !== "right" ? commands.off : commands.on;
-      const parameter = (type === "rotate" && isEnabled !== "stop") ? "200" : (isEnabled ? "0" : "255");
+      const requestCommands = (isEnabled && type !== "rotate") ? commands.off : commands.on;
+      const parameter = (type === "rotate" && isEnabled !== "stop") ? "200" : (isEnabled ? "0" : "200");
 
       // Если стробоскоп, отправляем две команды
       if (Array.isArray(requestCommands)) {
@@ -487,17 +489,23 @@ export default {
       const prevSpeed = this.prevLinSpeed || 0;
       this.prevLinSpeed = this.lin_speed;
 
-      if (this.lin_speed < prevSpeed && !this.stopSignalOn) {
-        console.debug("SS ВКЛЮЧЕН");
-        this.set_light("stop", false);
-        this.stopSignalOn = true;
-        this.stopSignalOff = false;
-      } else if (this.lin_speed > prevSpeed && !this.stopSignalOff) {
-        console.debug("SS ВЫКЛЮЧЕН");
-        this.set_light("stop", true);
-        this.stopSignalOn = false;
-        this.stopSignalOff = true;
+      if (Math.abs(this.lin_speed) < Math.abs(prevSpeed)) {
+        if (!this.stopSignalOn) {
+          console.debug("SS ВКЛЮЧЕН");
+          this.set_light("stopS", false);
+          this.stopSignalOn = true;
+          this.stopSignalOff = false;
+        }
+      } else if (this.lin_speed === 0 || Math.abs(this.lin_speed) > Math.abs(prevSpeed)) {
+        if (!this.stopSignalOff) {
+          console.debug("SS ВЫКЛЮЧЕН");
+          this.set_light("stopS", true);
+          this.stopSignalOn = false;
+          this.stopSignalOff = true;
+        }
       }
+
+      this.prevLinSpeed = this.lin_speed;
     },
     calculateWheelSpeeds(wheelBase, wheelRadius, maxRpm) {
       const baseSpeed = (this.lin_speed * 60) / (Math.PI * wheelRadius);

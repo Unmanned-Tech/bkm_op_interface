@@ -6,7 +6,7 @@ export const useRosStore = defineStore("ros",() => {
     const isConnected = ref(false);
     const connectionError = ref(null);
 
-    const connect = (url = "ws://192.168.0.17:9090") => {
+    const connect = (url = "ws://192.168.2.111:9090") => {
         ros.value = new ROSLIB.Ros({ url });
 
         ros.value.on("connection", () => {
