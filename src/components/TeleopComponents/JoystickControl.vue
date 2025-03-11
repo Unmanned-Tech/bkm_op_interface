@@ -60,12 +60,12 @@ export default {
                 }
 
                 // Логика включения поворотника
-                if (ang_speed.value > 0.2 && lastTurnSignal.value !== "right") {
-                    emit("toggleLight", "rotate", "right");
-                    lastTurnSignal.value = "right";
-                } else if (ang_speed.value < -0.2 && lastTurnSignal.value !== "left") {
+                if (ang_speed.value > 0.15 && lastTurnSignal.value !== "left") {
                     emit("toggleLight", "rotate", "left");
                     lastTurnSignal.value = "left";
+                } else if (ang_speed.value < -0.15 && lastTurnSignal.value !== "right") {
+                    emit("toggleLight", "rotate", "right");
+                    lastTurnSignal.value = "right";
                 }
 
                 emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value });
