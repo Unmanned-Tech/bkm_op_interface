@@ -430,8 +430,8 @@ export default {
 
         case "side":
           commands = { 
-              on: "C_SL_R_BLK", 
-              off: "C_SL_R_OFF" 
+              on: ["C_SL_R_ON", "C_SL_L_ON"], 
+              off: ["C_SL_R_OFF", "C_SL_L_OFF"] 
           };
           break;
 

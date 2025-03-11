@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { useRosStore } from "@/stores/ConfigStore";
 import ROSLIB from "roslib";
-import { onMounted } from "vue";
 
 export const useTeleopStore = defineStore("teleop", {
   state: () => ({
@@ -40,7 +39,7 @@ export const useTeleopStore = defineStore("teleop", {
 
       this.isSmLightsEnabled = lightMap["HL"]?.status === "ON";
       this.isStrobeEnabled = lightMap["FL_L"]?.status === "BLK" || lightMap["FL_R"]?.status === "BLK";
-      this.isSideEnabled = lightMap["SL"]?.status === "ON";
+      this.isSideEnabled = lightMap["SL_L"]?.status === "BLK" || lightMap["SL_R"]?.status === "BLK";
     },
 
     /** Тоггл опции в Store */
