@@ -410,7 +410,7 @@ export default {
       cmd_srv.callService(request);
       console.debug(request);
     },
-    set_light(type, isEnabled) {
+    set_light(type, isEnabled, previousState = null) {
       var cmd_srv = new ROSLIB.Service({
         ros: this.rosStore.ros,
         name: "/control_light",
@@ -437,9 +437,19 @@ export default {
 
         case "rotate":
           if (isEnabled === "left") {
-              commands = { on: "C_SL_L_BLK", off: "C_SL_L_OFF" };
+            if (previousState === "right") {
+              const previous = new ROSLIB.ServiceRequest({ command: "C_SL_R_OFF", parameter: "0" });
+              cmd_srv.callService(previous);
+              console.debug(previous);
+            }
+            commands = { on: "C_SL_L_BLK", off: "C_SL_L_OFF" };
           } else if (isEnabled === "right") {
-              commands = { on: "C_SL_R_BLK", off: "C_SL_R_OFF" };
+            if (previousState === "left") {
+              const previous = new ROSLIB.ServiceRequest({ command: "C_SL_L_OFF", parameter: "0" });
+              cmd_srv.callService(previous);
+              console.debug(previous);
+            }
+            commands = { on: "C_SL_R_BLK", off: "C_SL_R_OFF" };
           } else if (isEnabled === "stop") {
               commands = { on: ["C_SL_L_OFF", "C_SL_R_OFF"], off: ["C_SL_L_OFF", "C_SL_R_OFF"] };
           }
@@ -458,7 +468,7 @@ export default {
       }
 
       const requestCommands = (isEnabled && type !== "rotate") ? commands.off : commands.on;
-      const parameter = (type === "rotate" && isEnabled !== "stop") ? "200" : (isEnabled ? "0" : "200");
+      const parameter = (type === "rotate" && isEnabled !== "stop") ? "500" : (isEnabled ? "0" : "100");
 
       // Если стробоскоп, отправляем две команды
       if (Array.isArray(requestCommands)) {
@@ -496,7 +506,7 @@ export default {
           this.stopSignalOn = true;
           this.stopSignalOff = false;
         }
-      } else if (this.lin_speed === 0 || Math.abs(this.lin_speed) > Math.abs(prevSpeed)) {
+      } else if (Math.abs(this.lin_speed) > Math.abs(prevSpeed)) {
         if (!this.stopSignalOff) {
           console.debug("SS ВЫКЛЮЧЕН");
           this.set_light("stopS", true);

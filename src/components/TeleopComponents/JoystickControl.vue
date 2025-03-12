@@ -60,17 +60,34 @@ export default {
                 }
 
                 // Логика включения поворотника
-                if (ang_speed.value > 0.15 && lastTurnSignal.value !== "left") {
-                    emit("toggleLight", "rotate", "left");
-                    lastTurnSignal.value = "left";
-                } else if (ang_speed.value < -0.15 && lastTurnSignal.value !== "right") {
-                    emit("toggleLight", "rotate", "right");
-                    lastTurnSignal.value = "right";
+
+                // Квадранты угловой скорости
+                if (ang_speed.value > 0.1) {
+                    if (lin_speed.value > 0.1 && lastTurnSignal.value !== "left") {
+                        emit("toggleLight", "rotate", "left", lastTurnSignal.value);
+                        lastTurnSignal.value = "left";
+                    } else if (lin_speed.value < -0.1 && lastTurnSignal.value !== "right") {
+                        emit("toggleLight", "rotate", "right", lastTurnSignal.value);
+                        lastTurnSignal.value = "right";
+                    }
+                } else if (ang_speed.value < -0.1) {
+                    if (lin_speed.value > 0.1 && lastTurnSignal.value !== "right") {
+                        emit("toggleLight", "rotate", "right", lastTurnSignal.value);
+                        lastTurnSignal.value = "right";
+                    } else if (lin_speed.value < -0.1 && lastTurnSignal.value !== "left") {
+                        emit("toggleLight", "rotate", "left", lastTurnSignal.value);
+                        lastTurnSignal.value = "left";
+                    }
+                } else if (ang_speed.value > -0.1 && ang_speed.value < 0.1 && lin_speed.value > -0.1 && lin_speed.value < 0.1) {
+                    if (lastTurnSignal.value) {
+                        emit("toggleLight", "rotate", "stop");  
+                    }          
                 }
 
                 emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value });
-                // console.debug(lin_speed.value);
-                console.debug(ang_speed.value);
+
+                // console.debug("linear: ", lin_speed.value);
+                // console.debug("angular: ", ang_speed.value);
             });
 
             joystick.on("end", () => {
@@ -90,7 +107,7 @@ export default {
 
                 // Выключаем поворотники при отпускании джойстика
                 if (lastTurnSignal.value) {
-                    emit("toggleLight", "rotate", "stop");
+                    emit("toggleLight", "rotate", "stop", lastTurnSignal.value);
                     lastTurnSignal.value = null;
                 }
 
