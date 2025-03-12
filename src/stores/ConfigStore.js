@@ -1,4 +1,4 @@
-import { ref, onBeforeMount, onUnmounted } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
 import { defineStore } from "pinia";
 
 export const useRosStore = defineStore("ros",() => {
@@ -30,7 +30,7 @@ export const useRosStore = defineStore("ros",() => {
         })
     }
 
-    onBeforeMount(() => connect());
+    onMounted(() => connect());
     // onUnmounted(() => ros.value?.close());
     
     return { ros, isConnected, connectionError, connect };

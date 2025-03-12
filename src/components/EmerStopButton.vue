@@ -16,22 +16,23 @@
 </template>
 
 <script>
-
+import { useRosStore } from "@/stores/ConfigStore";
 export default {
   name: "EmerStopButton",
+  setup() {
+    const rosStore = useRosStore();
+
+    return { rosStore }
+  },
   methods: {
     send_emerstop() {
-      const ros = new ROSLIB.Ros({ url: "ws://192.168.2.111:9090" });
       console.info("EmerStop");
       var EmerStopSrv = new ROSLIB.Service({
-        ros: ros,
-        name: '/bkm_cmd_srv',
-        serviceType: 'mcu_msgs/srv/TextCmd'
+        ros: this.rosStore.ros,
+        name: '/safety/em_stop_hw',
+        serviceType: 'std_srvs/srv/Trigger'
       });
-      var request = new ROSLIB.ServiceRequest({
-        cmd: "EMER_STOP"
-      });
-      EmerStopSrv.callService(request, function (result) {
+      EmerStopSrv.callService(function (result) {
         console.log('Result for service call on ' + EmerStopSrv.name + ': ' + result.success);
       });
     },

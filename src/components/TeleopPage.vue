@@ -11,7 +11,7 @@
         <iframe class="video" scrolling="no" nocontrols :src="camera_0" @load="handleLoad" />
       </swiper-slide>
       <swiper-slide>
-        <iframe class="video" scrolling="no" :src="camera_3" @load="handleLoad" />
+        <iframe class="video" scrolling="no" :src="camera_1" @load="handleLoad" />
       </swiper-slide>
     </swiper>
     
@@ -231,11 +231,11 @@ export default {
         },
       },
       c1_msg: {},
-      camera_0: "http://192.168.0.20:1984/stream.html?src=camera_0",
-      camera_1: "http://192.168.0.20:1984/stream.html?src=camera_1",
-      camera_2: "http://192.168.0.20:1984/stream.html?src=camera_2",
-      camera_3: "http://192.168.0.20:1984/stream.html?src=camera_3",
-      cameras_side: "http://192.168.0.20:1984/stream.html?src=camera_1&src=camera_2",
+      camera_0: "http://192.168.2.111:1984/stream.html?src=camera_0",
+      camera_1: "http://192.168.2.111:1984/stream.html?src=camera_1",
+      camera_2: "http://192.168.2.111:1984/stream.html?src=camera_2",
+      camera_3: "http://192.168.2.111:1984/stream.html?src=camera_3",
+      cameras_side: "http://192.168.2.111:1984/stream.html?src=camera_0&src=camera_1",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
     };
