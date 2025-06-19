@@ -91,25 +91,28 @@ export default {
             });
 
             joystick.on("end", () => {
-                if (!speed_decay_interval) {
-                    speed_decay_interval = setInterval(() => {
-                        lin_speed.value = reduce_speed(lin_speed.value, 0);
-                        ang_speed.value = reduce_speed(lin_speed.value, 0);
+                // if (!speed_decay_interval) {
+                //     speed_decay_interval = setInterval(() => {
+                //         lin_speed.value = reduce_speed(lin_speed.value, 0);
+                //         ang_speed.value = reduce_speed(lin_speed.value, 0);
 
-                        if (lin_speed.value === 0 && ang_speed.value === 0) {
-                            clearInterval(speed_decay_interval);
-                            speed_decay_interval = null;
-                        }
+                //         if (lin_speed.value === 0 && ang_speed.value === 0) {
+                //             clearInterval(speed_decay_interval);
+                //             speed_decay_interval = null;
+                //         }
 
-                        emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value });
-                    }, 100);
-                }
+                //         emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value });
+                //     }, 100);
+                // }
 
                 // Выключаем поворотники при отпускании джойстика
                 if (lastTurnSignal.value) {
                     emit("toggleLight", "rotate", "stop", lastTurnSignal.value);
                     lastTurnSignal.value = null;
                 }
+                lin_speed.value = 0;
+                ang_speed.value = 0;
+                emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value })
 
                 emit("joystickEnd");
             });

@@ -235,7 +235,7 @@ export default {
       camera_1: "http://192.168.2.111:1984/stream.html?src=camera_1",
       camera_2: "http://192.168.2.111:1984/stream.html?src=camera_2",
       camera_3: "http://192.168.2.111:1984/stream.html?src=camera_3",
-      cameras_side: "http://192.168.2.111:1984/stream.html?src=camera_0&src=camera_1",
+      cameras_side: "http://192.168.2.111:1984/stream.html?src=camera_2&src=camera_3",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
     };
@@ -430,7 +430,7 @@ export default {
 
         case "side":
           commands = { 
-              on: ["C_SL_R_ON", "C_SL_L_ON"], 
+              on: ["C_SL_R_BLK", "C_SL_L_BLK"], 
               off: ["C_SL_R_OFF", "C_SL_L_OFF"] 
           };
           break;
@@ -486,7 +486,7 @@ export default {
     send_speed() {
       const wheelBase = 0.5;
       const wheelRadius = 0.175;
-      const maxRpm = 150;
+      const maxRpm = 50;
 
       this.handleStopSignal();
 
@@ -522,7 +522,7 @@ export default {
       const angSpeedAdj = (this.ang_speed * wheelBase * 30) / (Math.PI * wheelRadius);
 
       return {
-        leftSpeed: Math.max(-maxRpm, Math.min(maxRpm, Math.round(baseSpeed - angSpeedAdj))),
+        leftSpeed: Math.max(-maxRpm, Math.min(maxRpm, Math.round(baseSpeed + angSpeedAdj))),
         rightSpeed: Math.max(-maxRpm, Math.min(maxRpm, Math.round(baseSpeed - angSpeedAdj))),
       };
     },
@@ -542,11 +542,14 @@ export default {
       } else if (this.bkmStore.selectedBkm === "БКМ-2") {
         const speedCmd = new ROSLIB.Topic({
           ros,
-          name: "/speed_cmd",
-          messageType: "std_msgs/String",
+          name: "/cmd_vel",
+          messageType: "geometry_msgs/Twist",
         });
 
-        speedCmd.publish(new ROSLIB.Message({ data: command }));
+        this.twist.linear.x = this.lin_speed;
+        this.twist.angular.z = this.ang_speed;
+
+        speedCmd.publish(this.twist);
       }
     },
     send_brush_speed() {
@@ -620,7 +623,7 @@ export default {
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(-5px);
+  transform: translateX(-482px);
 }
 .slide-out-columnX.mapHide {
   transform: translateX(-315px);

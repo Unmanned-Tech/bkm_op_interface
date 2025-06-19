@@ -8,7 +8,7 @@ import main_menu from "./components/MainMenu.vue";
     <div class="container-fluid">
       <FullScreen></FullScreen>
       <router-view v-slot="{ Component }">
-        <Transition name="fade" mode="out-in">
+        <Transition name="fade">
           <Component :is="Component" />
         </Transition>
       </router-view>
