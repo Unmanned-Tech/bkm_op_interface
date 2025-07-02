@@ -60,6 +60,59 @@
                 </table>
             </div>
         </div>
+        <div class="bms-monitor">
+            <h2>BMS</h2>
+            <div class="cards">
+                <div class="card">
+                    <p class="label">Напряжение</p>
+                    <p class="value">{{ bmsData.total_voltage.toFixed(2) }} V</p>
+                </div>
+                <div class="card">
+                    <p class="label">Ток</p>
+                    <p class="value">{{ bmsData.current.toFixed(2) }} A</p>
+                </div>
+                <div class="card">
+                    <p class="label">SoC</p>
+                    <p class="value">{{ bmsData.soc }} %</p>
+                </div>
+                <div class="card">
+                    <p class="label">Остаточная емкость</p>
+                    <p class="value">{{ bmsData.remaining_capacity.toFixed(2) }} Ah</p>
+                </div>
+                <div class="card">
+                    <p class="label">Темп. мин</p>
+                    <p class="value" :class="getTempColor(minTemp)">{{ minTemp }} ℃</p>
+                </div>
+                <div class="card">
+                    <p class="label">Темп. макс</p>
+                    <p class="value" :class="getTempColor(maxTemp)">{{ maxTemp }} ℃</p>
+                </div>
+                <div class="card">
+                    <p class="label">Зарядный мосфет</p>
+                    <p class="value">{{ bmsData.charge_mosfet }}</p>
+                </div>
+                <div class="card">
+                    <p class="label">Разрядный мосфет</p>
+                    <p class="value">{{ bmsData.discharge_mosfet }}</p>
+                </div>
+                <div class="card">
+                    <p class="label">Статус балансировки</p>
+                    <p class="value">{{ bmsData.balancer_status }}</p>
+                </div>
+                <div class="card">
+                    <p class="label">Мощность</p>
+                    <p class="value">{{ bmsData.current_power }} W</p>
+                </div>
+                <div class="card">
+                    <p class="label">Ср. напряжение ячейки</p>
+                    <p class="value">{{ bmsData.avg_cell_voltage.toFixed(2) }} V</p>
+                </div>
+                <div class="card">
+                    <p class="label">Макс. дисбаланс</p>
+                    <p class="value">{{ (bmsData.cell_with_highest_voltage.toFixed(4) - bmsData.cell_with_lowest_voltage.toFixed(4)).toFixed(4) }} V</p>
+                </div>
+            </div>
+        </div>
         <div class="log-monitor">
             <h2>Log's</h2>
             <div class="log-controls">
@@ -124,6 +177,39 @@ export default {
         const consoleRef = ref(null);
         const logFilters = ref([20, 30, 40]); // Default: INFO, WARN, ERROR
 
+        const bmsData = ref({
+            total_voltage: 0,
+            current: 0,
+            soc: 0,
+            remaining_capacity: 0,
+            temperatures: [],
+            charge_mosfet: 0,
+            discharge_mosfet: 0,
+            balancer_status: 0,
+            current_power: 0,
+            avg_cell_voltage: 0,
+            cell_with_highest_voltage: 0,
+            cell_with_lowest_voltage: 0
+        });
+
+        const minTemp = computed(() => {
+            return bmsData.value.temperatures.length
+                ? Math.min(...bmsData.value.temperatures)
+                : 0;
+        });
+
+        const maxTemp = computed(() => {
+            return bmsData.value.temperatures.length
+                ? Math.max(...bmsData.value.temperatures)
+                : 0;
+        });
+
+        const getTempColor = (temp) => {
+            if (temp < 0) return 'low';
+            if (temp > 45) return 'high';
+            return 'normal';
+        };
+
         const logLevels = ref([
             { value: 10, label: "DEBUG", class: "debug" },
             { value: 20, label: "INFO", class: "info" },
@@ -140,6 +226,31 @@ export default {
                 console.error("no connect to ros");
                 return;
             }
+
+            const bmsTopic = new ROSLIB.Topic({
+                ros: rosStore.ros,
+                name: "/bms_data",
+                messageType: "mcu_msgs/msg/BMSData"
+            });
+
+            bmsTopic.subscribe((msg) => {
+                bmsData.value = {
+                    total_voltage: msg.total_voltage,
+                    current: msg.current,
+                    soc: msg.soc,
+                    remaining_capacity: msg.remaining_capacity,
+                    temperatures: msg.temperatures,
+                    charge_mosfet: msg.charge_mosfet,
+                    discharge_mosfet: msg.discharge_mosfet,
+                    balancer_status: msg.balancer_status,
+                    current_power: msg.current_power,
+                    avg_cell_voltage: msg.avg_cell_voltage,
+                    cell_with_highest_voltage: msg.cell_with_highest_voltage,
+                    cell_with_lowest_voltage: msg.cell_with_lowest_voltage
+                }
+            });
+
+            topics.push(bmsTopic);
 
             const logTopic = new ROSLIB.Topic({
                 ros: rosStore.ros,
@@ -174,7 +285,7 @@ export default {
                 });
 
                 vescState.subscribe((msg) => {
-                    vescState.value[wheel.toUpperCase()] = {
+                    vescData.value[wheel.toUpperCase()] = {
                         "Темп. FET": `${msg.temp_fet.toFixed(1)} °C`,
                         "Темп. мотора": `${msg.temp_motor.toFixed(1)} °C`,
                         "Ток мотора": `${msg.current_motor.toFixed(2)} A`,
@@ -425,7 +536,11 @@ export default {
             consoleRef,
             formatLogTime,
             clearLogs,
-            toggleLight
+            toggleLight,
+            bmsData,
+            getTempColor,
+            minTemp,
+            maxTemp
         };
     },
 };
@@ -461,6 +576,13 @@ p {
     border-radius: 12px;
     text-align: center;
     grid-column: span 2;
+}
+.bms-monitor {
+    max-width: 100%;
+    padding: 1.5rem;
+    background-color: var(--grey6);
+    border-radius: 12px;
+    text-align: center;
 }
 .log-monitor {
     grid-column: span 2;
