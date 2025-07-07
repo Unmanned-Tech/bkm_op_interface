@@ -3,6 +3,9 @@
         <div class="header">
             <h2>Safety Modules</h2>
             <div class="config-controls">
+                <div v-if="isApplying" class="applying-overlay">
+                    Applying changes: {{ appliedCount }}/{{ totalChanges }}
+                </div>
                 <Transition name="fade-config" mode="out-in">
                     <button v-if="!isConfiguring" @click="enterConfigMode" class="config-btn">
                         Изменить inhibit
@@ -18,7 +21,7 @@
         <div class="cards">
             <div
                 v-for="(module, index) in safetyModules"
-                :key="index"
+                :key="`${module.id}-${module.status}`"
                 class="card"
                 :class="module.status"
             >
@@ -97,8 +100,18 @@ const safetyModules = ref(
 );
 
 const isConfiguring = ref(false);
-const inhibitConfig = ref({});
+const inhibitConfig = ref(
+    Object.keys(MODULE_NAMES).reduce((acc, id) => {
+        acc[id] = false;
+        return acc;
+    }, {})
+);
+const prevInhibitConfig = ref({});
 const statusInterval = ref(null);
+
+const isApplying = ref(false);
+const appliedCount = ref(0);
+const totalChanges = ref(0);
 
 // Общая функция для вызова сервисов
 function callService(serviceName, serviceType, requestData = {}) {
@@ -131,13 +144,9 @@ async function getInhibitConfig() {
             '/safety/cfg_inh_show',
             'std_srvs/srv/Trigger'
         );
-        // const response = {
-        //     success: true,
-        //     message: "F_CFG_INH_1_1_1_1_1_0_0_0_0_0_0_0_0_0_0_0_0_0"
-        // }
 
         if (response.success && response.message.includes("F_CFG_INH")) {
-            const states = response.message.match(/\d/g);
+            const states = response.message.split('_').slice(-Object.keys(MODULE_NAMES).length)
 
             Object.keys(MODULE_NAMES).forEach((id, index) => {
                 inhibitConfig.value[id] = states[index] === '1';
@@ -158,6 +167,7 @@ async function enterConfigMode() {
     }
 
     await getInhibitConfig();
+    prevInhibitConfig.value = {...inhibitConfig.value};
 }
 
 // Выход из режима конфигурации
@@ -165,30 +175,50 @@ function cancelConfig() {
     isConfiguring.value = false;
 
     if (!statusInterval.value) {
-        statusInterval.value = setInterval(callModulesStatusService, 5000);
+        callModulesStatusService();
+        statusInterval.value = setInterval(callModulesStatusService, 3000);
     }
 }
 
 // Применение конфигурации
 async function applyConfig() {
     try {
-        await callService(
-            '/safety/cfg_inh_reset',
-            'std_srvs/srv/Trigger'
-        );
+        const changedModules = [];
 
-        for (const [moduleId, isInhibited] of Object.entries(inhibitConfig.value)) {
-            await callService(
-                '/safety/cfg_inh_module',
-                'mcu_msgs/srv/SetModuleState',
-                {
-                    module_num: parseInt(moduleId),
-                    state: isInhibited ? 1 : 0
-                }
-            );
+        Object.entries(inhibitConfig.value).forEach(([moduleId, currentState]) => {
+            const previousState = prevInhibitConfig.value[moduleId];
+
+            if (previousState !== undefined && currentState !== previousState) {
+                changedModules.push({
+                    id: parseInt(moduleId),
+                    state: currentState
+                });
+            }
+        });
+
+        if (changedModules.length === 0) {
+            cancelConfig();
+            return;
         }
 
+        isApplying.value = true;
+        appliedCount.value = 0;
+        totalChanges.value = changedModules.length;
+
+        const requests = changedModules.map((module) =>
+            callService('/safety/cfg_inh_module', 'mcu_msgs/srv/SetModuleState', {
+                module_num: module.id,
+                state: module.state ? 1 : 0
+            }).then(() => { appliedCount.value++; })
+        );
+
+        await Promise.all(requests);
+        isApplying.value = false;
+
+        await getInhibitConfig();
         await callModulesStatusService();
+
+        prevInhibitConfig.value = { ...inhibitConfig.value };
 
         cancelConfig();
     } catch (error) {
@@ -201,9 +231,7 @@ const updateModulesStatus = (statusString) => {
     if (!statusString.includes("F_MODULES_STATUS")) return;
 
     try {
-    
-        const statusArray = statusString.match(/\d/g);
-    
+        const statusArray = statusString.split('_').slice(-Object.keys(MODULE_NAMES).length);
         safetyModules.value = Object.entries(MODULE_NAMES).map(([id, name]) => {
             const inhibited = inhibitConfig.value[id];
             const active = statusArray[id - 1] === "1";
@@ -227,11 +255,6 @@ async function callModulesStatusService() {
             'std_srvs/srv/Trigger'
         );
 
-        // const response = {
-        //     success: true,
-        //     message: "F_MODULES_STATUS_1_1_1_1_1_1_1_1_1_0_0_0_0_0_0_0_0_0"
-        // }
-
         if (response.success) {
             updateModulesStatus(response.message);
         }
@@ -242,8 +265,9 @@ async function callModulesStatusService() {
 
 onMounted(async () => {
     try {
-        await getInhibitConfig();
-        await callModulesStatusService();
+        await Promise.all([getInhibitConfig(), callModulesStatusService()]);
+
+        prevInhibitConfig.value = { ...inhibitConfig.value };
 
         statusInterval.value = setInterval(async () => {
             try {
@@ -251,7 +275,7 @@ onMounted(async () => {
             } catch (error) {
                 console.error("Error fetching modules status:", error);
             }
-        }, 5000);
+        }, 3000);
 
         onUnmounted(() => {
             if (statusInterval.value) {
@@ -286,6 +310,13 @@ p {
     border-radius: 12px;
     text-align: center;
     box-sizing: border-box;
+}
+
+.applying-overlay {
+    margin-right: 0.5rem;
+    color: var(--p-slate-500);
+    display: flex;
+    align-items: center;
 }
 
 .modules-status .cards {
