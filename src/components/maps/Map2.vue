@@ -7,16 +7,16 @@ import { ref, onMounted } from 'vue';
 import "leaflet/dist/leaflet.css";
 import * as L from 'leaflet';
 
-const initialMap1 = ref(null);
+const initialMap2 = ref(null);
 
 onMounted(()=> {
-    initialMap1.value = L.map('map2', { zoomControl: false,zoom:1,zoomAnimation:false,fadeAnimation:true,markerZoomAnimation:true, attributionControl:false}).setView([55.02240, 73.29929], 16);
+    initialMap2.value = L.map('map2', { zoomControl: false,zoom:1,zoomAnimation:false,fadeAnimation:true,markerZoomAnimation:true, attributionControl:false}).setView([55.02240, 73.29929], 16);
     L.tileLayer('/src/assets/Tiles//{z}/{x}/{y}.png', {
         className: 'map-tiles'
-    }).addTo(initialMap1.value);
+    }).addTo(initialMap2.value);
     L.control.zoom({
         position: 'topright',
-    }).addTo(initialMap1.value)
+    }).addTo(initialMap2.value)
 });
 </script>
 

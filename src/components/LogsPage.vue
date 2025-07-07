@@ -3,155 +3,115 @@
         Safety {{ safetyState }}
     </button>
     <div class="main">
-        <div class="power-monitor">
-            <h2>DC</h2>
-            <div class="cards">
-                <div class="card">
-                    <p class="label">U-OUT</p>
-                    <p class="value" :class="getColor(u_out, 10, 30)">{{ u_out }} V</p>
+        <grid-layout 
+            v-model:layout="layout"
+            :row-height="2"
+            :is-draggable="true"
+            :is-resizable="false"
+            :vertical-compact="true"
+            :margin="[10, 10]"
+            :use-css-transforms="true"
+            class="vue-grid-layout"
+        >
+            <grid-item :x="layout[0].x" :y="layout[0].y" :w="layout[0].w" :h="layout[0].h" :i="layout[0].i" :minW="layout[0].minW" :minH="layout[0].minH" class="vue-grid-item">
+                <div class="power-monitor">
+                    <h2>DC</h2>
+                    <div class="cards">
+                        <div class="card">
+                            <p class="label">U-OUT</p>
+                            <p class="value" :class="getColor(u_out, 10, 30)">{{ u_out }} V</p>
+                        </div>
+                        <div class="card">
+                            <p class="label">I-OUT</p>
+                            <p class="value" :class="getColor(i_out, 5, 15)">{{ i_out }} A</p>
+                        </div>
+                        <div class="card">
+                            <p class="label">POWER</p>
+                            <p class="value" :class="getColor(power, 50, 200)">{{ power }} W</p>
+                        </div>
+                        <div class="card">
+                            <p class="label">U-IN</p>
+                            <p class="value" :class="getColor(u_in, 10, 50)">{{ u_in }} V</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
-                    <p class="label">I-OUT</p>
-                    <p class="value" :class="getColor(i_out, 5, 15)">{{ i_out }} A</p>
-                </div>
-                <div class="card">
-                    <p class="label">POWER</p>
-                    <p class="value" :class="getColor(power, 50, 200)">{{ power }} W</p>
-                </div>
-                <div class="card">
-                    <p class="label">U-IN</p>
-                    <p class="value" :class="getColor(u_in, 10, 50)">{{ u_in }} V</p>
-                </div>
-            </div>
-        </div>
-        <div class="light-monitor">
-            <h2>Свет</h2>
-            <div class="cards">
-                <div 
-                    v-for="(light, index) in lights"
-                    :key="index"
-                    class="card"
-                    :class="getStatusClass(light.status)"
-                    @click="toggleLight(light)"
-                >
-                    <p class="label">{{ light.device }}</p>
-                    <p class="status">{{ formatStatus(light.status, light.value) }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="vesc-monitor">
-            <h2>VESC</h2>
-            <div class="vesc-table-container">
-                <table class="vesc-table">
-                    <thead>
-                        <tr>
-                            <th>Показатель</th>
-                            <th v-for="(data, id) in vescData" :key="id">Controller {{ id }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="key in parameterKeys" :key="key">
-                            <td>{{ key }}</td>
-                            <td v-for="(data, id) in vescData" :key="id">
-                                {{ data[key] ?? '-' }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="bms-monitor">
-            <h2>BMS</h2>
-            <div class="cards">
-                <div class="card">
-                    <p class="label">Напряжение</p>
-                    <p class="value">{{ bmsData.total_voltage.toFixed(2) }} V</p>
-                </div>
-                <div class="card">
-                    <p class="label">Ток</p>
-                    <p class="value">{{ bmsData.current.toFixed(2) }} A</p>
-                </div>
-                <div class="card">
-                    <p class="label">SoC</p>
-                    <p class="value">{{ bmsData.soc }} %</p>
-                </div>
-                <div class="card">
-                    <p class="label">Остаточная емкость</p>
-                    <p class="value">{{ bmsData.remaining_capacity.toFixed(2) }} Ah</p>
-                </div>
-                <div class="card">
-                    <p class="label">Темп. мин</p>
-                    <p class="value" :class="getTempColor(minTemp)">{{ minTemp }} ℃</p>
-                </div>
-                <div class="card">
-                    <p class="label">Темп. макс</p>
-                    <p class="value" :class="getTempColor(maxTemp)">{{ maxTemp }} ℃</p>
-                </div>
-                <div class="card">
-                    <p class="label">Зарядный мосфет</p>
-                    <p class="value">{{ bmsData.charge_mosfet }}</p>
-                </div>
-                <div class="card">
-                    <p class="label">Разрядный мосфет</p>
-                    <p class="value">{{ bmsData.discharge_mosfet }}</p>
-                </div>
-                <div class="card">
-                    <p class="label">Статус балансировки</p>
-                    <p class="value">{{ bmsData.balancer_status }}</p>
-                </div>
-                <div class="card">
-                    <p class="label">Мощность</p>
-                    <p class="value">{{ bmsData.current_power }} W</p>
-                </div>
-                <div class="card">
-                    <p class="label">Ср. напряжение ячейки</p>
-                    <p class="value">{{ bmsData.avg_cell_voltage.toFixed(2) }} V</p>
-                </div>
-                <div class="card">
-                    <p class="label">Макс. дисбаланс</p>
-                    <p class="value">{{ (bmsData.cell_with_highest_voltage.toFixed(4) - bmsData.cell_with_lowest_voltage.toFixed(4)).toFixed(4) }} V</p>
-                </div>
-            </div>
-        </div>
-        <div class="log-monitor">
-            <h2>Log's</h2>
-            <div class="log-controls">
-                <button @click="clearLogs()">Очистить</button>
-                <label>
-                    <input type="checkbox" v-model="autoScroll" /> Автопрокрутка
-                </label>
-                <div class="filter-controls">
-                    <label v-for="level in logLevels" :key="level.value">
-                        <input type="checkbox" v-model="logFilters" :value="level.value"/>
-                        <span :class="level.class">{{ level.label }}</span>
-                    </label>
-                </div>
-            </div>
-            <div class="log-console" ref="consoleRef">
-                <table class="log-table">
-                    <thead>
-                        <tr>
-                            <th>Время</th>
-                            <th>Уровень</th>
-                            <th>Сообщение</th>
-                            <th>Узел</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(log, index) in filteredLogs"
+            </grid-item>
+            <grid-item :x="layout[1].x" :y="layout[1].y" :w="layout[1].w" :h="layout[1].h" :i="layout[1].i" :minW="layout[1].minW" :minH="layout[1].minH" class="vue-grid-item">
+                <div class="light-monitor">
+                    <h2>Свет</h2>
+                    <div class="cards">
+                        <div 
+                            v-for="(light, index) in lights"
                             :key="index"
-                            :class="log.levelClass"
+                            class="card"
+                            :class="getStatusClass(light.status)"
+                            @click="toggleLight(light)"
                         >
-                            <td>{{ formatLogTime(log.stamp) }}</td>
-                            <td>{{ log.levelText }}</td>
-                            <td>{{ log.msg }}</td>
-                            <td>{{ log.name }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                            <p class="label">{{ light.device }}</p>
+                            <p class="status">{{ formatStatus(light.status, light.value) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </grid-item>
+            <grid-item :x="layout[2].x" :y="layout[2].y" :w="layout[2].w" :h="layout[2].h" :i="layout[2].i" :minW="layout[2].minW" :minH="layout[2].minH" class="vue-grid-item">
+                <VESCMonitor />
+            </grid-item>
+            <grid-item :x="layout[3].x" :y="layout[3].y" :w="layout[3].w" :h="layout[3].h" :i="layout[3].i" :minW="layout[3].minW" :minH="layout[3].minH" class="vue-grid-item">
+                <BMSMonitorLeft />
+            </grid-item>
+            <grid-item :x="layout[4].x" :y="layout[4].y" :w="layout[4].w" :h="layout[4].h" :i="layout[4].i" :minW="layout[4].minW" :minH="layout[4].minH" class="vue-grid-item">
+                <BMSMonitorRight />
+            </grid-item>
+            <grid-item :x="layout[5].x" :y="layout[5].y" :w="layout[5].w" :h="layout[5].h" :i="layout[5].i" :minW="layout[5].minW" :minH="layout[5].minH" class="vue-grid-item">
+                <SafetyModules />
+            </grid-item>
+            <grid-item :x="layout[6].x" :y="layout[6].y" :w="layout[6].w" :h="layout[6].h" :i="layout[6].i" :minW="layout[6].minW" :minH="layout[6].minH" class="vue-grid-item">
+                <SafetyConf />
+            </grid-item>
+            <grid-item :x="layout[7].x" :y="layout[7].y" :w="layout[7].w" :h="layout[7].h" :i="layout[7].i" :minW="layout[7].minW" :minH="layout[7].minH" class="vue-grid-item">
+                <div class="log-monitor">
+                    <h2>Logs</h2>
+                    <div class="log-controls">
+                        <button class="clear-logs" @click="clearLogs()">Очистить</button>
+                        <label>
+                            <input type="checkbox" v-model="autoScroll" /> Автопрокрутка
+                        </label>
+                        <div class="filter-controls">
+                            <label v-for="level in logLevels" :key="level.value">
+                                <input type="checkbox" v-model="logFilters" :value="level.value"/>
+                                <span :class="level.class">{{ level.label }}</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="log-console" ref="consoleRef">
+                        <table class="log-table">
+                            <thead>
+                                <tr>
+                                    <th>Время</th>
+                                    <th>Уровень</th>
+                                    <th>Сообщение</th>
+                                    <th>Узел</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(log, index) in filteredLogs"
+                                    :key="index"
+                                    :class="log.levelClass"
+                                >
+                                    <td>{{ formatLogTime(log.stamp) }}</td>
+                                    <td>{{ log.levelText }}</td>
+                                    <td>{{ log.msg }}</td>
+                                    <td>{{ log.name }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </grid-item>
+            
+        </grid-layout>
+        
     </div>
 </template>
 
@@ -159,56 +119,56 @@
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from "vue";
 import { useRosStore } from "@/stores/ConfigStore";
 import ROSLIB from "roslib";
+import BMSMonitorLeft from "./LogsComponents/BMSMonitorLeft.vue";
+import BMSMonitorRight from "./LogsComponents/BMSMonitorRight.vue";
+import VESCMonitor from "./LogsComponents/VESCMonitor.vue";
+import SafetyModules from "./LogsComponents/SafetyModules.vue";
+import SafetyConf from "./LogsComponents/SafetyConf.vue";
+import { GridLayout, GridItem } from 'vue-grid-layout-v3';
 
 export default {
+    components: {
+        BMSMonitorLeft,
+        BMSMonitorRight,
+        VESCMonitor,
+        SafetyModules,
+        SafetyConf,
+        GridLayout,
+        GridItem
+    },
     setup() {
+        const layout = ref([
+            { x: 0, y: 0, w: 6, h: 22, i: "0", minW: 6, minH: 22 }, // Power Monitor
+            { x: 6, y: 0, w: 6, h: 22, i: "1", minW: 6, minH: 22 }, // Light Monitor
+            { x: 0, y: 1, w: 12, h: 34, i: "2", minW: 12, minH: 34 }, // VESC Monitor
+            { x: 0, y: 1, w: 6, h: 30, i: "3", minW: 6, minH: 30 }, // Left BMS Monitor 
+            { x: 6, y: 1, w: 6, h: 30, i: "4", minW: 6, minH: 30 }, // Right BMS Monitor
+            { x: 0, y: 1, w: 8, h: 28, i: "5", minW: 6, minH: 28 }, // Safety Modules Monitor
+            { x: 8, y: 1, w: 4, h: 28, i: "6", minW: 12, minH: 28 }, // Safety Config
+            { x: 0, y: 1, w: 12, h: 46, i: "7", minW: 12, minH: 46 }, // Logs
+        ]);
         const rosStore = useRosStore();
         const u_out = ref(0);
         const i_out = ref(0);
         const power = ref(0);
         const u_in = ref(0);
         const safetyState = ref(null);
-        const vescData = ref({});
 
-        const lights = ref([]);
+        const lights = ref([
+            { device: "HL", status: "OFF", value: 0 },
+            { device: "SL_L", status: "OFF", value: 0 },
+            { device: "SL_R", status: "OFF", value: 0 },
+            { device: "FL_L", status: "OFF", value: 0 },
+            { device: "FL_R", status: "OFF", value: 0 },
+            { device: "DL", status: "OFF", value: 0 },
+            { device: "SS", status: "OFF", value: 0 },
+            { device: "EL", status: "OFF", value: 0 }
+        ]);
 
         const logs = ref([]);
         const autoScroll = ref(true);
         const consoleRef = ref(null);
         const logFilters = ref([20, 30, 40]); // Default: INFO, WARN, ERROR
-
-        const bmsData = ref({
-            total_voltage: 0,
-            current: 0,
-            soc: 0,
-            remaining_capacity: 0,
-            temperatures: [],
-            charge_mosfet: 0,
-            discharge_mosfet: 0,
-            balancer_status: 0,
-            current_power: 0,
-            avg_cell_voltage: 0,
-            cell_with_highest_voltage: 0,
-            cell_with_lowest_voltage: 0
-        });
-
-        const minTemp = computed(() => {
-            return bmsData.value.temperatures.length
-                ? Math.min(...bmsData.value.temperatures)
-                : 0;
-        });
-
-        const maxTemp = computed(() => {
-            return bmsData.value.temperatures.length
-                ? Math.max(...bmsData.value.temperatures)
-                : 0;
-        });
-
-        const getTempColor = (temp) => {
-            if (temp < 0) return 'low';
-            if (temp > 45) return 'high';
-            return 'normal';
-        };
 
         const logLevels = ref([
             { value: 10, label: "DEBUG", class: "debug" },
@@ -219,38 +179,12 @@ export default {
         ]);
 
         let topics = [];
-        const wheelNames = ["fl", "fr", "rl", "rr"]
 
         const subscribeToTopics = () => {
             if(!rosStore.ros) {
                 console.error("no connect to ros");
                 return;
             }
-
-            const bmsTopic = new ROSLIB.Topic({
-                ros: rosStore.ros,
-                name: "/bms_data",
-                messageType: "mcu_msgs/msg/BMSData"
-            });
-
-            bmsTopic.subscribe((msg) => {
-                bmsData.value = {
-                    total_voltage: msg.total_voltage,
-                    current: msg.current,
-                    soc: msg.soc,
-                    remaining_capacity: msg.remaining_capacity,
-                    temperatures: msg.temperatures,
-                    charge_mosfet: msg.charge_mosfet,
-                    discharge_mosfet: msg.discharge_mosfet,
-                    balancer_status: msg.balancer_status,
-                    current_power: msg.current_power,
-                    avg_cell_voltage: msg.avg_cell_voltage,
-                    cell_with_highest_voltage: msg.cell_with_highest_voltage,
-                    cell_with_lowest_voltage: msg.cell_with_lowest_voltage
-                }
-            });
-
-            topics.push(bmsTopic);
 
             const logTopic = new ROSLIB.Topic({
                 ros: rosStore.ros,
@@ -276,42 +210,6 @@ export default {
             });
 
             topics.push(logTopic);
-
-            wheelNames.forEach((wheel) => {
-                const vescState = new ROSLIB.Topic({
-                    ros: rosStore.ros,
-                    name: `/vesc/state/${wheel}`,
-                    messageType: "mcu_msgs/msg/VescState",
-                });
-
-                vescState.subscribe((msg) => {
-                    vescData.value[wheel.toUpperCase()] = {
-                        "Темп. FET": `${msg.temp_fet.toFixed(1)} °C`,
-                        "Темп. мотора": `${msg.temp_motor.toFixed(1)} °C`,
-                        "Ток мотора": `${msg.current_motor.toFixed(2)} A`,
-                        "Ток входной": `${msg.current_input.toFixed(2)} A`,
-                        "Напряжение": `${msg.voltage_input.toFixed(2)} V`,
-                        "Duty cycle": `${(msg.duty_cycle * 100).toFixed(1)} %`,
-                        "Скорость": `${msg.speed} об/мин`,
-                        "Заряд (drawn)": `${msg.charge_drawn.toFixed(2)} А·ч`,
-                        "Заряд (regen)": `${msg.charge_regen.toFixed(2)} А·ч`,
-                        "Энергия (drawn)": `${msg.energy_drawn.toFixed(2)} Вт·ч`,
-                        "Энергия (regen)": `${msg.energy_regen.toFixed(2)} Вт·ч`,
-                        "Tacho": msg.displacement,
-                        "Tacho abs": msg.distance_traveled,
-                        "avg_id": msg.avg_id.toFixed(2),
-                        "avg_iq": msg.avg_iq.toFixed(2),
-                        "avg_vd": msg.avg_vd.toFixed(2),
-                        "avg_vq": msg.avg_vq.toFixed(2),
-                        "NTC MOS 1": `${msg.ntc_temp_mos1.toFixed(1)} °C`,
-                        "NTC MOS 2": `${msg.ntc_temp_mos2.toFixed(1)} °C`,
-                        "NTC MOS 3": `${msg.ntc_temp_mos3.toFixed(1)} °C`,
-                        "Fault code": msg.fault_code
-                    };
-                });
-
-                topics.push(vescState);
-            })
 
             const safetyStateTopic = new ROSLIB.Topic({
                 ros: rosStore.ros,
@@ -382,7 +280,7 @@ export default {
             logs.value = [];
         };
 
-         // Автопрокрутка
+        // Автопрокрутка
         watch(filteredLogs, async () => {
             if (autoScroll.value) {
                 await nextTick();
@@ -454,9 +352,9 @@ export default {
         }
 
         const formatStatus = (status, value) => {
-            if (status === "BLK") return `Мигает`;
-            if (status === "ON") return `Включен`;
-            return "Выключен";
+            if (status === "BLK") return `blink`;
+            if (status === "ON") return `Вкл`;
+            return "Выкл";
         }
 
         const toggleLight = (light) => {
@@ -490,44 +388,18 @@ export default {
 
         }
 
-        const parameterKeys = [
-            "Темп. FET",
-            "Темп. мотора",
-            "Ток мотора",
-            "Ток входной",
-            "Напряжение",
-            "Duty cycle",
-            "Скорость",
-            "Заряд (drawn)",
-            "Заряд (regen)",
-            "Энергия (drawn)",
-            "Энергия (regen)",
-            "Tacho",
-            "Tacho abs",
-            "avg_id",
-            "avg_iq",
-            "avg_vd",
-            "avg_vq",
-            "NTC MOS 1",
-            "NTC MOS 2",
-            "NTC MOS 3",
-            "Fault code",
-        ];
-
-        return { 
+        return {
             u_out, 
             i_out, 
             power, 
             u_in, 
             getColor, 
             lights, 
-            vescData, 
             getStatusClass, 
             formatStatus, 
             sendUnblockCommand, 
             updateUnlockButtonColor, 
             safetyState, 
-            parameterKeys,
             logs,
             filteredLogs,
             logLevels,
@@ -537,10 +409,7 @@ export default {
             formatLogTime,
             clearLogs,
             toggleLight,
-            bmsData,
-            getTempColor,
-            minTemp,
-            maxTemp
+            layout
         };
     },
 };
@@ -550,91 +419,82 @@ export default {
 p {
     margin: 0;
 }
-.main {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-}
-.power-monitor {
+
+.vue-grid-layout {
     max-width: 100%;
-    padding: 1.5rem;
-    background-color: var(--grey6);
-    border-radius: 12px;
-    text-align: center;
+    height: 100%;
+    background: transparent;
 }
+
+.power-monitor,
 .light-monitor {
-    max-width: 100%;
+    height: 100%;
+    width: 100%;
     padding: 1.5rem;
     background-color: var(--grey6);
     border-radius: 12px;
     text-align: center;
-}
-.vesc-monitor {
-    max-width: 100%;
-    padding: 1.5rem;
-    background-color: var(--grey6);
-    border-radius: 12px;
-    text-align: center;
-    grid-column: span 2;
-}
-.bms-monitor {
-    max-width: 100%;
-    padding: 1.5rem;
-    background-color: var(--grey6);
-    border-radius: 12px;
-    text-align: center;
+    box-sizing: border-box;
 }
 .log-monitor {
-    grid-column: span 2;
+    height: 100%;
+    width: 100%;
+    padding: 1.5rem;
     background-color: var(--grey6);
     border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 1rem;
+    box-sizing: border-box;
 }
 .log-console {
     max-height: 400px;
     overflow-y: auto;
     background-color: #1e1e1e;
-    border-radius: 8px;
-    padding: 10px;
+    border-radius: 12px;
     font-family: monospace;
     margin-top: 10px;
 }
 .log-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: #d4d4d4;
+    width: 100%;
+    border-collapse: collapse;
+    color: #d4d4d4;
 }
 
 .log-table th {
-  position: sticky;
-  top: 0;
-  background-color: #2d2d2d;
-  padding: 8px;
-  text-align: left;
+    position: sticky;
+    top: 0;
+    background-color: #2d2d2d;
+    padding: 8px;
+    text-align: left;
 }
 
 .log-table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid #3c3c3c;
+    padding: 6px 8px;
+    border-bottom: 1px solid #3c3c3c;
 }
 
 .log-controls {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .filter-controls {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .filter-controls label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.clear-logs {
+    background-color: color-mix(in srgb, rgba(14,165,233,1.0) 16%, transparent);
+    color: var(--p-sky-300);
+    border: 2px solid var(--p-sky-900);
+    border-radius: 12px;
+    padding: .25rem 1rem;
 }
 
 /* Цвета для уровней логов */
@@ -651,9 +511,9 @@ tr.error td { background-color: #3a0a0a; }
 tr.fatal td { background-color: #4a0000; animation: pulse 1s infinite; }
 
 @keyframes pulse {
-  0% { background-color: #4a0000; }
-  50% { background-color: #6a0000; }
-  100% { background-color: #4a0000; }
+    0% { background-color: #4a0000; }
+    50% { background-color: #6a0000; }
+    100% { background-color: #4a0000; }
 }
 
 h2 {
@@ -661,21 +521,22 @@ h2 {
     margin-bottom: 1rem;
     color: var(--text-color)
 }
+
 .cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 0.5rem;
 }
-.cards-vesc {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0.5rem
+
+.card {
+    background: var(--grey4);
+    padding: .5rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s;
 }
-.vesc-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
+
 table tr:last-child td:first-child {
     border-bottom-left-radius: 12px;
 }
@@ -689,31 +550,8 @@ table tr:first-child th:last-child {
     border-top-right-radius: 12px;
 }
 
-.vesc-table th,
-.vesc-table td {
-  border: 1px solid var(--grey4);
-  padding: 8px 12px;
-  text-align: center;
-}
-
-.vesc-table th {
-  background-color: var(--grey5);
-}
-.card {
-    background: var(--grey4);
-    padding: .5rem;
-    border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
-}
-
-.card:hover {
-    transform: scale(1.03);
-}
-
-.card:active {
-    filter: brightness(0.9);
+.light-monitor > .cards > .card:active {
+    filter: brightness(0.7);
 }
 .label {
     font-size: 1.2rem;
@@ -747,31 +585,42 @@ table tr:first-child th:last-child {
 .blink {
     background-color: var(--orange);
     color: var(--text-color);
-    animation: blink 1s infinite alternate;
 }
 .lock {
-    background-color: var(--red);
-    color: var(--text-color);
+    background-color: color-mix(in srgb, var(--p-red-950) 30%, transparent);
+    color: var(--p-red-500);
+    border: 2px solid var(--p-red-900);
 }
 .unlock {
-    background-color: var(--green);
-    color: var(--text-color);
+    background-color: var(--p-green-950);
+    color: var(--p-emerald-400);
+    border: 2px solid var(--p-emerald-900);
 }
 .safety-unlock {
-    outline: none;
-    border: none;
-    /* background-color: var(--grey4); */
-    /* color: var(--text-color); */
     padding: .75rem 1.5rem;
     border-radius: 12px;
-    margin: 1rem;
+    margin: 0.75rem;
     transition: all 0.5s;
 }
 .safety-unlock:active {
     filter: brightness(0.5);
 }
-@keyframes blink {
-    from { opacity: 1; }
-    to { opacity: 0.5; }
+
+@media screen and (max-width: 968px) {
+    .power-monitor :deep(.label) {
+        font-size: 1.0rem;
+    }
+
+    .power-monitor :deep(.value) {
+        font-size: 1.2rem;
+    }
+
+    .power-monitor .cards {
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    }
+
+    .light-monitor .cards {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
 }
 </style>

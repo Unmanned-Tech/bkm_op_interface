@@ -6,7 +6,7 @@ export const useRosStore = defineStore("ros",() => {
     const isConnected = ref(false);
     const connectionError = ref(null);
 
-    const connect = (url = "ws://192.168.2.111:9090") => {
+    const connect = (url = "ws://192.168.0.18:9090") => {
         ros.value = new ROSLIB.Ros({ url });
 
         ros.value.on("connection", () => {
@@ -30,7 +30,7 @@ export const useRosStore = defineStore("ros",() => {
         })
     }
 
-    onMounted(() => connect());
+    onBeforeMount(() => connect());
     // onUnmounted(() => ros.value?.close());
     
     return { ros, isConnected, connectionError, connect };

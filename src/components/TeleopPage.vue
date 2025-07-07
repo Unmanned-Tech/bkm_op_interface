@@ -151,7 +151,7 @@ import Headlight from "@/assets/headlights.svg";
 import Brush from "@/assets/brush.svg";
 import Strobe from "@/assets/strobe.svg";
 import EmerStopButton from "./EmerStopButton.vue";
-import Map from "@/components/maps/Map1.vue";
+import Map from "@/components/maps/MapTeleop.vue";
 import camSettings from "@/components/camSettings.vue";
 
 import { useBkmStore } from "@/stores/bkmStore";

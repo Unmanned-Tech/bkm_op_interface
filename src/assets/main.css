@@ -1,6 +1,7 @@
 @import '~leafletdraw/leaflet.draw-src.css';
 @import '~leaflet/leaflet.css';
 @import "vue-draggable-resizable/style.css";
+@import "./colors.css";
 
 a.router-link-active.router-link-exact-active.link {
   background-color: var(--bg-secondary);
