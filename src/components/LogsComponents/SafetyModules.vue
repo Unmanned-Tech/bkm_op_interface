@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onUnmounted, Transition, TransitionGroup } from 'vue';
+import { onMounted, ref, onUnmounted, Transition } from 'vue';
 import { useRosStore } from "@/stores/ConfigStore";
 import ROSLIB from 'roslib';
 
@@ -176,7 +176,7 @@ function cancelConfig() {
 
     if (!statusInterval.value) {
         callModulesStatusService();
-        statusInterval.value = setInterval(callModulesStatusService, 3000);
+        statusInterval.value = setInterval(callModulesStatusService, 5000);
     }
 }
 
@@ -275,23 +275,28 @@ onMounted(async () => {
             } catch (error) {
                 console.error("Error fetching modules status:", error);
             }
-        }, 3000);
+        }, 5000);
 
-        onUnmounted(() => {
-            if (statusInterval.value) {
-                clearInterval(statusInterval.value);
-            }
-        });
     } catch (error) {
         console.error("Initialization error: ", error);
     }    
-})
+});
+
+onUnmounted(() => {
+    if (statusInterval.value) {
+        clearInterval(statusInterval.value);
+    }
+});
 </script>
 
 <style lang="css" scoped>
 @import url("@/assets/checkbox.css");
 
 p {
+    margin: 0;
+}
+
+h2 {
     margin: 0;
 }
 

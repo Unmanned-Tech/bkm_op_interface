@@ -125,6 +125,7 @@ import VESCMonitor from "./LogsComponents/VESCMonitor.vue";
 import SafetyModules from "./LogsComponents/SafetyModules.vue";
 import SafetyConf from "./LogsComponents/SafetyConf.vue";
 import { GridLayout, GridItem } from 'vue-grid-layout-v3';
+import { debounce } from "lodash-es";
 
 export default {
     components: {
@@ -204,8 +205,8 @@ export default {
                 });
 
                 // Ограничиваем размер логов
-                if (logs.value.length > 1000) {
-                    logs.value.splice(0, 200);
+                if (logs.value.length > 500) {
+                    logs.value.splice(0, 100);
                 }
             });
 
@@ -229,12 +230,21 @@ export default {
                 messageType: "mcu_msgs/msg/LightState",
             });
 
-            lightStateTopic.subscribe((msg) => {
+            const updateLights = debounce((msg) => {
                 lights.value = msg.devices.map((device, index) => ({
                     device,
                     status: msg.statuses[index],
-                    value: msg.values[index] ?? 0,
+                    value: msg.values[index] ?? 0
                 }));
+            }, 200);
+
+            lightStateTopic.subscribe((msg) => {
+                // lights.value = msg.devices.map((device, index) => ({
+                //     device,
+                //     status: msg.statuses[index],
+                //     value: msg.values[index] ?? 0,
+                // }));
+                updateLights(msg);
             });
             topics.push(lightStateTopic);
 
