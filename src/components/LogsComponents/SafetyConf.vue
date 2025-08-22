@@ -1,6 +1,6 @@
 <template>
     <div class="safety-control">
-        <h2>Safety Config</h2>
+        <h4>Управление безопасности</h4>
 
         <div class="control-buttons">
             <!-- Reset Inhibit Configuration -->
@@ -8,7 +8,7 @@
                 @click="callService('/safety/cfg_inh_reset', 'std_srvs/srv/Trigger')"
                 class="control-btn reset-btn"
             >
-                Reset Inhibit Config
+                Сбросить игнорирование
             </button>
 
             <!-- Heartbeat Monitoring Group -->
@@ -17,7 +17,7 @@
                 class="control-btn hb-btn"
                 :class="{ active: hbmonState }"
             >
-                {{ hbmonState ? 'Disable' : 'Enable' }} HB Mon
+                {{ hbmonState ? 'Отключить' : 'Включить' }} проверку соединения
             </button>
             
             <!-- Software Emergency Stop Group -->
@@ -26,12 +26,12 @@
                 class="control-btn swes-btn"
                 :class="{ active: swesState }"
             >
-                {{ swesState ? 'Disable' : 'Enable' }} SW ES
+                {{ swesState ? 'Отключить' : 'Включить' }} программную остановку
             </button>
 
             <!-- Safety Unlock -->
             <button @click="sendUnblockCommand()" class="control-btn status-btn" :class="updateUnlockButtonColor(safetyState)">
-                Safety {{ safetyState }}
+                Приводы {{ safetyState ? 'заблокированы' : 'разблокированы' }}
             </button>
         </div>
 
@@ -50,8 +50,8 @@ import ROSLIB from 'roslib';
 const rosStore = useRosStore();
 
 // States
-const hbmonState = ref(false);
-const swesState = ref(false);
+const hbmonState = ref(true);
+const swesState = ref(true);
 const safetyState = ref('');
 const notification = ref({
     message: '',

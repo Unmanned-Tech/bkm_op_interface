@@ -1,12 +1,12 @@
 <template>
     <div class="vesc-monitor">
-        <h2>VESC</h2>
+        <h2>Контроллеры привода</h2>
         <div class="vesc-table-container position-relative">
             <table class="vesc-table">
                 <thead>
                     <tr>
                         <th>Показатель</th>
-                        <th v-for="(data, id) in vescData" :key="id">Controller {{ id }}</th>
+                        <th v-for="(data, id) in vescData" :key="id">Контроллер {{ id }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,7 +22,7 @@
                                 :rowspan="parameterKeys.length"
                                 class="not-connected-cell"
                             >
-                                Not Connected
+                                Не подключено
                             </td>
 
                             <td v-else v-show="false"></td>

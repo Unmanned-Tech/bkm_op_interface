@@ -1,6 +1,6 @@
 <template>
   <div class="bms-monitor">
-    <h2>Right BMS</h2>
+    <h2>Правая BMS</h2>
     <div class="cards">
       <div
         v-for="(value, key) in bmsData"

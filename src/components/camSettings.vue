@@ -17,6 +17,18 @@
                         <option value="БКМ-1">БКМ-1</option>
                         <option value="БКМ-2">БКМ-2</option>
                     </select>
+
+                    <label for="maxRpmInput" class="form-label">Максимальные обороты (max_rpm)</label>
+                    <input
+                        id="maxRpmInput"
+                        type="number"
+                        class="form-control mb-2"
+                        v-model.number="maxRpmInput"
+                        min="5000"
+                        max="10000"
+                        step="1000"
+                    >
+                    <button class="btn btn-primary w-100" @click="setMaxRpm">Установить max_rpm</button>
                 </div>
             </div>
         </div>
@@ -27,16 +39,25 @@
 import settingsSVG from '/src/assets/settings.svg';
 import resetSVG from '/src/assets/arrow-repeat.svg';
 import { useBkmStore } from '../stores/bkmStore';
+import { useRosStore } from '../stores/ConfigStore';
 
 export default {
     components: {
         settingsSVG,
         resetSVG,
     },
+    data() {
+        return {
+            maxRpmInput: 5000,
+        };
+    },
 
     computed: {
         bkmStore() {
             return useBkmStore();
+        },
+        rosStore() {
+            return useRosStore();
         },
         selectedBkm: {
             get() {
@@ -47,6 +68,39 @@ export default {
             }
         }
     },
+
+    methods: {
+        setMaxRpm() {
+            if (!this.rosStore.ros) {
+                console.error('ROS connection not established');
+                return;
+            }
+            if (this.maxRpmInput <= 0) {
+                alert('max_rpm должен быть положительным числом');
+                return;
+            }
+
+            const setMaxRpmSrv = new window.ROSLIB.Service({
+                ros: this.rosStore.ros,
+                name: '/set_max_rpm',
+                serviceType: 'mcu_msgs/srv/SetMaxRPM',
+            });
+
+            const request = new window.ROSLIB.ServiceRequest({
+                new_max_rpm: this.maxRpmInput,
+            });
+
+            setMaxRpmSrv.callService(request, (result) => {
+                if (result.success) {
+                    console.log(`max_rpm успешно установлен в ${this.maxRpmInput}`);
+                    alert(`max_rpm установлен: ${this.maxRpmInput}`);
+                } else {
+                    console.warn('Не удалось установить max_rpm');
+                    alert('Ошибка при установке max_rpm');
+                }
+            });
+        }
+    }
 }
 </script>
 
@@ -55,13 +109,13 @@ export default {
     font-size: 1.35rem;
 }
 .tongue{
-  background-color: var(--bg-tertiary);
-  border: solid .125rem var(--grey2);
-  padding-block: .25rem;
-  padding-inline: .5rem;
-  border-radius: .85rem;
-  font-size: 1.25rem;
-  color: var(--text-color);
+    background-color: var(--bg-tertiary);
+    border: solid .125rem var(--grey2);
+    padding-block: .25rem;
+    padding-inline: .5rem;
+    border-radius: .85rem;
+    font-size: 1.25rem;
+    color: var(--text-color);
 }
 .tongue.active {
     border-color: var(--green);

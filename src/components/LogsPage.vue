@@ -1,6 +1,6 @@
 <template>
     <button id="unlockBtn" @click="sendUnblockCommand()" class="safety-unlock" :class="updateUnlockButtonColor(safetyState)">
-        Safety {{ safetyState }}
+        Приводы {{ safetyState ? "заблокированы" : "разблокированы" }}
     </button>
     <div class="main">
         <grid-layout 
@@ -15,7 +15,7 @@
         >
             <grid-item :x="layout[0].x" :y="layout[0].y" :w="layout[0].w" :h="layout[0].h" :i="layout[0].i" :minW="layout[0].minW" :minH="layout[0].minH" class="vue-grid-item">
                 <div class="power-monitor">
-                    <h2>DC</h2>
+                    <h2>Питание электроники (DC-DC)</h2>
                     <div class="cards">
                         <div class="card">
                             <p class="label">U-OUT</p>
@@ -38,7 +38,7 @@
             </grid-item>
             <grid-item :x="layout[1].x" :y="layout[1].y" :w="layout[1].w" :h="layout[1].h" :i="layout[1].i" :minW="layout[1].minW" :minH="layout[1].minH" class="vue-grid-item">
                 <div class="light-monitor">
-                    <h2>Свет</h2>
+                    <h2>Управление светом</h2>
                     <div class="cards">
                         <div 
                             v-for="(light, index) in lights"
@@ -47,7 +47,7 @@
                             :class="getStatusClass(light.status)"
                             @click="toggleLight(light)"
                         >
-                            <p class="label">{{ light.device }}</p>
+                            <p class="label">{{ light.label }}</p>
                             <p class="status">{{ formatStatus(light.status, light.value) }}</p>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
             </grid-item>
             <grid-item :x="layout[7].x" :y="layout[7].y" :w="layout[7].w" :h="layout[7].h" :i="layout[7].i" :minW="layout[7].minW" :minH="layout[7].minH" class="vue-grid-item">
                 <div class="log-monitor">
-                    <h2>Logs</h2>
+                    <h2>Журнал</h2>
                     <div class="log-controls">
                         <button class="clear-logs" @click="clearLogs()">Очистить</button>
                         <label>
@@ -156,14 +156,14 @@ export default {
         const safetyState = ref(null);
 
         const lights = ref([
-            { device: "HL", status: "OFF", value: 0 },
-            { device: "SL_L", status: "OFF", value: 0 },
-            { device: "SL_R", status: "OFF", value: 0 },
-            { device: "FL_L", status: "OFF", value: 0 },
-            { device: "FL_R", status: "OFF", value: 0 },
-            { device: "DL", status: "OFF", value: 0 },
-            { device: "SS", status: "OFF", value: 0 },
-            { device: "EL", status: "OFF", value: 0 }
+            { device: "HL", label: "Фары", status: "OFF", value: 0 },
+            { device: "SL_L", label: "Л.Поворотники", status: "OFF", value: 0 },
+            { device: "SL_R", label: "П.Повортники", status: "OFF", value: 0 },
+            { device: "FL_L", label: "Л.Стробы", status: "OFF", value: 0 },
+            { device: "FL_R", label: "П.Стробы", status: "OFF", value: 0 },
+            { device: "DL", label: "Декор. свет", status: "OFF", value: 0 },
+            { device: "SS", label: "Стоп-сигнал", status: "OFF", value: 0 },
+            { device: "EL", label: "Подсветка", status: "OFF", value: 0 }
         ]);
 
         const logs = ref([]);
@@ -231,11 +231,15 @@ export default {
             });
 
             const updateLights = debounce((msg) => {
-                lights.value = msg.devices.map((device, index) => ({
-                    device,
-                    status: msg.statuses[index],
-                    value: msg.values[index] ?? 0
-                }));
+                lights.value = msg.devices.map((device, index) => {
+                    const oldLight = lights.value.find(l => l.device === device);
+                    return {
+                        device,
+                        label: oldLight?.label,
+                        status: msg.statuses[index],
+                        value: msg.values[index] ?? 0
+                    }
+                })
             }, 200);
 
             lightStateTopic.subscribe((msg) => {
@@ -564,7 +568,7 @@ table tr:first-child th:last-child {
     filter: brightness(0.7);
 }
 .label {
-    font-size: 1.2rem;
+    font-size: 0.85rem;
     margin-bottom: 0.5rem;
     color: var(--text-color);
 }

@@ -1,14 +1,17 @@
 <template>
     <div class="modules-status" :class="{ 'config-mode': isConfiguring }">
         <div class="header">
-            <h2>Safety Modules</h2>
+            <h2>Модули безопасности</h2>
             <div class="config-controls">
                 <div v-if="isApplying" class="applying-overlay">
-                    Applying changes: {{ appliedCount }}/{{ totalChanges }}
+                    {{ appliedCount }}/{{ totalChanges }}
+                    <div class="progress-bar">
+                        <div class="progress" :style="{ width: `${(appliedCount/totalChanges) * 100}%` }"></div>
+                    </div>
                 </div>
                 <Transition name="fade-config" mode="out-in">
                     <button v-if="!isConfiguring" @click="enterConfigMode" class="config-btn">
-                        Изменить inhibit
+                        Отключение модулей
                     </button>
                     <div v-else class="config-actions">
                         <button @click="applyConfig" class="apply-btn">Применить</button>
@@ -21,41 +24,37 @@
         <div class="cards">
             <div
                 v-for="(module, index) in safetyModules"
-                :key="`${module.id}-${module.status}`"
+                :key="module.id"
                 class="card"
                 :class="module.status"
             >
                 <p class="label">{{ module.name }}</p>
                 <div class="content-container">
-                    <Transition name="fade-switch">
-                        <p class="status" v-if="!isConfiguring">{{ module.status }}</p>
-                    </Transition>
-
-                    <Transition name="fade-switch">
-                        <div v-if="isConfiguring" class="inhibit-control">
-                            <label class="ios-checkbox blue me-1">
-                                <input 
-                                    type="checkbox" 
-                                    :id="'inhibit-' + module.id" 
-                                    v-model="inhibitConfig[module.id]"
-                                />
-                                <div class="checkbox-wrapper">
-                                    <div class="checkbox-bg"></div>
-                                    <svg fill="none" viewBox="0 0 24 24" class="checkbox-icon">
-                                        <path
-                                        stroke-linejoin="round"
-                                        stroke-linecap="round"
-                                        stroke-width="3"
-                                        stroke="currentColor"
-                                        d="M4 12L10 18L20 6"
-                                        class="check-path"
-                                        ></path>
-                                    </svg>
-                                </div>
-                            </label>
-                            <label :for="'inhibit-' + module.id">Inhibit</label>
-                        </div>
-                    </Transition>
+                    <p class="status" v-show="!isConfiguring">{{ module.status === "active" ? "вкл." : (module.status === "inhibited" ? "игнор." : "выкл.") }}</p>
+                    <div class="inhibit-control" v-show="isConfiguring">
+                        <label class="ios-checkbox blue me-1">
+                            <input 
+                                type="checkbox" 
+                                :id="'inhibit-' + module.id" 
+                                v-model="inhibitConfig[module.id].value"
+                                @change="inhibitConfig[module.id].dirty = true"
+                            />
+                            <div class="checkbox-wrapper">
+                                <div class="checkbox-bg"></div>
+                                <svg fill="none" viewBox="0 0 24 24" class="checkbox-icon">
+                                    <path
+                                    stroke-linejoin="round"
+                                    stroke-linecap="round"
+                                    stroke-width="3"
+                                    stroke="currentColor"
+                                    d="M4 12L10 18L20 6"
+                                    class="check-path"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </label>
+                        <label :for="'inhibit-' + module.id">Игнор.</label>
+                    </div>
                 </div>
             </div> 
         </div>
@@ -101,14 +100,12 @@ const safetyModules = ref(
 
 const isConfiguring = ref(false);
 const inhibitConfig = ref(
-    Object.keys(MODULE_NAMES).reduce((acc, id) => {
-        acc[id] = false;
-        return acc;
-    }, {})
+    Object.fromEntries(Object.keys(MODULE_NAMES).map(id => [id, { value: false, dirty: false }]))
 );
-const prevInhibitConfig = ref({});
-const statusInterval = ref(null);
 
+const currentInhibitState = ref({ ...inhibitConfig.value });
+
+const statusInterval = ref(null);
 const isApplying = ref(false);
 const appliedCount = ref(0);
 const totalChanges = ref(0);
@@ -116,177 +113,138 @@ const totalChanges = ref(0);
 // Общая функция для вызова сервисов
 function callService(serviceName, serviceType, requestData = {}) {
     return new Promise((resolve, reject) => {
-        if (!rosStore.ros) {
-            reject("ROS not connected");
-            return;
-        }
-
-        const service = new ROSLIB.Service({
-            ros: rosStore.ros,
-            name: serviceName,
-            serviceType: serviceType
-        });
-
+        if (!rosStore.ros) return reject("ROS not connected");
+        const service = new ROSLIB.Service({ ros: rosStore.ros, name: serviceName, serviceType });
         const request = new ROSLIB.ServiceRequest(requestData);
-
-        service.callService(request, (response) => {
-            resolve(response);
-        }, (error) => {
-            reject(error);
-        });
+        service.callService(request, resolve, reject);
     });
 }
 
 // Получение конфигурации ингибита
 async function getInhibitConfig() {
+    const start = performance.now();
     try {
-        const response = await callService(
-            '/safety/cfg_inh_show',
-            'std_srvs/srv/Trigger'
-        );
+        const res = await callService('/safety/cfg_inh_show', 'std_srvs/srv/Trigger');
+        if (res.success && res.message.includes("F_CFG_INH")) {
+            const states = res.message.split('_').slice(-Object.keys(MODULE_NAMES).length)
+            Object.keys(MODULE_NAMES).forEach((id, i) => {
+                const val = states[i] === '1';
+                inhibitConfig.value[id].value = val;
+                inhibitConfig.value[id].dirty = false;
 
-        if (response.success && response.message.includes("F_CFG_INH")) {
-            const states = response.message.split('_').slice(-Object.keys(MODULE_NAMES).length)
-
-            Object.keys(MODULE_NAMES).forEach((id, index) => {
-                inhibitConfig.value[id] = states[index] === '1';
+                currentInhibitState.value[id] = val; 
             });
         }
-    } catch (error) {
-        console.error("Error getting inhibit config: ", error);
-    }
-};
+    } catch (e) { console.error("Error getting inhibit config: ", e); }
+    const end = performance.now();
+    console.log(`[TIMING] getInhibitConfig took ${(end - start).toFixed(2)} ms`);
+}
 
 // Вход в режим конфигурации
 async function enterConfigMode() {
     isConfiguring.value = true;
-
-    if (statusInterval.value) {
-        clearInterval(statusInterval.value);
-        statusInterval.value = null;
-    }
-
+    if (statusInterval.value) { clearInterval(statusInterval.value); statusInterval.value = null; }
     await getInhibitConfig();
-    prevInhibitConfig.value = {...inhibitConfig.value};
 }
 
 // Выход из режима конфигурации
 function cancelConfig() {
     isConfiguring.value = false;
-
     if (!statusInterval.value) {
         callModulesStatusService();
-        statusInterval.value = setInterval(callModulesStatusService, 5000);
+        statusInterval.value = setInterval(statusTick, 5000);
     }
 }
 
 // Применение конфигурации
 async function applyConfig() {
+    const changedModules = Object.entries(inhibitConfig.value)
+        .filter(([id, m]) => m.dirty)
+        .map(([id, m]) => ({ id: parseInt(id), state: m.value }));
+
+    if (changedModules.length === 0) { cancelConfig(); return; }
+
+    isApplying.value = true;
+    appliedCount.value = 0;
+    totalChanges.value = changedModules.length;
+
+    if (statusInterval.value) {
+        clearInterval(statusInterval.value);
+        statusInterval.value = null;
+    }
+    const applyStart = performance.now();
+
     try {
-        const changedModules = [];
+        for (const m of changedModules) {
+            const modStart = performance.now();
+            await callService('/safety/cfg_inh_module', 'mcu_msgs/srv/SetModuleState', { module_num: m.id, state: m.state ? 1 : 0 });
+            const modEnd = performance.now();
+            console.log(`[TIMING] Module ${m.id} apply took ${(modEnd - modStart).toFixed(2)} ms`);
 
-        Object.entries(inhibitConfig.value).forEach(([moduleId, currentState]) => {
-            const previousState = prevInhibitConfig.value[moduleId];
-
-            if (previousState !== undefined && currentState !== previousState) {
-                changedModules.push({
-                    id: parseInt(moduleId),
-                    state: currentState
-                });
-            }
-        });
-
-        if (changedModules.length === 0) {
-            cancelConfig();
-            return;
+            appliedCount.value++;
+            inhibitConfig.value[m.id].dirty = false;
         }
-
-        isApplying.value = true;
-        appliedCount.value = 0;
-        totalChanges.value = changedModules.length;
-
-        const requests = changedModules.map((module) =>
-            callService('/safety/cfg_inh_module', 'mcu_msgs/srv/SetModuleState', {
-                module_num: module.id,
-                state: module.state ? 1 : 0
-            }).then(() => { appliedCount.value++; })
-        );
-
-        await Promise.all(requests);
-        isApplying.value = false;
-
         await getInhibitConfig();
         await callModulesStatusService();
 
-        prevInhibitConfig.value = { ...inhibitConfig.value };
-
+    } catch (e) { console.error("Error applying inhibit config: ", e); } 
+    finally {
+        const applyEnd = performance.now();
+        console.log(`[TIMING] Total applyConfig took ${(applyEnd - applyStart).toFixed(2)} ms`);
+        isApplying.value = false;
+        statusInterval.value = setInterval(statusTick, 5000);
         cancelConfig();
-    } catch (error) {
-        console.error("Error applying inhibit config: ", error);
     }
 }
 
 // Обновление статуса модулей
 const updateModulesStatus = (statusString) => {
     if (!statusString.includes("F_MODULES_STATUS")) return;
+    const arr = statusString.split('_').slice(-Object.keys(MODULE_NAMES).length);
 
-    try {
-        const statusArray = statusString.split('_').slice(-Object.keys(MODULE_NAMES).length);
-        safetyModules.value = Object.entries(MODULE_NAMES).map(([id, name]) => {
-            const inhibited = inhibitConfig.value[id];
-            const active = statusArray[id - 1] === "1";
-
-            return {
-                id: parseInt(id),
-                name,
-                status: inhibited ? "inhibited" : (active ? "active" : "inactive") 
-            };
-        });
-    } catch (e) {
-        console.error("Error parsing modules status:", e);
-    }
+    safetyModules.value.forEach((m, i) => {
+        if (inhibitConfig.value[m.id].value) { 
+            m.status = "inhibited"; 
+        } else {
+            m.status = arr[i] === "1" ? "active" : "inactive";
+        }
+    });
 };
 
 // Асинхронный запрос статуса модулей
 async function callModulesStatusService() {
+    const start = performance.now();
     try {
-        const response = await callService(
-            '/safety/modules_status',
-            'std_srvs/srv/Trigger'
-        );
+        const res = await callService('/safety/modules_status', 'std_srvs/srv/Trigger');
+        if (res.success) updateModulesStatus(res.message);
+    } catch (e) { console.error("Error fetching modules status: ", e); }
+    const end = performance.now();
+    console.log(`[TIMING] callModulesStatusService took ${(end - start).toFixed(2)} ms`);
+}
 
-        if (response.success) {
-            updateModulesStatus(response.message);
-        }
-    } catch (error) {
-        console.error("Error fetching modules status: ", error);
-    }
-};
+// throttle для статусов
+function statusTick() {
+    if (isApplying.value) return;
+    callModulesStatusService().catch(console.error);
+}
+
+function startStatusLoop() {
+    if (statusInterval.value) clearInterval(statusInterval.value);
+
+    statusInterval.value = setInterval(async () => {
+        if (isApplying.value) return; // пропускаем тик
+        try {
+            await callModulesStatusService();
+        } catch (e) { console.error(e); }
+    }, 5000);
+}
 
 onMounted(async () => {
-    try {
-        await Promise.all([getInhibitConfig(), callModulesStatusService()]);
-
-        prevInhibitConfig.value = { ...inhibitConfig.value };
-
-        statusInterval.value = setInterval(async () => {
-            try {
-                await callModulesStatusService();
-            } catch (error) {
-                console.error("Error fetching modules status:", error);
-            }
-        }, 5000);
-
-    } catch (error) {
-        console.error("Initialization error: ", error);
-    }    
+    await getInhibitConfig();
+    startStatusLoop();
 });
 
-onUnmounted(() => {
-    if (statusInterval.value) {
-        clearInterval(statusInterval.value);
-    }
-});
+onUnmounted(() => { if (statusInterval.value) { clearInterval(statusInterval.value); } });
 </script>
 
 <style lang="css" scoped>
@@ -323,6 +281,9 @@ h2 {
     display: flex;
     align-items: center;
 }
+
+.progress-bar { width:80%; height:4px; background:#ddd; border-radius:4px; overflow:hidden; margin-top:4px; }
+.progress { height:4px; background:var(--green); transition: width 0.3s ease; }
 
 .modules-status .cards {
     display: grid;

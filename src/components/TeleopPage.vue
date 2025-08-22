@@ -202,6 +202,7 @@ export default {
       lin_speed: 0,
       ang_speed: 0,
       prevLinSpeed: 0,
+      listner1: null,
       stopSignalOn: false,
       stopSignalOff: true,
       speed_send_timer: {},
@@ -280,7 +281,7 @@ export default {
     };
 
     const sliders = [
-      { id: "lin_max_speed_range", label: "Скорость робота", model: states.lin_max_speed, min: 0, max: 5, step: 1, unit: "м/с", colorStyle: styles.linSpeedColorStyle, showValue: true },
+      { id: "lin_max_speed_range", label: "Скорость робота", model: states.lin_max_speed, min: 0, max: 7, step: 1, unit: "м/с", colorStyle: styles.linSpeedColorStyle, showValue: true },
       { id: "ang_max_speed_range", label: "Скорость поворота", model: states.ang_max_speed, min: 0, max: 5, step: 0.25, unit: "рад/с", colorStyle: styles.angSpeedColorStyle, showValue: true },
       { id: "brush_speed_range", label: "Скорость щётки", model: states.brush_speed, min: -200, max: 400, step: 20, unit: "об/м", colorStyle: styles.brushSpeedColorStyle, showValue: true },
       { id: "brush_rotate_range", label: "Поворот щётки", model: states.brush_rotation, min: -2, max: 2, step: 1, unit: "", showLetters: true },
@@ -310,14 +311,19 @@ export default {
     setTimeout(() => {
       this.handleError();
     }, 1500);
-    var listner1 = new ROSLIB.Topic({
+    this.listner1 = new ROSLIB.Topic({
       ros: this.rosStore.ros,
       name: "/c1_telem",
       messageType: "mcu_msgs/msg/BldcStatus",
     });
-    listner1.subscribe(this.set_c1_msg);
+    this.listner1.subscribe(this.set_c1_msg);
 
     this.teleopStore.subscribeToLightState();
+  },
+  unmounted: function() {
+    this.speed_send_timer = null;
+    this.brush_send_timer = null;
+    this.listner1.unsubscribe();
   },
   methods: {
     handleJoystickUpdate({ lin_speed, ang_speed }) {
