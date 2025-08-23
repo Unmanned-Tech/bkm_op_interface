@@ -16,7 +16,6 @@ export default {
         let joystick = null;
         const lin_speed = ref(0);
         const ang_speed = ref(0);
-        const lastTurnSignal = ref(null);
         const decay_step = 0.1;
         let speed_decay_interval = null;
 
@@ -41,7 +40,7 @@ export default {
                         props.lin_max_speed
                     ) * 100
                 ) / 100;
-      
+
                 // Если lin_speed отрицательна, меняем знак у ang_speed
                 if (lin_speed.value < -0.15) { 
                     ang_speed.value = Math.round(
@@ -57,31 +56,6 @@ export default {
                             props.ang_max_speed
                         ) * 100
                     ) / 100;
-                }
-
-                // Логика включения поворотника
-
-                // Квадранты угловой скорости
-                if (ang_speed.value > 0.1) {
-                    if (lin_speed.value > 0.1 && lastTurnSignal.value !== "left") {
-                        emit("toggleLight", "rotate", "left", lastTurnSignal.value);
-                        lastTurnSignal.value = "left";
-                    } else if (lin_speed.value < -0.1 && lastTurnSignal.value !== "right") {
-                        emit("toggleLight", "rotate", "right", lastTurnSignal.value);
-                        lastTurnSignal.value = "right";
-                    }
-                } else if (ang_speed.value < -0.1) {
-                    if (lin_speed.value > 0.1 && lastTurnSignal.value !== "right") {
-                        emit("toggleLight", "rotate", "right", lastTurnSignal.value);
-                        lastTurnSignal.value = "right";
-                    } else if (lin_speed.value < -0.1 && lastTurnSignal.value !== "left") {
-                        emit("toggleLight", "rotate", "left", lastTurnSignal.value);
-                        lastTurnSignal.value = "left";
-                    }
-                } else if (ang_speed.value > -0.1 && ang_speed.value < 0.1 && lin_speed.value > -0.1 && lin_speed.value < 0.1) {
-                    if (lastTurnSignal.value) {
-                        emit("toggleLight", "rotate", "stop");  
-                    }          
                 }
 
                 emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value });
@@ -104,12 +78,6 @@ export default {
                 //         emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value });
                 //     }, 100);
                 // }
-
-                // Выключаем поворотники при отпускании джойстика
-                if (lastTurnSignal.value) {
-                    emit("toggleLight", "rotate", "stop", lastTurnSignal.value);
-                    lastTurnSignal.value = null;
-                }
                 lin_speed.value = 0;
                 ang_speed.value = 0;
                 emit("joystickUpdate", { lin_speed: lin_speed.value, ang_speed: ang_speed.value })
@@ -118,10 +86,10 @@ export default {
             });
         };
 
-        const reduce_speed = (current, target) => {
-            if (Math.abs(current - target) <= decay_step) return target;
-            return current > target ? current - decay_step : current + decay_step;
-        };
+        // const reduce_speed = (current, target) => {
+        //     if (Math.abs(current - target) <= decay_step) return target;
+        //     return current > target ? current - decay_step : current + decay_step;
+        // };
 
         onMounted(setupJoystick);
         onUnmounted(() => joystick?.destroy());
@@ -132,15 +100,15 @@ export default {
 </script>
 <style scoped>
 .zone {
-  position: relative;
-  width: 200px;
-  height: 200px;
+    position: relative;
+    width: 200px;
+    height: 200px;
 }
 
 @media (max-width: 896px) {
     .zone {
         width: 135px;
         height: 135px;
-  }
+    }
 }
 </style>

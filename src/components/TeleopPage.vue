@@ -441,26 +441,6 @@ export default {
           };
           break;
 
-        case "rotate":
-          if (isEnabled === "left") {
-            if (previousState === "right") {
-              const previous = new ROSLIB.ServiceRequest({ command: "C_SL_R_OFF", parameter: "0" });
-              cmd_srv.callService(previous);
-              console.debug(previous);
-            }
-            commands = { on: "C_SL_L_BLK", off: "C_SL_L_OFF" };
-          } else if (isEnabled === "right") {
-            if (previousState === "left") {
-              const previous = new ROSLIB.ServiceRequest({ command: "C_SL_L_OFF", parameter: "0" });
-              cmd_srv.callService(previous);
-              console.debug(previous);
-            }
-            commands = { on: "C_SL_R_BLK", off: "C_SL_R_OFF" };
-          } else if (isEnabled === "stop") {
-              commands = { on: ["C_SL_L_OFF", "C_SL_R_OFF"], off: ["C_SL_L_OFF", "C_SL_R_OFF"] };
-          }
-          break;
-
         case "head":
           commands = { on: "C_HL_ON", off: "C_HL_OFF" };
           break;
@@ -494,34 +474,10 @@ export default {
       const wheelRadius = 0.175;
       const maxRpm = 50;
 
-      this.handleStopSignal();
-
       const { leftSpeed, rightSpeed } = this.calculateWheelSpeeds(wheelBase, wheelRadius, maxRpm);
       const command = `C_SPD_${leftSpeed}_${rightSpeed}`;
 
       this.publishSpeed(command);
-    },
-    handleStopSignal() {
-      const prevSpeed = this.prevLinSpeed || 0;
-      this.prevLinSpeed = this.lin_speed;
-
-      if (Math.abs(this.lin_speed) < Math.abs(prevSpeed)) {
-        if (!this.stopSignalOn) {
-          console.debug("SS ВКЛЮЧЕН");
-          this.set_light("stopS", false);
-          this.stopSignalOn = true;
-          this.stopSignalOff = false;
-        }
-      } else if (Math.abs(this.lin_speed) > Math.abs(prevSpeed)) {
-        if (!this.stopSignalOff) {
-          console.debug("SS ВЫКЛЮЧЕН");
-          this.set_light("stopS", true);
-          this.stopSignalOn = false;
-          this.stopSignalOff = true;
-        }
-      }
-
-      this.prevLinSpeed = this.lin_speed;
     },
     calculateWheelSpeeds(wheelBase, wheelRadius, maxRpm) {
       const baseSpeed = (this.lin_speed * 60) / (Math.PI * wheelRadius);

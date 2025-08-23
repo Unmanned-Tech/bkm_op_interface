@@ -222,6 +222,42 @@ async function callModulesStatusService() {
     console.log(`[TIMING] callModulesStatusService took ${(end - start).toFixed(2)} ms`);
 }
 
+async function getInhAndStatus() {
+    try {
+        const res = await callService("/safety/inh_and_status", "std_srvs/srv/Trigger");
+
+        if (res.success && res.message) {
+            const lines = res.message.split('\r\n').map(l => l.trim()).filter(Boolean);;
+
+            const inhLine = lines.find(l => l.includes("F_CFG_INH"));
+            if (inhLine) {
+                const states = inhLine.split('_').slice(-Object.keys(MODULE_NAMES).length);
+                Object.keys(MODULE_NAMES).forEach((id, i) => {
+                    const val = states[i] === '1';
+                    inhibitConfig.value[id].value = val;
+                    inhibitConfig.value[id].dirty = false;
+                    currentInhibitState.value[id] = val;
+                });
+            }
+
+            const statusLine = lines.find(l => l.includes("F_MODULES_STATUS"));
+            if (statusLine) {
+                const arr = statusLine.split('_').slice(-Object.keys(MODULE_NAMES).length);
+                safetyModules.value.forEach((m, i) => {
+                    if (inhibitConfig.value[m.id].value) {
+                        m.status = "inhibited";
+                    } else {
+                        m.status = arr[i] === "1" ? "active" : "inactive";
+                    }
+                })
+            }
+
+        }
+    } catch (e) {
+        console.error("Error fetching INH + STATUS: ", e);
+    }
+}
+
 // throttle для статусов
 function statusTick() {
     if (isApplying.value) return;
@@ -239,8 +275,8 @@ function startStatusLoop() {
     }, 5000);
 }
 
-onMounted(async () => {
-    await getInhibitConfig();
+onMounted(async() => {
+    await getInhAndStatus();
     startStatusLoop();
 });
 
