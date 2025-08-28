@@ -321,9 +321,12 @@ export default {
     this.teleopStore.subscribeToLightState();
   },
   unmounted: function() {
-    this.speed_send_timer = null;
-    this.brush_send_timer = null;
-    this.listner1.unsubscribe();
+    clearInterval(this.speed_send_timer);
+    clearInterval(this.brush_send_timer);
+    if (this.listner1) {
+      this.listner1.unsubscribe();
+      this.listner1 = null;
+    }
   },
   methods: {
     handleJoystickUpdate({ lin_speed, ang_speed }) {

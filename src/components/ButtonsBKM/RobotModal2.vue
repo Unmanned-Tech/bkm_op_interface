@@ -184,7 +184,7 @@ onMounted(() => {
 
   const bmsData = new ROSLIB.Topic({
     ros: rosStore.ros,
-    name: "/bms_data",
+    name: "/bms_data/id_0004" || "/bms_data/id_0003",
     messageType: "mcu_msgs/msg/BMSData",
   });
 
