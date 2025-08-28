@@ -1,6 +1,6 @@
 <template>
     <button id="unlockBtn" @click="sendUnblockCommand()" class="safety-unlock" :class="updateUnlockButtonColor(safetyState)">
-        Приводы {{ safetyState ? "заблокированы" : "разблокированы" }}
+        Приводы {{ !safetyState ? "заблокированы" : "разблокированы" }}
     </button>
     <div class="main">
         <grid-layout 
@@ -13,8 +13,9 @@
             :use-css-transforms="true"
             class="vue-grid-layout"
         >
-            <grid-item :x="layout[0].x" :y="layout[0].y" :w="layout[0].w" :h="layout[0].h" :i="layout[0].i" :minW="layout[0].minW" :minH="layout[0].minH" class="vue-grid-item">
-                <div class="power-monitor">
+            <grid-item :x="layout[0].x" :y="layout[0].y" :w="layout[0].w" :h="layout[0].h" :i="layout[0].i" :minW="layout[0].minW" :minH="layout[0].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
+                <div class="power-monitor no-drag">
                     <h2>Питание электроники (DC-DC)</h2>
                     <div class="cards">
                         <div class="card">
@@ -36,8 +37,9 @@
                     </div>
                 </div>
             </grid-item>
-            <grid-item :x="layout[1].x" :y="layout[1].y" :w="layout[1].w" :h="layout[1].h" :i="layout[1].i" :minW="layout[1].minW" :minH="layout[1].minH" class="vue-grid-item">
-                <div class="light-monitor">
+            <grid-item :x="layout[1].x" :y="layout[1].y" :w="layout[1].w" :h="layout[1].h" :i="layout[1].i" :minW="layout[1].minW" :minH="layout[1].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
+                <div class="light-monitor no-drag">
                     <h2>Управление светом</h2>
                     <div class="cards">
                         <div 
@@ -53,23 +55,29 @@
                     </div>
                 </div>
             </grid-item>
-            <grid-item :x="layout[2].x" :y="layout[2].y" :w="layout[2].w" :h="layout[2].h" :i="layout[2].i" :minW="layout[2].minW" :minH="layout[2].minH" class="vue-grid-item">
-                <VESCMonitor />
+            <grid-item :x="layout[2].x" :y="layout[2].y" :w="layout[2].w" :h="layout[2].h" :i="layout[2].i" :minW="layout[2].minW" :minH="layout[2].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
+                <VESCMonitor class="no-drag"/>
             </grid-item>
-            <grid-item :x="layout[3].x" :y="layout[3].y" :w="layout[3].w" :h="layout[3].h" :i="layout[3].i" :minW="layout[3].minW" :minH="layout[3].minH" class="vue-grid-item">
-                <BMSMonitorLeft />
+            <grid-item :x="layout[3].x" :y="layout[3].y" :w="layout[3].w" :h="layout[3].h" :i="layout[3].i" :minW="layout[3].minW" :minH="layout[3].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
+                <BMSMonitorLeft class="no-drag" />
             </grid-item>
-            <grid-item :x="layout[4].x" :y="layout[4].y" :w="layout[4].w" :h="layout[4].h" :i="layout[4].i" :minW="layout[4].minW" :minH="layout[4].minH" class="vue-grid-item">
-                <BMSMonitorRight />
+            <grid-item :x="layout[4].x" :y="layout[4].y" :w="layout[4].w" :h="layout[4].h" :i="layout[4].i" :minW="layout[4].minW" :minH="layout[4].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
+                <BMSMonitorRight class="no-drag" />
             </grid-item>
-            <grid-item :x="layout[5].x" :y="layout[5].y" :w="layout[5].w" :h="layout[5].h" :i="layout[5].i" :minW="layout[5].minW" :minH="layout[5].minH" class="vue-grid-item">
-                <SafetyModules />
+            <grid-item :x="layout[5].x" :y="layout[5].y" :w="layout[5].w" :h="layout[5].h" :i="layout[5].i" :minW="layout[5].minW" :minH="layout[5].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal" style="left: 50% !important"></i>
+                <SafetyModules class="no-drag" />
             </grid-item>
-            <grid-item :x="layout[6].x" :y="layout[6].y" :w="layout[6].w" :h="layout[6].h" :i="layout[6].i" :minW="layout[6].minW" :minH="layout[6].minH" class="vue-grid-item">
-                <SafetyConf />
+            <grid-item :x="layout[6].x" :y="layout[6].y" :w="layout[6].w" :h="layout[6].h" :i="layout[6].i" :minW="layout[6].minW" :minH="layout[6].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle-right" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle-right bi bi-grip-vertical"></i>
+                <SafetyConf class="no-drag"/>
             </grid-item>
-            <grid-item :x="layout[7].x" :y="layout[7].y" :w="layout[7].w" :h="layout[7].h" :i="layout[7].i" :minW="layout[7].minW" :minH="layout[7].minH" class="vue-grid-item">
-                <div class="log-monitor">
+            <grid-item :x="layout[7].x" :y="layout[7].y" :w="layout[7].w" :h="layout[7].h" :i="layout[7].i" :minW="layout[7].minW" :minH="layout[7].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle-right" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle-right bi bi-grip-horizontal"></i>
+                <div class="log-monitor no-drag">
                     <h2>Журнал</h2>
                     <div class="log-controls">
                         <button class="clear-logs" @click="clearLogs()">Очистить</button>
@@ -144,8 +152,8 @@ export default {
             { x: 0, y: 1, w: 12, h: 34, i: "2", minW: 12, minH: 34 }, // VESC Monitor
             { x: 0, y: 1, w: 6, h: 30, i: "3", minW: 6, minH: 30 }, // Left BMS Monitor 
             { x: 6, y: 1, w: 6, h: 30, i: "4", minW: 6, minH: 30 }, // Right BMS Monitor
-            { x: 0, y: 1, w: 8, h: 28, i: "5", minW: 6, minH: 28 }, // Safety Modules Monitor
-            { x: 8, y: 1, w: 4, h: 28, i: "6", minW: 12, minH: 28 }, // Safety Config
+            { x: 0, y: 1, w: 8, h: 28, i: "5", minW: 8, minH: 28 }, // Safety Modules Monitor
+            { x: 8, y: 1, w: 4, h: 28, i: "6", minW: 4, minH: 28 }, // Safety Config
             { x: 0, y: 1, w: 12, h: 46, i: "7", minW: 12, minH: 46 }, // Logs
         ]);
         const rosStore = useRosStore();
@@ -243,11 +251,6 @@ export default {
             }, 200);
 
             lightStateTopic.subscribe((msg) => {
-                // lights.value = msg.devices.map((device, index) => ({
-                //     device,
-                //     status: msg.statuses[index],
-                //     value: msg.values[index] ?? 0,
-                // }));
                 updateLights(msg);
             });
             topics.push(lightStateTopic);
@@ -433,13 +436,35 @@ export default {
 p {
     margin: 0;
 }
-
 .vue-grid-layout {
     max-width: 100%;
     height: 100%;
     background: transparent;
 }
-
+.vue-draggable-handle {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    left: 0;
+    margin: 8px;
+    font-size: 2rem;
+}
+.vue-draggable-handle-right {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    right: 0;
+    margin: 8px;
+    font-size: 2rem;
+}
 .power-monitor,
 .light-monitor {
     height: 100%;

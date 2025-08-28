@@ -31,7 +31,7 @@
 
             <!-- Safety Unlock -->
             <button @click="sendUnblockCommand()" class="control-btn status-btn" :class="updateUnlockButtonColor(safetyState)">
-                Приводы {{ safetyState ? 'заблокированы' : 'разблокированы' }}
+                Приводы {{ !safetyState ? 'заблокированы' : 'разблокированы' }}
             </button>
         </div>
 
@@ -190,7 +190,6 @@ onMounted(() => {
     background-color: var(--grey6);
     border-radius: 12px;
     text-align: center;
-    position: relative;
     height: 100%;
     width: 100%;
 }
