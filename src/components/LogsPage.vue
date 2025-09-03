@@ -72,10 +72,6 @@
                 <SafetyModules class="no-drag" />
             </grid-item>
             <grid-item :x="layout[6].x" :y="layout[6].y" :w="layout[6].w" :h="layout[6].h" :i="layout[6].i" :minW="layout[6].minW" :minH="layout[6].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle-right" drag-ignore-from=".no-drag">
-                <i class="vue-draggable-handle-right bi bi-grip-vertical"></i>
-                <SafetyConf class="no-drag"/>
-            </grid-item>
-            <grid-item :x="layout[7].x" :y="layout[7].y" :w="layout[7].w" :h="layout[7].h" :i="layout[7].i" :minW="layout[7].minW" :minH="layout[7].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle-right" drag-ignore-from=".no-drag">
                 <i class="vue-draggable-handle-right bi bi-grip-horizontal"></i>
                 <div class="log-monitor no-drag">
                     <h2>Журнал</h2>
@@ -117,6 +113,11 @@
                     </div>
                 </div>
             </grid-item>
+
+            <grid-item :x="layout[7].x" :y="layout[7].y" :w="layout[7].w" :h="layout[7].h" :i="layout[7].i" :minW="layout[7].minW" :minH="layout[7].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+                <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
+                <DangerZone class="no-drag"></DangerZone>
+            </grid-item>
             
         </grid-layout>
         
@@ -132,6 +133,7 @@ import BMSMonitorRight from "./LogsComponents/BMSMonitorRight.vue";
 import VESCMonitor from "./LogsComponents/VESCMonitor.vue";
 import SafetyModules from "./LogsComponents/SafetyModules.vue";
 import SafetyConf from "./LogsComponents/SafetyConf.vue";
+import DangerZone from "./LogsComponents/DangerZone.vue";
 import { GridLayout, GridItem } from 'vue-grid-layout-v3';
 import { debounce } from "lodash-es";
 
@@ -142,6 +144,7 @@ export default {
         VESCMonitor,
         SafetyModules,
         SafetyConf,
+        DangerZone,
         GridLayout,
         GridItem
     },
@@ -152,9 +155,9 @@ export default {
             { x: 0, y: 1, w: 12, h: 34, i: "2", minW: 12, minH: 34 }, // VESC Monitor
             { x: 0, y: 1, w: 6, h: 30, i: "3", minW: 6, minH: 30 }, // Left BMS Monitor 
             { x: 6, y: 1, w: 6, h: 30, i: "4", minW: 6, minH: 30 }, // Right BMS Monitor
-            { x: 0, y: 1, w: 8, h: 28, i: "5", minW: 8, minH: 28 }, // Safety Modules Monitor
-            { x: 8, y: 1, w: 4, h: 28, i: "6", minW: 4, minH: 28 }, // Safety Config
+            { x: 0, y: 1, w: 12, h: 22, i: "5", minW: 12, minH: 22 }, // Safety Modules Monitor
             { x: 0, y: 1, w: 12, h: 46, i: "7", minW: 12, minH: 46 }, // Logs
+            { x: 8, y: 1, w: 12, h: 20, i: "6", minW: 4, minH: 20 }, // Danger Zone
         ]);
         const rosStore = useRosStore();
         const u_out = ref(0);
