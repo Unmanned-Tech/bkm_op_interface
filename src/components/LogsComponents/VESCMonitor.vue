@@ -44,7 +44,7 @@ let topics = [];
 
 const vescData = ref({});
 const lastUpdateTimes = ref({});
-const wheelNames = ["fl", "fr", "rl", "rr"];
+const wheelNames = ["fl", "fr", "rl", "rr", "additional"];
 const checkInterval = ref(null);
 
 const isControllerConnected = (controllerId) => {

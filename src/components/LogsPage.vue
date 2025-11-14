@@ -1,6 +1,6 @@
 <template>
     <button id="unlockBtn" @click="sendUnblockCommand()" class="safety-unlock" :class="updateUnlockButtonColor(safetyState)">
-        Приводы {{ !safetyState ? "заблокированы" : "разблокированы" }}
+        Приводы {{ safetyState === "unlocked" ? "разблокированы" : "заблокированы" }}
     </button>
     <div class="main">
         <grid-layout 

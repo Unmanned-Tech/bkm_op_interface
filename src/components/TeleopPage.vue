@@ -107,7 +107,11 @@
         <div class="row align-items-center butt-col">
 
           <div class="col">
-            <OptionsControl @toggleLight="set_light"/>
+            <OptionsControl 
+              @toggleLight="set_light"
+              @startAction="handleStartAction"
+              @stopAction="handleStopAction"
+            />
           </div>
           
           <div class="col-auto">
@@ -171,6 +175,7 @@ import 'swiper/css';
 import "swiper/css/free-mode";
 
 import { FreeMode } from 'swiper/modules';
+import ROSLIB from "roslib";
 
 export default {
   name: "TeleopPage",
@@ -207,6 +212,7 @@ export default {
       stopSignalOff: true,
       speed_send_timer: {},
       brush_send_timer: {},
+      wash_send_timer: null,
       twist: {
         linear: {
           x: 0.0,
@@ -239,15 +245,14 @@ export default {
       cameras_side: "http://192.168.2.111:1984/stream.html?src=camera_2&src=camera_3",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
+      audioElement: null,
+      isPlayingSound: false,
     };
   },
   watch: {
     brush_rotation(newVal) {
       this.sendBrushRotationCommand(newVal);
     },
-    wash_pressure(newVal) {
-      this.sendWashPressureCommand(newVal);
-    }
   },
   setup() {
     const states = {
@@ -285,7 +290,7 @@ export default {
       { id: "ang_max_speed_range", label: "Скорость поворота", model: states.ang_max_speed, min: 0, max: 5, step: 0.25, unit: "рад/с", colorStyle: styles.angSpeedColorStyle, showValue: true },
       { id: "brush_speed_range", label: "Скорость щётки", model: states.brush_speed, min: -200, max: 400, step: 20, unit: "об/м", colorStyle: styles.brushSpeedColorStyle, showValue: true },
       { id: "brush_rotate_range", label: "Поворот щётки", model: states.brush_rotation, min: -2, max: 2, step: 1, unit: "", showLetters: true },
-      { id: "wash_range", label: "Давление", model: states.wash_pressure, min: 0, max: 10, step: 1 }
+      { id: "wash_range", label: "Давление", model: states.wash_pressure, min: 0, max: 50000, step: 5000 }
     ];
     return {
       modules: [FreeMode],
@@ -308,6 +313,10 @@ export default {
   mounted: function () {
     this.speed_send_timer = setInterval(this.send_speed, 200);
     this.brush_send_timer = setInterval(this.send_brush_speed, 300);
+    this.wash_send_timer = setInterval(() => {
+      this.sendWashPressureCommand(this.wash_pressure);
+    }, 200)
+    
     setTimeout(() => {
       this.handleError();
     }, 1500);
@@ -319,16 +328,99 @@ export default {
     this.listner1.subscribe(this.set_c1_msg);
 
     this.teleopStore.subscribeToLightState();
+
+    this.soundCommandTopic = new ROSLIB.Topic({
+      ros: this.rosStore.ros,
+      name: "/sound_control",
+      messageType: "std_msgs/Bool"
+    });
+
+    this.micCommandTopic = new ROSLIB.Topic({
+      ros: this.rosStore.ros,
+      name: "/mic_command", 
+      messageType: "std_msgs/Bool"
+    });
   },
   unmounted: function() {
     clearInterval(this.speed_send_timer);
     clearInterval(this.brush_send_timer);
+    clearInterval(this.wash_send_timer);
     if (this.listner1) {
       this.listner1.unsubscribe();
       this.listner1 = null;
     }
   },
   methods: {
+    // Обработчик начала действия
+    handleStartAction(optionId) {
+      if (optionId === "mic") {
+        this.startMic();
+      } else if (optionId === "sound") {
+        this.startSound();
+      }
+    },
+
+    // Обработчик окончания действия
+    handleStopAction(optionId) {
+      if (optionId === "mic") {
+        this.stopMic();
+      } else if (optionId === "sound") {
+        this.stopSound();
+      }
+    },
+
+    // Включение микрофона
+    startMic() {
+      console.debug("Микрофон активирован");
+      // Здесь добавьте ROS-команду для включения микрофона
+      this.sendMicCommand(true);
+    },
+
+    // Выключение микрофона
+    stopMic() {
+      console.debug("Микрофон деактивирован");
+      // Здесь добавьте ROS-команду для выключения микрофона
+      this.sendMicCommand(false);
+    },
+
+    startSound() {
+      console.debug("Звук активирован");
+      this.sendSoundCommand(true);
+    },
+
+    // Выключение звука
+    stopSound() {
+      console.debug("Звук деактивирован");
+      this.sendSoundCommand(false);
+    },
+
+    sendSoundCommand(isEnabled) {
+      if (this.soundCommandTopic) {
+        const message = new ROSLIB.Message({
+          data: isEnabled
+        });
+        this.soundCommandTopic.publish(message);
+        console.debug(`ROS: Звук ${isEnabled ? 'включен' : 'выключен'}`);
+      }
+    },
+
+    // ROS-команда для микрофона
+    sendMicCommand(isEnabled) {
+      var cmd_srv = new ROSLIB.Service({
+        ros: this.rosStore.ros,
+        name: "/mic_control", // Укажите правильное имя сервиса
+        serviceType: "std_srvs/SetBool", // Или другой подходящий тип сообщения
+      });
+
+      var request = new ROSLIB.ServiceRequest({
+        data: isEnabled
+      });
+
+      cmd_srv.callService(request, (result) => {
+        console.debug(`Микрофон ${isEnabled ? 'включен' : 'выключен'}`, result);
+      });
+    },
+
     handleJoystickUpdate({ lin_speed, ang_speed }) {
       this.lin_speed = lin_speed;
       this.ang_speed = ang_speed;
@@ -404,20 +496,20 @@ export default {
       console.debug(request);
     },
     sendWashPressureCommand(pressure) {
-      pressure = parseInt(Math.round((pressure / 10) * 255));
-      var cmd_srv = new ROSLIB.Service({
+      const rpm = parseInt(pressure);
+
+      const additionalVescTopic = new ROSLIB.Topic({
         ros: this.rosStore.ros,
-        name: "/wash_cmd_srv",
-        serviceType: "mcu_msgs/srv/CmdPres",
+        name: '/cmd_vel_additional',
+        messageType: 'std_msgs/msg/Float32'
       });
 
-      var request = new ROSLIB.ServiceRequest({
-        cmd: "set_pressure",
-        pressure: pressure,
+      const message = new ROSLIB.Message({
+        data: rpm
       });
 
-      cmd_srv.callService(request);
-      console.debug(request);
+      additionalVescTopic.publish(message);
+      console.debug(`Sent additional VESC RPM: ${rpm}`);
     },
     set_light(type, isEnabled, previousState = null) {
       var cmd_srv = new ROSLIB.Service({

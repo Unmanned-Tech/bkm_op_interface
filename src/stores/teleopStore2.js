@@ -63,6 +63,16 @@ export const useTeleopStore = defineStore("teleop", {
             default:
                 break;
         }
+    },
+
+    /** Установка состояния микрофона */
+    setMicEnabled(state) {
+      this.isMicEnabled = state;
+    },
+
+    /** Установка состояния звука */
+    setSoundEnabled(state) {
+      this.isSoundEnabled = state;
     }
   }
 });

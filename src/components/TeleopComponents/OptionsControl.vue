@@ -4,8 +4,16 @@
             v-for="option in options"
             :key="option.id"
             class="buttonSet"
-            :class="{ active: option.state && option.id !== 'mic', mic: option.id === 'mic' }"
-            @click="toggleOption(option.id, option.state)"
+            :class="{ 
+              active: option.state && option.id !== 'mic', 
+              mic: option.id === 'mic',
+              'mic-active': option.id === 'mic' && option.state
+            }"
+            @mousedown="startAction(option.id)"
+            @mouseup="stopAction(option.id)"
+            @touchstart="startAction(option.id)"
+            @touchend="stopAction(option.id)"
+            @mouseleave="stopAction(option.id)"
         >
             <component :is="option.icon" class="optin"/>
         </button>
@@ -20,7 +28,7 @@ import Mic from "@/assets/mic-fill.svg";
 import Sound from "@/assets/sound.svg";
 
 import { useTeleopStore } from "@/stores/teleopStore2";
-import { computed, watch } from "vue";
+import { computed } from "vue";
 
 export default {
     setup(_, { emit }) {
@@ -34,21 +42,39 @@ export default {
             { id: "sound", icon: Sound, state: store.isSoundEnabled },
         ]);
 
-        const toggleOption = (optionId, state) => {
-            store.toggleOption(optionId);
-            if (optionId !== "mic" && optionId !== "sound") {
-                emit("toggleLight", optionId, state);
+        // Запуск действия при нажатии
+        const startAction = (optionId) => {
+            if (optionId === "mic" || optionId === "sound") {
+                if (optionId === "mic") {
+                    store.setMicEnabled(true);
+                } else if (optionId === "sound") {
+                    store.setSoundEnabled(true);
+                }
+                emit("startAction", optionId);
+            } else {
+                // Для остальных кнопок - обычный toggle
+                store.toggleOption(optionId);
+                emit("toggleLight", optionId, !options.value.find(opt => opt.id === optionId).state);
             }
-        }
+        };
 
-        watch(
-            () => store.isSmLightsEnabled,
-            (newValue) => {
-                console.debug("HL изменился", newValue);
+        // Остановка действия при отпускании
+        const stopAction = (optionId) => {
+            if (optionId === "mic" || optionId === "sound") {
+                if (optionId === "mic") {
+                    store.setMicEnabled(false);
+                } else if (optionId === "sound") {
+                    store.setSoundEnabled(false);
+                }
+                emit("stopAction", optionId);
             }
-        )
+        };
 
-        return { options, toggleOption };
+        return { 
+            options, 
+            startAction, 
+            stopAction 
+        };
     }  
 };
 </script>
@@ -65,14 +91,52 @@ export default {
     border: solid var(--grey2) 0.125rem;
     background-color: transparent;
     cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
 }
-.mic:active {
-  border-color: var(--green);
+.buttonSet:active {
+    transform: scale(0.95);
+}
+.mic {
+    border-color: var(--red);
+}
+.mic-active {
+    background-color: var(--red);
+    border-color: var(--red);
+}
+.mic-active .optin {
+    filter: brightness(0) invert(1);
+}
+.sound-active {
+    background-color: var(--orange);
+    border-color: var(--orange);
+}
+.sound-active .optin {
+    filter: brightness(0) invert(1);
 }
 .active {
     border-color: var(--green);
 }
 .optin {
     transform: scale(2);
+    transition: filter 0.2s ease;
+}
+
+/* Стили для активного состояния звука */
+.buttonSet:active[class*="sound"] {
+    border-color: var(--orange);
+    background-color: var(--orange);
+}
+.buttonSet:active[class*="sound"] .optin {
+    filter: brightness(0) invert(1);
+}
+
+/* Стили для активного состояния микрофона */
+.buttonSet:active[class*="mic"] {
+    border-color: var(--red);
+    background-color: var(--red);
+}
+.buttonSet:active[class*="mic"] .optin {
+    filter: brightness(0) invert(1);
 }
 </style>
