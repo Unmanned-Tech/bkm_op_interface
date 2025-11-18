@@ -1,5 +1,16 @@
 <template>
   <div class="main">
+
+    <div v-if="micNotification.show" class="mic-notification" :class="micNotification.type">
+      <div class="notification-content">
+        <div v-if="micNotification.type === 'connecting'" class="spinner"></div>
+        <span>{{ micNotification.message }}</span>
+        <button v-if="micNotification.type === 'connected'" class="close-btn" @click="hideMicNotification">
+          <i class="bi bi-x-circle"></i>
+        </button>
+      </div>
+    </div>
+
     <swiper
       :slidesPerView="1"
       :spaceBetween="0"
@@ -171,6 +182,8 @@ import OptionsControl from "@/components/TeleopComponents/OptionsControl.vue";
 import JoystickControl from "@/components/TeleopComponents/JoystickControl.vue";
 import InfoCard from "@/components/TeleopComponents/InfoCard.vue";
 
+import { useMicrophone } from "../composables/useMicrophone";
+
 import 'swiper/css';
 import "swiper/css/free-mode";
 
@@ -238,11 +251,11 @@ export default {
         },
       },
       c1_msg: {},
-      camera_0: "http://192.168.2.111:1984/stream.html?src=camera_0",
-      camera_1: "http://192.168.2.111:1984/stream.html?src=camera_1",
-      camera_2: "http://192.168.2.111:1984/stream.html?src=camera_2",
-      camera_3: "http://192.168.2.111:1984/stream.html?src=camera_3",
-      cameras_side: "http://192.168.2.111:1984/stream.html?src=camera_2&src=camera_3",
+      camera_0: "https://192.168.2.111:1265/stream.html?src=camera_0",
+      camera_1: "https://192.168.2.111:1265/stream.html?src=camera_1",
+      camera_2: "https://192.168.2.111:1265/stream.html?src=camera_2",
+      camera_3: "https://192.168.2.111:1265/stream.html?src=camera_3",
+      cameras_side: "https://192.168.2.111:1265/stream.html?src=camera_2&src=camera_3",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
       audioElement: null,
@@ -262,6 +275,15 @@ export default {
       brush_rotation: ref(0),
       wash_pressure: ref(0),
     }
+
+    const {
+      micNotification,
+      isMicActive,
+      startMic,
+      stopMic,
+      hideMicNotification,
+      cleanupMic
+    } = useMicrophone();
 
     const rosStore = useRosStore();
     const bkmStore = useBkmStore();
@@ -299,6 +321,12 @@ export default {
       rosStore,
       bkmStore,
       teleopStore,
+      micNotification,
+      isMicActive,
+      startMic,
+      stopMic,
+      hideMicNotification,
+      cleanupMic
     }
   },
   computed: {
@@ -335,20 +363,18 @@ export default {
       messageType: "std_msgs/Bool"
     });
 
-    this.micCommandTopic = new ROSLIB.Topic({
-      ros: this.rosStore.ros,
-      name: "/mic_command", 
-      messageType: "std_msgs/Bool"
-    });
   },
   unmounted: function() {
     clearInterval(this.speed_send_timer);
     clearInterval(this.brush_send_timer);
     clearInterval(this.wash_send_timer);
+
     if (this.listner1) {
       this.listner1.unsubscribe();
       this.listner1 = null;
     }
+
+    this.cleanupMic();
   },
   methods: {
     // Обработчик начала действия
@@ -367,20 +393,6 @@ export default {
       } else if (optionId === "sound") {
         this.stopSound();
       }
-    },
-
-    // Включение микрофона
-    startMic() {
-      console.debug("Микрофон активирован");
-      // Здесь добавьте ROS-команду для включения микрофона
-      this.sendMicCommand(true);
-    },
-
-    // Выключение микрофона
-    stopMic() {
-      console.debug("Микрофон деактивирован");
-      // Здесь добавьте ROS-команду для выключения микрофона
-      this.sendMicCommand(false);
     },
 
     startSound() {
@@ -402,23 +414,6 @@ export default {
         this.soundCommandTopic.publish(message);
         console.debug(`ROS: Звук ${isEnabled ? 'включен' : 'выключен'}`);
       }
-    },
-
-    // ROS-команда для микрофона
-    sendMicCommand(isEnabled) {
-      var cmd_srv = new ROSLIB.Service({
-        ros: this.rosStore.ros,
-        name: "/mic_control", // Укажите правильное имя сервиса
-        serviceType: "std_srvs/SetBool", // Или другой подходящий тип сообщения
-      });
-
-      var request = new ROSLIB.ServiceRequest({
-        data: isEnabled
-      });
-
-      cmd_srv.callService(request, (result) => {
-        console.debug(`Микрофон ${isEnabled ? 'включен' : 'выключен'}`, result);
-      });
     },
 
     handleJoystickUpdate({ lin_speed, ang_speed }) {
@@ -631,6 +626,85 @@ export default {
   margin-inline: -0.75rem;
   height: 100dvh;
 }
+
+.mic-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.mic-notification.connecting {
+  background-color: var(--orange);
+  color: var(--grey2);
+}
+
+.mic-notification.connected {
+  background-color: var(--green);
+  color: white;
+}
+
+.mic-notification.error {
+  background-color: var(--red);
+  color: white;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  opacity: 0.8;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .overlay-video {
   top: 0;
   left: 0;
