@@ -1,7 +1,35 @@
 <template>
   <div class="main">
 
-    <div v-if="micNotification.show" class="mic-notification" :class="micNotification.type">
+    <transition name="mic-notification">
+      <div v-if="micNotification.show" class="mic-notification" :class="micNotification.type">
+        <div class="notification-content">
+          <div class="notification-icon">
+            <div v-if="micNotification.type === 'connecting'" class="spinner-container">
+              <div class="spinner"></div>
+            </div>
+            <i v-else-if="micNotification.type === 'connected'" class="bi bi-mic-fill success-icon"></i>
+            <i v-else-if="micNotification.type === 'error'" class="bi bi-exclamation-triangle-fill error-icon"></i>
+          </div>
+          <div class="notification-text">
+            <span class="notification-title">{{ getNotificationTitle }}</span>
+            <span class="notification-message">{{ micNotification.message }}</span>
+          </div>
+          <div class="notification-actions">
+            <button v-if="micNotification.type === 'connected' || micNotification.type === 'error'" 
+                    class="close-btn" 
+                    @click="hideMicNotification">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+        <div v-if="micNotification.type === 'connecting'" class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- <div v-if="micNotification.show" class="mic-notification" :class="micNotification.type">
       <div class="notification-content">
         <div v-if="micNotification.type === 'connecting'" class="spinner"></div>
         <span>{{ micNotification.message }}</span>
@@ -9,7 +37,7 @@
           <i class="bi bi-x-circle"></i>
         </button>
       </div>
-    </div>
+    </div> -->
 
     <swiper
       :slidesPerView="1"
@@ -260,6 +288,8 @@ export default {
       loaded: false,
       audioElement: null,
       isPlayingSound: false,
+      micCommandTopic: null,
+      micConnectionStatus: false,
     };
   },
   watch: {
@@ -282,7 +312,8 @@ export default {
       startMic,
       stopMic,
       hideMicNotification,
-      cleanupMic
+      cleanupMic,
+      setOnMicConnected
     } = useMicrophone();
 
     const rosStore = useRosStore();
@@ -326,7 +357,8 @@ export default {
       startMic,
       stopMic,
       hideMicNotification,
-      cleanupMic
+      cleanupMic,
+      setOnMicConnected
     }
   },
   computed: {
@@ -337,6 +369,15 @@ export default {
         return `${this.c1_msg}`;
       }
     },
+
+    getNotificationTitle() {
+      const titles = {
+        connecting: 'Подключение микрофона',
+        connected: 'Микрофон подключен',
+        error: 'Ошибка микрофона'
+      };
+      return titles[this.micNotification.type] || 'Уведомление';
+    }
   },
   mounted: function () {
     this.speed_send_timer = setInterval(this.send_speed, 200);
@@ -360,7 +401,23 @@ export default {
     this.soundCommandTopic = new ROSLIB.Topic({
       ros: this.rosStore.ros,
       name: "/sound_control",
-      messageType: "std_msgs/Bool"
+      messageType: "std_msgs/msg/Bool"
+    });
+
+    this.micCommandTopic = new ROSLIB.Topic({
+      ros: this.rosStore.ros,
+      name: "/mic_control",
+      messageType: "std_msgs/msg/Bool"
+    })
+
+    this.setOnMicConnected((connected) => {
+      this.micConnectionStatus = connected;
+      console.debug(`Microphone connection status: ${connected}`);
+      
+      // Отправляем команду в ROS только если микрофон подключен
+      if (connected) {
+        this.sendMicCommand(true);
+      }
     });
 
   },
@@ -404,6 +461,16 @@ export default {
     stopSound() {
       console.debug("Звук деактивирован");
       this.sendSoundCommand(false);
+    },
+
+    sendMicCommand(isEnabled) {
+      if (this.micCommandTopic) {
+        const message = new ROSLIB.Message({
+          data: isEnabled
+        });
+        this.micCommandTopic.publish(message);
+        console.debug(`ROS: Воспроизведение микрофона ${isEnabled ? 'включено' : 'выключено'}`);
+      }
     },
 
     sendSoundCommand(isEnabled) {
@@ -629,38 +696,63 @@ export default {
 
 .mic-notification {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 10000;
-  padding: 12px 20px;
-  text-align: center;
-  font-weight: 500;
-  animation: slideDown 0.3s ease-out;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mic-notification-enter-active {
+  animation: slideInDown 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mic-notification-leave-active {
+  animation: slideOutUp 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53);
 }
 
 .mic-notification.connecting {
-  background-color: var(--orange);
-  color: var(--grey2);
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.95), rgba(255, 152, 0, 0.95));
+  color: #333;
 }
 
 .mic-notification.connected {
-  background-color: var(--green);
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.95), rgba(56, 142, 60, 0.95));
   color: white;
 }
 
 .mic-notification.error {
-  background-color: var(--red);
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.95), rgba(211, 47, 47, 0.95));
   color: white;
 }
 
 .notification-content {
   display: flex;
   align-items: center;
+  padding: 16px 20px;
+  gap: 16px;
+}
+
+.notification-icon {
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
-  max-width: 1000px;
-  margin: 0 auto;
+  width: 32px;
+  height: 32px;
+}
+
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
 }
 
 .spinner {
@@ -672,37 +764,114 @@ export default {
   animation: spin 1s linear infinite;
 }
 
+.success-icon {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.error-icon {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.notification-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.notification-message {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.3;
+  opacity: 0.9;
+}
+
+.notification-actions {
+  display: flex;
+  align-items: center;
+}
+
 .close-btn {
-  background: none;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  color: inherit;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-  margin-left: auto;
-  width: 24px;
-  height: 24px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
 }
 
 .close-btn:hover {
-  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
-@keyframes slideDown {
+.progress-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.9));
+  animation: progressIndeterminate 2s linear infinite;
+}
+
+@keyframes slideInDown {
   from {
-    transform: translateY(-100%);
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
   }
   to {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutUp {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
   }
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes progressIndeterminate {
+  0% {
+    transform: translateX(-100%);
+    width: 30%;
+  }
+  50% {
+    transform: translateX(0%);
+    width: 60%;
+  }
+  100% {
+    transform: translateX(100%);
+    width: 30%;
+  }
 }
 
 .overlay-video {

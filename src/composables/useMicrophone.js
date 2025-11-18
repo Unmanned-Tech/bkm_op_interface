@@ -12,6 +12,14 @@ export function useMicrophone() {
         message: ''
     });
 
+    // Колбэк для уведомления о подключении микрофона
+    let onMicConnectedCallback = null;
+
+    // Установка колбэка для уведомления о подключении
+    const setOnMicConnected = (callback) => {
+        onMicConnectedCallback = callback;
+    };
+
     // Показать уведомление
     const showMicNotification = (type, message) => {
         micNotification.value = {
@@ -69,6 +77,11 @@ export function useMicrophone() {
         clearMicTimeout();
         
         console.debug("Аудиотрек микрофона включен");
+        
+        // Уведомляем о подключении микрофона
+        if (onMicConnectedCallback) {
+            onMicConnectedCallback(true);
+        }
     };
 
     // Отключение звука без разрыва соединения
@@ -79,6 +92,11 @@ export function useMicrophone() {
         isMicActive.value = false;
         
         console.debug("Аудиотрек микрофона отключен");
+
+        // Уведомляем об отключении микрофона
+        if (onMicConnectedCallback) {
+            onMicConnectedCallback(false);
+        }
 
         // Ставим таймер на полное отключение через 60 секунд
         clearMicTimeout();
@@ -248,6 +266,7 @@ export function useMicrophone() {
         stopMic,
         forceStopMic,
         hideMicNotification,
-        cleanupMic
+        cleanupMic,
+        setOnMicConnected // Добавляем метод для установки колбэка
     };
 }
