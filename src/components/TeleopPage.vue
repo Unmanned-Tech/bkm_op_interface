@@ -61,7 +61,7 @@
         </div>
         <div class="row my-1 my-lg-2 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, slideHide: !isSliderVisible }">
           <div class="col-auto pe-0 slide-col">
-            <div class="slide p-3 py-1">
+            <div class="slide">
               <div v-for="slider in sliders" :key="slider.id" class="slider-wrapper">
                 <SliderControl 
                   :id="slider.id"
@@ -277,11 +277,11 @@ export default {
         },
       },
       c1_msg: {},
-      camera_0: "https://192.168.2.111:1265/stream.html?src=camera_0",
-      camera_1: "https://192.168.2.111:1265/stream.html?src=camera_1",
-      camera_2: "https://192.168.2.111:1265/stream.html?src=camera_2",
-      camera_3: "https://192.168.2.111:1265/stream.html?src=camera_3",
-      cameras_side: "https://192.168.2.111:1265/stream.html?src=camera_2&src=camera_3",
+      camera_0: "https://bkm2:1265/stream.html?src=camera_0",
+      camera_1: "https://bkm2:1265/stream.html?src=camera_1",
+      camera_2: "https://bkm2:1265/stream.html?src=camera_2",
+      camera_3: "https://bkm2:1265/stream.html?src=camera_3",
+      cameras_side: "https://bkm2:1265/stream.html?src=camera_2&src=camera_3",
       placeholderSrc: "/src/assets/black-screen.gif",
       loaded: false,
       audioElement: null,
@@ -755,16 +755,17 @@ export default {
   position: relative;
   padding: 10px;
   margin-inline: -0.75rem;
-  height: 100dvh;
+  /* height: 100dvh; */
+  /* transform: scale(0.85); */
+  transform-origin: top left;
+  /* width: 117.65%; */
+  /* height: 117.65%; */
 }
 
 /* Стили для крестовины */
 .cross-control-wrapper {
-  margin-top: 1rem;
-  /* padding: 1rem; */
-  /* background: var(--grey2); */
+  margin-top: .5rem;
   border-radius: 12px;
-  /* border: 1px solid var(--grey3); */
 }
 
 .mic-notification {
@@ -954,6 +955,8 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 0;
+  transform: scale(0.85);
+  transform-origin: top left;
 }
 .overlay-side {
   position: relative;
@@ -964,8 +967,8 @@ export default {
 .side-video-left {
   position: absolute;
   top: 0;
-  left: -110px;
-  width: 100vh;
+  left: -90px;
+  width: 85vh;
   height: 100%;
   pointer-events: none;
   border-radius: 18px;
@@ -981,11 +984,11 @@ export default {
   pointer-events: none;
 }
 .map-col {
-  max-width: 20rem;
-  height: 12rem;
+  max-width: 16rem !important;
+  height: 10rem !important;
 }
 .slide-col {
-  max-width: 20rem;
+  max-width: 16rem !important;
 }
 .map {
   border: 2px solid var(--grey2);
@@ -996,19 +999,19 @@ export default {
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(-482px);
+  transform: translateX(calc(-100% + 68px));
 }
 .slide-out-columnX.mapHide {
-  transform: translateX(-315px);
+  transform: translateX(calc(-16rem + 2px));
 }
 .slide-out-columnX.slideHide {
-  transform: translateX(-315px);
+  transform: translateX(calc(-16rem + 2px));
 }
 .tongue-op {
   background-color: transparent;
   border: none;
   border-left: 2px solid var(--grey2);
-  padding-block: 5px;
+  padding-block: 3px;
   color: var(--text-color);
 }
 .tongue {
@@ -1016,11 +1019,11 @@ export default {
   border: 2px solid var(--grey2);
   border-top-right-radius: 1.125rem;
   border-bottom-right-radius: 1.125rem;
-  padding-block: 5px;
+  padding-block: 3px;
   color: var(--text-color);
 }
 .bi {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 .start1 {
   text-align: center;
@@ -1039,7 +1042,7 @@ export default {
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 3px;
+  gap: 2px;
 }
 .butt-col {
   background-color: var(--bg-tertiary);
@@ -1051,12 +1054,18 @@ export default {
   background-color: var(--bg-tertiary);
   border-radius: 1.125rem;
   border: 2px solid var(--grey2);
+  padding: 0.5rem;
 }
 .optin-min {
   transform: scale(0.8);
 }
 
 @media (max-width: 896px) {
+  .main {
+    transform: scale(0.75);
+    width: 133.33%; /* 100 / 0.75 */
+    height: 133.33%;
+  }
   .slide-out-columnX.mapHide {
     transform: translateX(-229px);
   }

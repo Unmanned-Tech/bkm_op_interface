@@ -3,7 +3,7 @@
         <label :for="id" class="form-label">
             <div class="row">
                 <span class="col caption_low pe-1">{{ label }}</span>
-                <span v-if="showValue" class="col-auto caption_low_num d-flex justify-content-end" :style="colorStyle">
+                <span v-if="showValue" class="col-1 caption_low_num d-flex justify-content-end" :style="colorStyle">
                     <span v-if="id === 'brush_speed_range'">{{ sliderValue / 8 }}</span>
                     <span v-else>{{ sliderValue }}</span>
                     {{ unit }}
@@ -76,16 +76,18 @@ export default {
 
 <style scoped>
 .slider {
-    margin-bottom: -0.5rem;
+    margin-bottom: -0.6rem;
 }
-.range-container {
+.range-container input[type="range"] {
     position: relative;
+    height: 1.5rem !important;
 }
 .letter {
   position: absolute;
   z-index: 1;
-  top: 0.4rem;
+  top: 0.3rem;
   width: 0.75rem;
+  font-size: 0.9rem;
   text-align: center;
   font-weight: 700;
   font-family: "SF Pro Bold";
@@ -103,11 +105,11 @@ export default {
   display: inline;
 }
 .caption_low {
-  font-size: 1.15rem;
+  font-size: 0.85rem;
 }
 .caption_low_num {
   min-width: 120px;
-  font-size: 1.15rem;
+  font-size: 1rem;
 }
 
 @media (max-width: 896px) {

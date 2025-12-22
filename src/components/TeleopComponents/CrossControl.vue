@@ -139,6 +139,8 @@ export default {
     border: 1px solid var(--border-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     min-width: 200px;
+    transform: scale(0.85);
+    transform-origin: center;
 }
 
 .control-header {
@@ -169,8 +171,8 @@ export default {
 }
 
 .cross-container {
-    width: 160px;
-    height: 160px;
+    width: 136px;
+    height: 136px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
@@ -183,7 +185,7 @@ export default {
     border-radius: 8px;
     background: var(--surface-color);
     color: var(--text-color);
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -242,15 +244,15 @@ export default {
 }
 
 .center-icon {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     background: var(--secondary-color);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .status-container {
@@ -305,8 +307,8 @@ export default {
     }
     
     .cross-container {
-        width: 140px;
-        height: 140px;
+        width: 119px;
+        height: 119px;
         gap: 3px;
     }
     
@@ -349,8 +351,8 @@ export default {
     }
     
     .cross-container {
-        width: 120px;
-        height: 120px;
+        width: 102px;
+        height: 102px;
         gap: 2px;
     }
     

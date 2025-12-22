@@ -82,12 +82,12 @@ export default {
 <style scoped>
 .light-controls {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     padding: 0.5rem;
 }
 .buttonSet {
     border-radius: 50%;
-    padding: 1.5rem;
+    padding: 1.2rem;
     border: solid var(--grey2) 0.125rem;
     background-color: transparent;
     cursor: pointer;
@@ -118,7 +118,7 @@ export default {
     border-color: var(--green);
 }
 .optin {
-    transform: scale(2);
+    transform: scale(1.7);
     transition: filter 0.2s ease;
 }
 
