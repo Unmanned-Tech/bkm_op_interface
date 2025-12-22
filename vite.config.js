@@ -31,15 +31,21 @@ export default defineConfig({
       key: fs.readFileSync('/home/benihime/bkm_repos/bkm2-ca/bkm2+4-key.pem'),
       cert: fs.readFileSync('/home/benihime/bkm_repos/bkm2-ca/bkm2+4.pem'),
     },
-    host: "bkm2",
+    host: "0.0.0.0",
     proxy: {
-      // Проксируем WebSocket соединения к ROSBridge
-      '/rosbridge': {
+      '/rosbridge1': {  // для 192.168.2.111
         target: 'ws://192.168.2.111:9090',
         changeOrigin: true,
         ws: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/rosbridge/, '')
+        rewrite: (path) => path.replace(/^\/rosbridge1/, '')
+      },
+      '/rosbridge2': {  // для 192.168.255.3
+        target: 'ws://192.168.255.3:9090',
+        changeOrigin: true,
+        ws: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/rosbridge2/, '')
       }
     }
   },
