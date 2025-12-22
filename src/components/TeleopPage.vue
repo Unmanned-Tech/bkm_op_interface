@@ -29,16 +29,6 @@
       </div>
     </transition>
 
-    <!-- <div v-if="micNotification.show" class="mic-notification" :class="micNotification.type">
-      <div class="notification-content">
-        <div v-if="micNotification.type === 'connecting'" class="spinner"></div>
-        <span>{{ micNotification.message }}</span>
-        <button v-if="micNotification.type === 'connected'" class="close-btn" @click="hideMicNotification">
-          <i class="bi bi-x-circle"></i>
-        </button>
-      </div>
-    </div> -->
-
     <swiper
       :slidesPerView="1"
       :spaceBetween="0"
@@ -86,6 +76,12 @@
                   :showLetters="slider.showLetters"
                 />
               </div>
+              <div class="cross-control-wrapper">
+                <CrossControl 
+                  @command-start="onBrushCommandStart"
+                  @command-stop="onBrushCommandStop"
+                />
+              </div>
             </div>
           </div>
           <div class="col-auto ps-0 d-flex flex-column justify-content-center">
@@ -118,7 +114,7 @@
           <div class="col-auto z-1">
             <div class="info-grid">
               <InfoCard :value="displayC1Msg" unit="м/с" class="start1" />
-              <InfoCard :value="brush_speed" unit="об/м" class="end1" />
+              <InfoCard :value="brush_speed/8" unit="об/м" class="end1" />
               <InfoCard :value="bkmStore.selectedBkm" />
               <InfoCard><Brush /></InfoCard>
             </div>
@@ -209,6 +205,7 @@ import SliderControl from "@/components/TeleopComponents/SliderControl.vue";
 import OptionsControl from "@/components/TeleopComponents/OptionsControl.vue";
 import JoystickControl from "@/components/TeleopComponents/JoystickControl.vue";
 import InfoCard from "@/components/TeleopComponents/InfoCard.vue";
+import CrossControl from "@/components/TeleopComponents/CrossControl.vue";
 
 import { useMicrophone } from "../composables/useMicrophone";
 
@@ -237,7 +234,8 @@ export default {
     SliderControl,
     OptionsControl,
     JoystickControl,
-    InfoCard
+    InfoCard,
+    CrossControl
   },
   data: function () {
     return {
@@ -290,12 +288,8 @@ export default {
       isPlayingSound: false,
       micCommandTopic: null,
       micConnectionStatus: false,
+      brushCommandTimer: null,
     };
-  },
-  watch: {
-    brush_rotation(newVal) {
-      this.sendBrushRotationCommand(newVal);
-    },
   },
   setup() {
     const states = {
@@ -332,8 +326,8 @@ export default {
       angSpeedColorStyle: computed(() => getColorStyle(states.ang_max_speed, { green: 1, orange: 3 })),
       brushSpeedColorStyle: computed(() => {
         const val = states.brush_speed.value;
-        if (val >= -75 && val <= 140) return { color: "var(--green)" };
-        if ((val > -150 && val < -75) || (val > 75 && val < 280)) return { color: "var(--orange)" };
+        if (val >= 0 && val <= 4000) return { color: "var(--green)" };
+        if ((val > 4000 && val < 8000)) return { color: "var(--orange)" };
         return { color: "var(--red)" };
       }),
     };
@@ -341,9 +335,9 @@ export default {
     const sliders = [
       { id: "lin_max_speed_range", label: "Скорость робота", model: states.lin_max_speed, min: 0, max: 7, step: 1, unit: "м/с", colorStyle: styles.linSpeedColorStyle, showValue: true },
       { id: "ang_max_speed_range", label: "Скорость поворота", model: states.ang_max_speed, min: 0, max: 5, step: 0.25, unit: "рад/с", colorStyle: styles.angSpeedColorStyle, showValue: true },
-      { id: "brush_speed_range", label: "Скорость щётки", model: states.brush_speed, min: -200, max: 400, step: 20, unit: "об/м", colorStyle: styles.brushSpeedColorStyle, showValue: true },
-      { id: "brush_rotate_range", label: "Поворот щётки", model: states.brush_rotation, min: -2, max: 2, step: 1, unit: "", showLetters: true },
-      { id: "wash_range", label: "Давление", model: states.wash_pressure, min: 0, max: 50000, step: 5000 }
+      { id: "brush_speed_range", label: "Скорость щётки", model: states.brush_speed, min: 0, max: 10000, step: 1000, unit: "об/м", colorStyle: styles.brushSpeedColorStyle, showValue: true },
+      // { id: "brush_rotate_range", label: "Поворот щётки", model: states.brush_rotation, min: -2, max: 2, step: 1, unit: "", showLetters: true },
+      // { id: "wash_range", label: "Давление", model: states.wash_pressure, min: 0, max: 50000, step: 5000 }
     ];
     return {
       modules: [FreeMode],
@@ -381,10 +375,12 @@ export default {
   },
   mounted: function () {
     this.speed_send_timer = setInterval(this.send_speed, 200);
-    this.brush_send_timer = setInterval(this.send_brush_speed, 300);
-    this.wash_send_timer = setInterval(() => {
-      this.sendWashPressureCommand(this.wash_pressure);
-    }, 200)
+    this.brush_send_timer = setInterval(() => {
+      this.send_brush_speed(this.brush_speed);
+    }, 200);
+    // this.wash_send_timer = setInterval(() => {
+    //   this.sendWashPressureCommand(this.wash_pressure);
+    // }, 200)
     
     setTimeout(() => {
       this.handleError();
@@ -426,6 +422,11 @@ export default {
     clearInterval(this.brush_send_timer);
     clearInterval(this.wash_send_timer);
 
+    if (this.brushCommandTimer) {
+      clearInterval(this.brushCommandTimer);
+      this.brushCommandTimer = null;
+    }
+
     if (this.listner1) {
       this.listner1.unsubscribe();
       this.listner1 = null;
@@ -434,6 +435,35 @@ export default {
     this.cleanupMic();
   },
   methods: {
+    // Обработчик начала команды щетки
+    onBrushCommandStart(command) {
+      console.debug(`Brush command START: ${command}`);
+      this.sendBrushCommand(command);
+      
+      // Устанавливаем интервал для непрерывной отправки
+      if (this.brushCommandTimer) {
+        clearInterval(this.brushCommandTimer);
+      }
+      
+      this.brushCommandTimer = setInterval(() => {
+        this.sendBrushCommand(command);
+      }, 200); // Отправляем каждые 200мс
+    },
+
+    // Обработчик остановки команды щетки
+    onBrushCommandStop(command) {
+      console.debug(`Brush command STOP: ${command}`);
+      
+      // Очищаем таймер
+      if (this.brushCommandTimer) {
+        clearInterval(this.brushCommandTimer);
+        this.brushCommandTimer = null;
+      }
+      
+      // Можно отправить команду "стоп" если это нужно
+      // Например, если устройство требует явной команды остановки
+      // this.sendBrushCommand(0); // Если 0 - это команда остановки
+    },
     // Обработчик начала действия
     handleStartAction(optionId) {
       if (optionId === "mic") {
@@ -557,6 +587,36 @@ export default {
       cmd_srv.callService(request);
       console.debug(request);
     },
+    sendBrushCommand(command) {
+      if (!this.rosStore.ros) {
+        console.error("ROS не подключен");
+        return;
+      }
+
+      try {
+        // Создаем сервис для команды щетки
+        var brushService = new ROSLIB.Service({
+          ros: this.rosStore.ros,
+          name: "/brush_command",
+          serviceType: "mcu_msgs/srv/Command"
+        });
+
+        var request = new ROSLIB.ServiceRequest({
+          command: command // 1-влево, 2-вправо, 3-вверх, 4-вниз
+        });
+
+        brushService.callService(request, (response) => {
+          if (response.success) {
+            console.debug(`Команда ${command} отправлена успешно: ${response.message}`);
+          } else {
+            console.error(`Ошибка отправки команды ${command}: ${response.message}`);
+          }
+        });
+
+      } catch (error) {
+        console.error("Ошибка при вызове сервиса brush_command:", error);
+      }
+    },
     sendWashPressureCommand(pressure) {
       const rpm = parseInt(pressure);
 
@@ -671,15 +731,19 @@ export default {
         speedCmd.publish(this.twist);
       }
     },
-    send_brush_speed() {
-      this.ce_vel = new ROSLIB.Topic({
+    send_brush_speed(speed) {
+      const rpm = parseInt(speed);
+      const br_speed = new ROSLIB.Topic({
         ros: this.rosStore.ros,
-        name: "/ce_vel",
-        messageType: "geometry_msgs/Twist",
+        name: '/cmd_vel_additional',
+        messageType: 'std_msgs/msg/Float32'
       });
-      this.twist_ce.linear.x = Math.round(this.brush_speed);
-      this.twist_ce.angular.z = Math.round(this.brush_speed);
-      this.ce_vel.publish(this.twist_ce);
+      const message = new ROSLIB.Message({
+        data: rpm
+      });
+      
+      br_speed.publish(message);
+      console.debug(`Sent additional VESC RPM: ${rpm}`);
     },
   },
 };
@@ -692,6 +756,15 @@ export default {
   padding: 10px;
   margin-inline: -0.75rem;
   height: 100dvh;
+}
+
+/* Стили для крестовины */
+.cross-control-wrapper {
+  margin-top: 1rem;
+  /* padding: 1rem; */
+  /* background: var(--grey2); */
+  border-radius: 12px;
+  /* border: 1px solid var(--grey3); */
 }
 
 .mic-notification {

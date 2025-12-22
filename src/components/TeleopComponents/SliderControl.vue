@@ -4,7 +4,9 @@
             <div class="row">
                 <span class="col caption_low pe-1">{{ label }}</span>
                 <span v-if="showValue" class="col-auto caption_low_num d-flex justify-content-end" :style="colorStyle">
-                    {{ sliderValue }} {{ unit }}
+                    <span v-if="id === 'brush_speed_range'">{{ sliderValue / 8 }}</span>
+                    <span v-else>{{ sliderValue }}</span>
+                    {{ unit }}
                 </span>
             </div>
         </label>
