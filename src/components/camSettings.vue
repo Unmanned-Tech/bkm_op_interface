@@ -18,17 +18,34 @@
                         <option value="БКМ-2">БКМ-2</option>
                     </select>
 
-                    <label for="maxRpmInput" class="form-label">Максимальные обороты (max_rpm)</label>
-                    <input
-                        id="maxRpmInput"
-                        type="number"
-                        class="form-control mb-2"
-                        v-model.number="maxRpmInput"
-                        min="5000"
-                        max="10000"
-                        step="1000"
-                    >
-                    <button class="btn btn-primary w-100" @click="setMaxRpm">Установить max_rpm</button>
+                    <SafetyUnlockButton class="my-2"/>
+
+                    <label for="maxRpmInput" class="form-label">Максимальные обороты привода</label>
+                    <div class="input-group mb-2">
+                        <button 
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            @click="decreaseMaxRpm"
+                            :disabled="maxRpmInput <= minRpm"
+                        >
+                            <i class="bi bi-dash-lg"></i>
+                        </button>
+
+                        <span class="input-group-text" style="min-width: 80px; justify-content: center;">
+                            {{ maxRpmInput }}
+                        </span>
+
+                        <button 
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            @click="increaseMaxRpm"
+                            :disabled="maxRpmInput >= maxRpm"
+                        >
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+
+                    <button class="btn btn-primary w-100" @click="setMaxRpm">Установить</button>
                 </div>
             </div>
         </div>
@@ -41,14 +58,20 @@ import resetSVG from '/src/assets/arrow-repeat.svg';
 import { useBkmStore } from '../stores/bkmStore';
 import { useRosStore } from '../stores/ConfigStore';
 
+import SafetyUnlockButton from './SafetyUnlockButton.vue';
+
 export default {
     components: {
         settingsSVG,
         resetSVG,
+        SafetyUnlockButton
     },
     data() {
         return {
-            maxRpmInput: 5000,
+            maxRpmInput: 10000,
+            minRpm: 5000,
+            maxRpm: 10000,
+            step: 1000,
         };
     },
 
@@ -70,6 +93,19 @@ export default {
     },
 
     methods: {
+        increaseMaxRpm() {
+            const newValue = this.maxRpmInput + this.step;
+            if (newValue <= this.maxRpm) {
+                this.maxRpmInput = newValue;
+            }
+        },
+        decreaseMaxRpm() {
+            const newValue = this.maxRpmInput - this.step;
+            if (newValue >= this.minRpm) {
+                this.maxRpmInput = newValue;
+            }
+        },
+
         setMaxRpm() {
             if (!this.rosStore.ros) {
                 console.error('ROS connection not established');
@@ -92,7 +128,7 @@ export default {
 
             setMaxRpmSrv.callService(request, (result) => {
                 if (result.success) {
-                    console.log(`max_rpm успешно установлен в ${this.maxRpmInput}`);
+                    console.debug(`max_rpm успешно установлен в ${this.maxRpmInput}`);
                     alert(`max_rpm установлен: ${this.maxRpmInput}`);
                 } else {
                     console.warn('Не удалось установить max_rpm');
@@ -107,6 +143,7 @@ export default {
 <style scoped>
 .caption {
     font-size: 1.35rem;
+    font-weight: 800;
 }
 .tongue{
     background-color: var(--bg-tertiary);
@@ -157,7 +194,7 @@ export default {
     padding: .35rem;
     border-radius: 1.125rem;
     border: solid var(--grey2) .125rem;
-    outline: nones;
+    outline: none;
 }
 
 .reset {
@@ -166,5 +203,51 @@ export default {
     padding: .25rem;
     border-radius: 12px;
     border: none;
+}
+
+.input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border: 1px solid var(--grey2);
+    /* flex: 1; */
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group .btn-outline-secondary {
+    color: var(--text-color);
+    background-color: var(--bg-tertiary);
+}
+
+.input-group .btn-outline-secondary:active:not(:disabled) {
+    background-color: var(--grey2);
+    color: var(--text-color);
+}
+
+.input-group .btn-outline-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.input-group-text {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--grey2);
+    color: var(--text-color);
+    font-weight: 600;
+    flex: 1;
+    padding: 0.375rem 0.75rem;
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
+    display: block;
 }
 </style>

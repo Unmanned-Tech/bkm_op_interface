@@ -40,13 +40,13 @@ const store = useStore();
     align-items: center;
     justify-content: center;
     color: var(--text-color);
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 400;
     padding: .5rem;
   }
   .ln {
     padding: .5rem;
-    line-height: 1.25rem;
+    line-height: 1rem;
   }
 
   @media (max-width: 896px) {

@@ -1,21 +1,41 @@
 <template>
     <div class="light-controls">
-        <button 
-            v-for="option in options"
+        <button
+            v-for="option in clickableOptions"
             :key="option.id"
             class="buttonSet"
-            :class="{ 
-              active: option.state && option.id !== 'mic', 
-              mic: option.id === 'mic',
-              'mic-active': option.id === 'mic' && option.state
-            }"
-            @mousedown="startAction(option.id)"
-            @mouseup="stopAction(option.id)"
-            @touchstart="startAction(option.id)"
-            @touchend="stopAction(option.id)"
-            @mouseleave="stopAction(option.id)"
+            :class="{ 'active': option.state }"
+            @click="toggleClickableOption(option.id)"
         >
             <component :is="option.icon" class="optin"/>
+        </button>
+        
+        <button 
+            v-if="micOption"
+            :key="micOption.id"
+            class="buttonSet mic"
+            :class="{ 'mic-active': micOption.state }"
+            @mousedown="startHoldAction('mic')"
+            @mouseup="stopHoldAction('mic')"
+            @touchstart="startHoldAction('mic')"
+            @touchend="stopHoldAction('mic')"
+            @mouseleave="stopHoldAction('mic')"
+        >
+            <component :is="micOption.icon" class="optin"/>
+        </button>
+
+        <button 
+            v-if="soundOption"
+            :key="soundOption.id"
+            class="buttonSet"
+            :class="{ 'sound-active': soundOption.state }"
+            @mousedown="startHoldAction('sound')"
+            @mouseup="stopHoldAction('sound')"
+            @touchstart="startHoldAction('sound')"
+            @touchend="stopHoldAction('sound')"
+            @mouseleave="stopHoldAction('sound')"
+        >
+            <component :is="soundOption.icon" class="optin"/>
         </button>
     </div>
 </template>
@@ -34,46 +54,61 @@ export default {
     setup(_, { emit }) {
         const store = useTeleopStore();
 
-        const options = computed(() => [
-            { id: "head", icon: Headlight, state: store.isSmLightsEnabled },
-            { id: "strobe", icon: Strobe, state: store.isStrobeEnabled },
-            { id: "side", icon: SideLights, state: store.isSideEnabled },
-            { id: "mic", icon: Mic, state: store.isMicEnabled },
-            { id: "sound", icon: Sound, state: store.isSoundEnabled },
+        const allOptions = computed(() => [
+            { id: "head", icon: Headlight, state: store.isSmLightsEnabled, type: "click" },
+            { id: "strobe", icon: Strobe, state: store.isStrobeEnabled, type: "click" },
+            { id: "side", icon: SideLights, state: store.isSideEnabled, type: "click" },
+            { id: "mic", icon: Mic, state: store.isMicEnabled, type: "hold" },
+            { id: "sound", icon: Sound, state: store.isSoundEnabled, type: "hold" },
         ]);
 
-        // Запуск действия при нажатии
-        const startAction = (optionId) => {
-            if (optionId === "mic" || optionId === "sound") {
-                if (optionId === "mic") {
-                    store.setMicEnabled(true);
-                } else if (optionId === "sound") {
-                    store.setSoundEnabled(true);
-                }
-                emit("startAction", optionId);
-            } else {
-                // Для остальных кнопок - обычный toggle
-                store.toggleOption(optionId);
-                emit("toggleLight", optionId, !options.value.find(opt => opt.id === optionId).state);
-            }
+        const clickableOptions = computed(() => 
+            allOptions.value.filter(opt => opt.type === "click")
+        );
+
+        const micOption = computed(() => 
+            allOptions.value.find(opt => opt.id === "mic")
+        );
+
+        const soundOption = computed(() => 
+            allOptions.value.find(opt => opt.id === "sound")
+        );
+
+        // Переключение кнопок по клику
+        const toggleClickableOption = (optionId) => {
+            store.toggleOption(optionId);
+            const option = allOptions.value.find(opt => opt.id === optionId);
+            emit("toggleLight", optionId, !option.state);
         };
 
-        // Остановка действия при отпускании
-        const stopAction = (optionId) => {
-            if (optionId === "mic" || optionId === "sound") {
-                if (optionId === "mic") {
-                    store.setMicEnabled(false);
-                } else if (optionId === "sound") {
-                    store.setSoundEnabled(false);
-                }
-                emit("stopAction", optionId);
+        // Начало удержания для микрофона и звука
+        const startHoldAction = (optionId) => {
+            if (optionId === "mic") {
+                store.setMicEnabled(true);
+            } else if (optionId === "sound") {
+                store.setSoundEnabled(true);
             }
+            emit("startAction", optionId);
         };
 
+        // Окончание удержания для микрофона и звука
+        const stopHoldAction = (optionId) => {
+            if (optionId === "mic") {
+                store.setMicEnabled(false);
+            } else if (optionId === "sound") {
+                store.setSoundEnabled(false);
+            }
+            emit("stopAction", optionId);
+        };
+
+        
         return { 
-            options, 
-            startAction, 
-            stopAction 
+            clickableOptions,
+            micOption,
+            soundOption,
+            toggleClickableOption,
+            startHoldAction,
+            stopHoldAction
         };
     }  
 };
@@ -83,7 +118,6 @@ export default {
 .light-controls {
     display: flex;
     gap: 8px;
-    padding: 0.5rem;
 }
 .buttonSet {
     border-radius: 50%;

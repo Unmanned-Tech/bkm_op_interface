@@ -59,8 +59,8 @@
             </button>
           </div>
         </div>
-        <div class="row my-1 my-lg-2 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, slideHide: !isSliderVisible }">
-          <div class="col-auto pe-0 slide-col">
+        <div class="row my-2 slide-out-columnX" :class="{ 'slide-out-columnX': isSliderVisible, slideHide: !isSliderVisible }">
+          <div class="col pe-0 slide-col">
             <div class="slide">
               <div v-for="slider in sliders" :key="slider.id" class="slider-wrapper">
                 <SliderControl 
@@ -103,13 +103,13 @@
       <div class="col px-0">
         <div class="row mx-0">
           <div class="col overlay-side">
-            <vue-draggable-resizable :w="920" :resizable="false" style="background-color: transparent; border: none;">
+            <vue-draggable-resizable :w="700" :resizable="false" style="background-color: transparent; border: none;">
                 <iframe class="side-video-left" scrolling="no" :src="cameras_side" @load="handleLoad" />
             </vue-draggable-resizable>
           </div>
         </div>
       </div>
-      <div class="col-auto ps-1 pe-5">
+      <div class="col-auto ps-1 pe-5" style="position: relative;">
         <div class="row justify-content-end">
           <div class="col-auto z-1">
             <div class="info-grid">
@@ -125,8 +125,8 @@
             <EmerStopButton />
           </div>
         </div>
-        <div class="row mt-0 mt-lg-4 justify-content-center">
-          <JoystickControl 
+        <div class="mt-0 mt-lg-4 justify-content-start" style="position: absolute; left: -50px;">
+          <JoystickControl
             :lin_max_speed="lin_max_speed"
             :ang_max_speed="ang_max_speed"
             @joystickUpdate="handleJoystickUpdate"
@@ -753,13 +753,9 @@ export default {
 .main {
   overflow: hidden;
   position: relative;
-  padding: 10px;
+  padding: 4px;
   margin-inline: -0.75rem;
-  /* height: 100dvh; */
-  /* transform: scale(0.85); */
-  transform-origin: top left;
-  /* width: 117.65%; */
-  /* height: 117.65%; */
+  height: calc(92.75dvh);
 }
 
 /* Стили для крестовины */
@@ -955,20 +951,18 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 0;
-  transform: scale(0.85);
-  transform-origin: top left;
 }
 .overlay-side {
   position: relative;
   box-sizing: border-box;
   z-index: 2;
-  scale: 0.7;
+  scale: 0.8;
 }
 .side-video-left {
   position: absolute;
   top: 0;
   left: -90px;
-  width: 85vh;
+  width: 100vh;
   height: 100%;
   pointer-events: none;
   border-radius: 18px;
@@ -984,11 +978,11 @@ export default {
   pointer-events: none;
 }
 .map-col {
-  max-width: 16rem !important;
+  min-width: 16rem !important;
   height: 10rem !important;
 }
 .slide-col {
-  max-width: 16rem !important;
+  min-width: 16rem !important;
 }
 .map {
   border: 2px solid var(--grey2);
@@ -999,13 +993,13 @@ export default {
   transform: translateX(0);
 }
 .hiddenX {
-  transform: translateX(calc(-100% + 68px));
+  transform: translateX(calc(-85% + 2px));
 }
 .slide-out-columnX.mapHide {
-  transform: translateX(calc(-16rem + 2px));
+  transform: translateX(calc(-80%));
 }
 .slide-out-columnX.slideHide {
-  transform: translateX(calc(-16rem + 2px));
+  transform: translateX(calc(-80% + 2px));
 }
 .tongue-op {
   background-color: transparent;

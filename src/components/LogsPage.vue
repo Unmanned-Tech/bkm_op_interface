@@ -1,7 +1,5 @@
 <template>
-    <button id="unlockBtn" @click="sendUnblockCommand()" class="safety-unlock" :class="updateUnlockButtonColor(safetyState)">
-        Приводы {{ safetyState === "unlocked" ? "разблокированы" : "заблокированы" }}
-    </button>
+    <SafetyUnlockButton class="safety-unlock-main" />
     <div class="main">
         <grid-layout 
             v-model:layout="layout"
@@ -13,7 +11,7 @@
             :use-css-transforms="true"
             class="vue-grid-layout"
         >
-            <grid-item :x="layout[0].x" :y="layout[0].y" :w="layout[0].w" :h="layout[0].h" :i="layout[0].i" :minW="layout[0].minW" :minH="layout[0].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".no-drag">
+            <grid-item :x="layout[0].x" :y="layout[0].y" :w="layout[0].w" :h="layout[0].h" :i="layout[0].i" :minW="layout[0].minW" :minH="layout[0].minH" class="vue-grid-item" drag-allow-from=".vue-draggable-handle" drag-ignore-from=".power-monitor">
                 <i class="vue-draggable-handle bi bi-grip-horizontal"></i>
                 <div class="power-monitor no-drag">
                     <h2>Питание электроники (DC-DC)</h2>
@@ -75,6 +73,20 @@
                 <i class="vue-draggable-handle-right bi bi-grip-horizontal"></i>
                 <div class="log-monitor no-drag">
                     <h2>Журнал</h2>
+
+                    <div class="log-tabs">
+                        <button 
+                            v-for="node in nodeTabs"
+                            :key="node.name"
+                            @click="selectNode(node.name)"
+                            :class="{ active: selectedNode === node.name, 'has-error': hasErrorLogs(node.name) }"
+                            class="tab-button"
+                        >
+                            {{ node.label }}
+                            <span v-if="node.unreadCount > 0" class="unread-badge">{{ node.unreadCount }}</span>
+                        </button>
+                    </div>
+
                     <div class="log-controls">
                         <button class="clear-logs" @click="clearLogs()">Очистить</button>
                         <label>
@@ -99,7 +111,7 @@
                             </thead>
                             <tbody>
                                 <tr
-                                    v-for="(log, index) in filteredLogs"
+                                    v-for="(log, index) in displayedLogs"
                                     :key="index"
                                     :class="log.levelClass"
                                 >
@@ -137,6 +149,8 @@ import DangerZone from "./LogsComponents/DangerZone.vue";
 import { GridLayout, GridItem } from 'vue-grid-layout-v3';
 import { debounce } from "lodash-es";
 
+import SafetyUnlockButton from "./SafetyUnlockButton.vue";
+
 export default {
     components: {
         BMSMonitorLeft,
@@ -146,7 +160,8 @@ export default {
         SafetyConf,
         DangerZone,
         GridLayout,
-        GridItem
+        GridItem,
+        SafetyUnlockButton
     },
     setup() {
         const layout = ref([
@@ -164,7 +179,6 @@ export default {
         const i_out = ref(0);
         const power = ref(0);
         const u_in = ref(0);
-        const safetyState = ref(null);
 
         const lights = ref([
             { device: "HL", label: "Фары", status: "OFF", value: 0 },
@@ -180,7 +194,8 @@ export default {
         const logs = ref([]);
         const autoScroll = ref(true);
         const consoleRef = ref(null);
-        const logFilters = ref([20, 30, 40]); // Default: INFO, WARN, ERROR
+        const logFilters = ref([30, 40]); // Default: INFO, WARN, ERROR
+        const selectedNode = ref("all");
 
         const logLevels = ref([
             { value: 10, label: "DEBUG", class: "debug" },
@@ -191,6 +206,82 @@ export default {
         ]);
 
         let topics = [];
+
+        const uniqueNodes = computed(() => {
+            const nodes = new Set();
+            logs.value.forEach(log => {
+                if (log.name) {
+                    nodes.add(log.name);
+                }
+            });
+            return Array.from(nodes).sort();
+        });
+
+        const nodeTabs = computed(() => {
+            const tabs = [
+                { 
+                    name: "all", 
+                    label: "Все", 
+                    unreadCount: logs.value.filter(log => 
+                        logFilters.value.includes(log.level) && 
+                        log.isUnread
+                    ).length 
+                }
+            ];
+
+            uniqueNodes.value.forEach(node => {
+                const nodeLogs = logs.value.filter(log => log.name === node);
+                tabs.push({
+                    name: node,
+                    label: node,
+                    unreadCount: nodeLogs.filter(log => 
+                        logFilters.value.includes(log.level) && 
+                        log.isUnread
+                    ).length
+                });
+            });
+
+            return tabs;
+        });
+
+        // Отфильтрованные логи с учетом выбранной ноды и уровня
+        const displayedLogs = computed(() => {
+            let filtered = logs.value.filter(log => 
+                logFilters.value.includes(log.level)
+            );
+            
+            if (selectedNode.value !== "all") {
+                filtered = filtered.filter(log => log.name === selectedNode.value);
+            }
+            
+            return filtered;
+        });
+
+        // Проверка есть ли ошибки для ноды
+        const hasErrorLogs = (nodeName) => {
+            const nodeLogs = logs.value.filter(log => log.name === nodeName);
+            return nodeLogs.some(log => log.level >= 40); // ERROR или FATAL
+        };
+
+        // Выбор ноды
+        const selectNode = (nodeName) => {
+            selectedNode.value = nodeName;
+            
+            // Помечаем логи как прочитанные при переключении на вкладку
+            if (nodeName === "all") {
+                logs.value.forEach(log => {
+                    if (logFilters.value.includes(log.level)) {
+                        log.isUnread = false;
+                    }
+                });
+            } else {
+                logs.value.forEach(log => {
+                    if (log.name === nodeName && logFilters.value.includes(log.level)) {
+                        log.isUnread = false;
+                    }
+                });
+            }
+        };
 
         const subscribeToTopics = () => {
             if(!rosStore.ros) {
@@ -222,18 +313,6 @@ export default {
             });
 
             topics.push(logTopic);
-
-            const safetyStateTopic = new ROSLIB.Topic({
-                ros: rosStore.ros,
-                name: "/safety/status",
-                messageType: "std_msgs/msg/String"
-            });
-
-            safetyStateTopic.subscribe((msg) => {
-                safetyState.value = parseStatusMessage(msg.data);
-                updateUnlockButtonColor(safetyState.value);
-            });
-            topics.push(safetyStateTopic);
 
             const lightStateTopic = new ROSLIB.Topic({
                 ros: rosStore.ros,
@@ -280,28 +359,29 @@ export default {
             });
         };
 
-        // Фильтрация логов
-        const filteredLogs = computed(() => {
-            return logs.value.filter(log => 
-                logFilters.value.includes(log.level)
-            );
-        });
-
         // Форматирование времени
         const formatLogTime = (stamp) => {
             if (!stamp) return '';
             const totalSeconds = stamp.sec + stamp.nanosec / 1e9;
             const date = new Date(totalSeconds * 1000);
-            return date.toLocaleTimeString();
+            return date.toLocaleTimeString('ru-RU', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
         };
 
         // Очистка логов
         const clearLogs = () => {
-            logs.value = [];
+            if (selectedNode.value === "all") {
+                logs.value = [];
+            } else {
+                logs.value = logs.value.filter(log => log.name !== selectedNode.value);
+            }
         };
 
         // Автопрокрутка
-        watch(filteredLogs, async () => {
+        watch(displayedLogs, async () => {
             if (autoScroll.value) {
                 await nextTick();
                 if (consoleRef.value) {
@@ -309,42 +389,6 @@ export default {
                 }
             }
         });
-
-        const parseStatusMessage = (status) => {
-            if (status.includes("F_STATUS_INIT_LOCK") ||
-                status.includes("F_STATUS_SW_LOCK") ||
-                status.includes("F_STATUS_HW_LOCK") ||
-                status.includes("F_STATUS_NOCON_LOCK")) {
-                return "locked";
-            } else if (status.includes("F_STATUS_NORMAL") || status.includes("F_STATUS_NORMAL_INH")) {
-                return "unlocked";
-            } else {
-                return "unknown";
-            };
-        }
-
-        const updateUnlockButtonColor = (status) => {
-            if (status === "locked") return "lock";
-            if (status === "unlocked") return "unlock";
-            return "unknown";
-        }
-
-        const sendUnblockCommand = () => {
-            if(!rosStore.ros) {
-                console.error("no connect to ros");
-                return;
-            }
-
-            var unlock = new ROSLIB.Service({
-                ros: rosStore.ros,
-                name: "/safety/unlock",
-                serviceType: "std_srvs/srv/Trigger"
-            });
-
-            const request = new ROSLIB.ServiceRequest({});
-            
-            unlock.callService(request);
-        }
 
         onMounted(subscribeToTopics);
         onUnmounted(() => {
@@ -405,8 +449,8 @@ export default {
                     console.error("Light command error", response.feedback);
                 }
             });
-
         }
+
 
         return {
             u_out, 
@@ -417,17 +461,18 @@ export default {
             lights, 
             getStatusClass, 
             formatStatus, 
-            sendUnblockCommand, 
-            updateUnlockButtonColor, 
-            safetyState, 
             logs,
-            filteredLogs,
+            displayedLogs,
             logLevels,
             logFilters,
             autoScroll,
             consoleRef,
             formatLogTime,
             clearLogs,
+            nodeTabs,
+            selectedNode,
+            selectNode,
+            hasErrorLogs,
             toggleLight,
             layout
         };
@@ -436,6 +481,11 @@ export default {
 </script>
 
 <style scoped>
+.safety-unlock-main {
+    position: relative;
+    z-index: 100;
+}
+
 p {
     margin: 0;
 }
@@ -487,7 +537,7 @@ p {
     box-sizing: border-box;
 }
 .log-console {
-    max-height: 400px;
+    max-height: 340px;
     overflow-y: auto;
     background-color: #1e1e1e;
     border-radius: 12px;
@@ -518,11 +568,76 @@ p {
     gap: 15px;
     align-items: center;
     margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.log-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 15px;
+    background-color: var(--grey5);
+    border-radius: 8px;
+    padding: 4px;
+    overflow-x: auto;
+}
+
+.tab-button {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 15px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+}
+
+.tab-button:hover {
+    background-color: var(--grey4);
+}
+
+.tab-button.active {
+    background-color: var(--grey6);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.tab-button.has-error {
+    color: var(--red);
+    border-right: 3px solid var(--red);
+}
+
+.tab-button.has-error.active {
+    background-color: color-mix(in srgb, var(--red) 20%, var(--grey6));
+}
+
+.unread-badge {
+    background-color: var(--blue);
+    color: white;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    min-width: 20px;
+    text-align: center;
+}
+
+.tab-button.has-error .unread-badge {
+    background-color: var(--red);
 }
 
 .filter-controls {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .filter-controls label {
@@ -537,6 +652,7 @@ p {
     border: 2px solid var(--p-sky-900);
     border-radius: 12px;
     padding: .25rem 1rem;
+    cursor: pointer;
 }
 
 /* Цвета для уровней логов */
@@ -637,15 +753,6 @@ table tr:first-child th:last-child {
     background-color: var(--p-green-950);
     color: var(--p-emerald-400);
     border: 2px solid var(--p-emerald-900);
-}
-.safety-unlock {
-    padding: .75rem 1.5rem;
-    border-radius: 12px;
-    margin: 0.75rem;
-    transition: all 0.5s;
-}
-.safety-unlock:active {
-    filter: brightness(0.5);
 }
 
 @media screen and (max-width: 968px) {

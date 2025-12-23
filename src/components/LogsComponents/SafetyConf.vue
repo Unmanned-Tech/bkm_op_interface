@@ -30,9 +30,7 @@
             </button>
 
             <!-- Safety Unlock -->
-            <button @click="sendUnblockCommand()" class="control-btn status-btn" :class="updateUnlockButtonColor(safetyState)">
-                Приводы {{ !safetyState ? 'заблокированы' : 'разблокированы' }}
-            </button>
+            <SafetyUnlockButton />
         </div>
 
         <!-- Notification area -->
@@ -46,13 +44,13 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRosStore } from "@/stores/ConfigStore";
 import ROSLIB from 'roslib';
+import SafetyUnlockButton from '../SafetyUnlockButton.vue';
 
 const rosStore = useRosStore();
 
 // States
 const hbmonState = ref(true);
 const swesState = ref(true);
-const safetyState = ref('');
 const notification = ref({
     message: '',
     type: ''
@@ -128,42 +126,6 @@ function showNotification(message, type) {
     setTimeout(() => {
         notification.value = { message: '', type: '' };
     }, 2000);
-}
-
-const parseStatusMessage = (status) => {
-    if (status.includes("F_STATUS_INIT_LOCK") ||
-        status.includes("F_STATUS_SW_LOCK") ||
-        status.includes("F_STATUS_HW_LOCK") ||
-        status.includes("F_STATUS_NOCON_LOCK")) {
-        return "locked";
-    } else if (status.includes("F_STATUS_NORMAL") || status.includes("F_STATUS_NORMAL_INH")) {
-        return "unlocked";
-    } else {
-        return "unknown";
-    };
-}
-
-const updateUnlockButtonColor = (status) => {
-    if (status === "locked") return "lock";
-    if (status === "unlocked") return "unlock";
-    return "unknown";
-}
-
-const sendUnblockCommand = () => {
-    if(!rosStore.ros) {
-        console.error("no connect to ros");
-        return;
-    }
-
-    var unlock = new ROSLIB.Service({
-        ros: rosStore.ros,
-        name: "/safety/unlock",
-        serviceType: "std_srvs/srv/Trigger"
-    });
-
-    const request = new ROSLIB.ServiceRequest({});
-    
-    unlock.callService(request);
 }
 
 const subscribe = () => {

@@ -33,11 +33,11 @@
             </button>
             
             <!-- Центральная кнопка -->
-            <div class="center-btn">
+            <!-- <div class="center-btn">
                 <div class="center-icon">
                     <i class="bi bi-circle-fill"></i>
                 </div>
-            </div>
+            </div> -->
             
             <!-- Правая стрелка (вправо) -->
             <button 
@@ -139,8 +139,8 @@ export default {
     border: 1px solid var(--border-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     min-width: 200px;
-    transform: scale(0.85);
-    transform-origin: center;
+    /* transform: scale(0.85); */
+    /* transform-origin: center; */
 }
 
 .control-header {
@@ -177,7 +177,6 @@ export default {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 4px;
-    margin-bottom: 16px;
 }
 
 .cross-btn {

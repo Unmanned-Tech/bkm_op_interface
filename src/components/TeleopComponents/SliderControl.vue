@@ -1,9 +1,9 @@
 <template>
     <div class="slider">
         <label :for="id" class="form-label">
-            <div class="row">
-                <span class="col caption_low pe-1">{{ label }}</span>
-                <span v-if="showValue" class="col-1 caption_low_num d-flex justify-content-end" :style="colorStyle">
+            <div class="line_wrapper">
+                <span class="caption_low">{{ label }}</span>
+                <span v-if="showValue" class="caption_low_num" :style="colorStyle">
                     <span v-if="id === 'brush_speed_range'">{{ sliderValue / 8 }}</span>
                     <span v-else>{{ sliderValue }}</span>
                     {{ unit }}
@@ -82,6 +82,10 @@ export default {
     position: relative;
     height: 1.5rem !important;
 }
+.line_wrapper {
+    display: flex;
+    justify-content: space-between;
+}
 .letter {
   position: absolute;
   z-index: 1;
@@ -108,8 +112,8 @@ export default {
   font-size: 0.85rem;
 }
 .caption_low_num {
-  min-width: 120px;
-  font-size: 1rem;
+  /* min-width: 120px; */
+  font-size: 0.9rem;
 }
 
 @media (max-width: 896px) {
